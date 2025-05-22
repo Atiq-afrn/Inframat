@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:inframat/models/contractor_login_model.dart';
+import 'package:inframat/provider/catagory_provider.dart';
+import 'package:inframat/provider/coil_slitting_provider.dart';
+import 'package:inframat/provider/connection_provider.dart';
+import 'package:inframat/provider/invards_all_details_provider.dart';
+import 'package:inframat/provider/login_provider.dart';
+import 'package:inframat/provider/operator_login_provider.dart';
+import 'package:inframat/provider/operator_logout_provider.dart';
+import 'package:inframat/provider/punch_in_provider.dart';
+import 'package:inframat/provider/punch_out_provider.dart';
+import 'package:inframat/provider/qr_scann_provider.dart';
+import 'package:inframat/provider/quality_check_provider.dart';
+import 'package:inframat/provider/sub_category_provider.dart';
+import 'package:inframat/screens/abc.dart';
+
+import 'package:inframat/screens/splash_screen.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  debugPaintSizeEnabled = false;
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => LoginProvider()),
+        ChangeNotifierProvider(create: (context) => ConnectionProvider()),
+        ChangeNotifierProvider(create: (context) => OperatorLoginProvider()),
+        ChangeNotifierProvider(create: (context) => OperatorLogOutProvider()),
+        ChangeNotifierProvider(create: (context) => PunchInProvider()),
+        ChangeNotifierProvider(create: (context) => PunchOutProvider()),
+        ChangeNotifierProvider(create: (context) => QrScannProvider()),
+        ChangeNotifierProvider(
+          create: (context) => InvardsAllDetailsProvider(),
+        ),
+        ChangeNotifierProvider(create: (context) => QualityCheckProvider()),
+        ChangeNotifierProvider(create: (context) => CatagoryProvider()),
+        ChangeNotifierProvider(create: (context) => SubCategoryProvider()),
+        ChangeNotifierProvider(create: (context) => CoilSlittingProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Inframat',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: SplashScreen(),
+      //TimerExample(),
+    );
+  }
+}

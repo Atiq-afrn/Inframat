@@ -1,0 +1,187 @@
+import 'dart:ffi';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:inframat/const/color.dart';
+import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/screens/anneling/anneling_process2.dart';
+import 'package:inframat/screens/anneling/container_widget_for_anneling.dart';
+import 'package:inframat/screens/coil_sliting_screen2.dart';
+import 'package:inframat/screens/coilsliting_open_camera.dart';
+import 'package:inframat/screens/coilslitting_issue_screen.dart';
+import 'package:inframat/widgets/container_widget_for_coilslitting.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+
+class AnnelingProcess extends StatefulWidget {
+  const AnnelingProcess({super.key});
+
+  @override
+  State<AnnelingProcess> createState() => _AnnelingProcessState();
+}
+
+class _AnnelingProcessState extends State<AnnelingProcess> {
+  TextEditingController alertDialog3controller = TextEditingController();
+  TextEditingController searchbyplancontroller = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    searchbyplancontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Appcolor.whitecolor,
+      appBar: AppBar(
+        title: Text("Annealing"),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Appcolor.greycolor,
+        actions: [Icon(Icons.date_range_outlined)],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20, top: 20),
+              child: Row(children: [Text("Search plan :")]),
+            ),
+
+            Container(
+              height: 40,
+              width: MediaQuery.of(context).size.width * .9,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Color(0xffF2F4FC),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: TextField(
+                  controller: searchbyplancontroller,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    // disabledBorder: InputBorder.none,
+                    hintText: "search by Batch no/Plan no",
+                    suffixIcon: Container(
+                      width: 60,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(Icons.search),
+                          SizedBox(width: 10),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CoilslitingOpenCamera(),
+                                ),
+                              );
+                            },
+                            child: Icon(Icons.qr_code),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    color: Appcolor.deepPurple,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Plan",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Appcolor.whitecolor,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text("Issue", style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 31,
+                    width: MediaQuery.of(context).size.width * .25,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Appcolor.greycolor),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: Text("Recived", style: TextStyle(fontSize: 18)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            searchbyplancontroller.text.isNotEmpty
+                ? Column(
+                  children: [
+                    ContainerWidgetforAnneling(
+                      textnameforcrm: "Select",
+                      ontap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AnnelingProcess2(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    ContainerWidgetforAnneling(textnameforcrm: "Select"),
+                  ],
+                )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future alertDialog1() async {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            actions: [
+              Container(
+                height: 21,
+                width: MediaQuery.of(context).size.width * .3,
+                color: Appcolor.deepPurple,
+              ),
+            ],
+          ),
+    );
+  }
+}
