@@ -623,7 +623,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Pickling Loss",
+                        "Actual Weight",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

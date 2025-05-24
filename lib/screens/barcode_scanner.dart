@@ -18,11 +18,14 @@ class BarcodeScanner extends StatefulWidget {
 
 class _BarcodeScannerState extends State<BarcodeScanner> {
   String? qrcodedata;
+
+  MobileScannerController scanController = MobileScannerController();
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    qrcodedata = null;
+    scanController.dispose();
+    qrcodedata;
   }
 
   @override
@@ -33,11 +36,11 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
         children: [
           SizedBox(height: MediaQuery.of(context).size.width * .3),
           Text(
-            "Scann QR Code ",
+            "Scan QR Code ",
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           Text("Align the QR code within "),
-          Text(" frame to scann "),
+          Text(" frame to scan "),
 
           SizedBox(height: MediaQuery.of(context).size.width * .3),
           Center(
@@ -48,19 +51,22 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: MobileScanner(
-                // controller: controller,
+                controller: scanController,
                 onDetect: (result) {
-                  print(result.barcodes.first.rawValue);
-                  setState(() {
-                    qrcodedata = result.barcodes.first.rawValue;
-                  });
+                  qrcodedata = result.barcodes.first.rawValue;
+                  if (qrcodedata != null) {
+                    setState(() {
+                      qrcodedata = result.barcodes.first.rawValue;
+                    });
+                    scanController.stop();
+                  }
                 },
               ),
             ),
           ),
           Text(
             "${qrcodedata} ",
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 23),
           Container(

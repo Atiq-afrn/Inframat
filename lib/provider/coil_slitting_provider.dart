@@ -47,12 +47,12 @@ class CoilSlittingProvider extends ChangeNotifier {
     // Inject runtime values into apibody
     apibody["connection_id"] = await AppStorage.getConnectionId();
     apibody["auth_code"] =
-        await AppStorage.gettingAuthId(); // change to 'auth_id' if needed
+        await AppStorage.gettingAuthId(); 
 
     final response = await client.post(
       Uri.parse(ConstApi.coilSlittingApi),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(apibody), // Proper JSON body
+      body: jsonEncode(apibody), 
     );
 
     print('Response: ${response.body}');

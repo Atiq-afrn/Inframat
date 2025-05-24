@@ -27,7 +27,6 @@ class _PunchnowState extends State<Punchnow> {
       bool isLocationServiceEnabled =
           await Geolocator.isLocationServiceEnabled();
       if (!isLocationServiceEnabled) {
-        print("Location services are disabled.");
         // Optionally, prompt the user to enable location services.
         return;
       }
@@ -114,7 +113,7 @@ class _PunchnowState extends State<Punchnow> {
                   ),
                 ),
               )
-              : SizedBox(height: 30),
+              : SizedBox(height: 20),
           IconButton(
             onPressed: () {
               pickedImage();
@@ -129,10 +128,23 @@ class _PunchnowState extends State<Punchnow> {
 
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Facerecognize(operatorImage: selectedImage,)),
-              );
+              if (selectedImage != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            Facerecognize(operatorImage: selectedImage),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.red,
+                    content: Center(child: Text("Please take a photo first")),
+                  ),
+                );
+              }
             },
             child: Container(
               height: 43,

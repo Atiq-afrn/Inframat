@@ -560,6 +560,7 @@ class _ContainerWidgetforTubeMill2State
                           width: MediaQuery.of(context).size.width * .5,
                           color: Appcolor.whitecolor,
                           child: TextField(
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
                               focusedBorder: InputBorder.none,
@@ -653,7 +654,6 @@ class _ContainerWidgetforTubeMill2State
                   ),
                   SizedBox(height: MediaQuery.of(context).size.width * .6),
 
-                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

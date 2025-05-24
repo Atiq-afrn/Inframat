@@ -518,6 +518,7 @@ class _ContainerWidgetforAnneling2State
                           width: MediaQuery.of(context).size.width * .5,
                           color: Appcolor.whitecolor,
                           child: TextField(
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
                               focusedBorder: InputBorder.none,
@@ -572,7 +573,7 @@ class _ContainerWidgetforAnneling2State
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Pickling Loss",
+                        "Actual Weight",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

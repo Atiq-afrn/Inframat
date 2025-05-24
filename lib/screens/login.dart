@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/provider/forget_password_provider.dart';
 import 'package:inframat/provider/login_provider.dart';
 import 'package:inframat/provider/operator_login_provider.dart';
 import 'package:inframat/screens/dashboard.dart';
@@ -91,12 +92,47 @@ class _LoginState extends State<Login> {
                     SizedBox(height: 8),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Provider.of<ForgetpasswordProvider>(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ForgetPassword(),
-                          ),
-                        );
+                          listen: false,
+                        ).getPassword(mobileNoController.text).then((value) {
+                          if (value?.message ==
+                                  "OTP sent to your registered number." &&
+                              mobileNoController.text.toString().length == 10) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ForgetPassword(
+                                      mobileNo: mobileNoController.text,
+                                      otp: value!.otp.toString(),
+                                    ),
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)..showSnackBar(
+                              SnackBar(
+                                backgroundColor: Appcolor.gcol,
+                                content: Text(
+                                  "${value!.message.toString()}, OTP: ${value.otp}",
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  243,
+                                  37,
+                                  37,
+                                ),
+                                content: Center(
+                                  child: Text("Invalid Mobile No"),
+                                ),
+                              ),
+                            );
+                          }
+                        });
                       },
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -130,6 +166,21 @@ class _LoginState extends State<Login> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Dashboard(),
+                                      ),
+                                    );
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: const Color.fromARGB(
+                                          255,
+                                          174,
+                                          230,
+                                          175,
+                                        ),
+                                        content: Center(
+                                          child: Text("Login successful."),
+                                        ),
                                       ),
                                     );
                                   } else {

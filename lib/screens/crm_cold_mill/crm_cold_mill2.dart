@@ -601,7 +601,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Pickling Loss",
+                        "Actual Weight",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

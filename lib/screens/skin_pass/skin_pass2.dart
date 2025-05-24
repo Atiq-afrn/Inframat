@@ -606,7 +606,7 @@ class _ContainerWidgetForSkinPass2State
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Actual Weight",
+                        "Scrap",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -648,7 +648,7 @@ class _ContainerWidgetForSkinPass2State
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Scrap",
+                        "Actual Weight",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

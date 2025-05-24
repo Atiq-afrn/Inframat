@@ -4,10 +4,13 @@ import 'package:inframat/models/contractor_login_model.dart';
 import 'package:inframat/provider/catagory_provider.dart';
 import 'package:inframat/provider/coil_slitting_provider.dart';
 import 'package:inframat/provider/connection_provider.dart';
+import 'package:inframat/provider/forget_password_provider.dart';
 import 'package:inframat/provider/invards_all_details_provider.dart';
 import 'package:inframat/provider/login_provider.dart';
+import 'package:inframat/provider/new_password_provider.dart';
 import 'package:inframat/provider/operator_login_provider.dart';
 import 'package:inframat/provider/operator_logout_provider.dart';
+import 'package:inframat/provider/opt_verify_provider.dart';
 import 'package:inframat/provider/punch_in_provider.dart';
 import 'package:inframat/provider/punch_out_provider.dart';
 import 'package:inframat/provider/qr_scann_provider.dart';
@@ -37,6 +40,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => CatagoryProvider()),
         ChangeNotifierProvider(create: (context) => SubCategoryProvider()),
         ChangeNotifierProvider(create: (context) => CoilSlittingProvider()),
+        ChangeNotifierProvider(create: (context) => ForgetpasswordProvider()),
+        ChangeNotifierProvider(create: (context) => OptVerifyProvider()),
+        ChangeNotifierProvider(create: (context) => NewPasswordProvider()),
       ],
       child: MyApp(),
     ),

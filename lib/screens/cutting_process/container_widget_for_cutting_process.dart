@@ -311,6 +311,7 @@ class _ContainerwidgetforcuttingprocessState
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
                                   focusedBorder: InputBorder.none,
@@ -350,6 +351,7 @@ class _ContainerwidgetforcuttingprocessState
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
                                   focusedBorder: InputBorder.none,
@@ -368,7 +370,7 @@ class _ContainerwidgetforcuttingprocessState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Enter No of Pices",
+                        "Enter No of Pieces",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -389,6 +391,7 @@ class _ContainerwidgetforcuttingprocessState
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                textAlign: TextAlign.center,
                                 controller: pcscontroller,
                                 onChanged: (value) {
                                   setState(() {});

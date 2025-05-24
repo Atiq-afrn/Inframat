@@ -41,6 +41,7 @@ class _Dashboard2State extends State<Dashboard2> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Appcolor.whitecolor,
         drawer: Drawer(
           backgroundColor: Appcolor.deepPurple,
           child: Column(
@@ -154,7 +155,7 @@ class _Dashboard2State extends State<Dashboard2> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(4),
+                          padding:  EdgeInsets.all(MediaQuery.of(context).size.width*.001),
                           child: CircleAvatar(
                             backgroundColor: Appcolor.whitecolor,
                           ),
@@ -164,13 +165,16 @@ class _Dashboard2State extends State<Dashboard2> {
                   ),
                 ),
 
-                IconButton(
-                  onPressed: () {},
-                  icon: IconButton(
+                Expanded(
+                  child: IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.more_vert, color: Colors.white),
+                    icon: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.more_vert, color: Colors.white),
+                    ),
                   ),
                 ),
+
               ],
             ),
           ),

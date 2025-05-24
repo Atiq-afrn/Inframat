@@ -487,6 +487,7 @@ class _ContainerWidgetforpickling2State
                             border: Border.all(color: Appcolor.greycolor),
                           ),
                           child: TextField(
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
                               focusedBorder: InputBorder.none,
@@ -524,6 +525,7 @@ class _ContainerWidgetforpickling2State
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
                                   focusedBorder: InputBorder.none,
@@ -563,6 +565,7 @@ class _ContainerWidgetforpickling2State
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                textAlign: TextAlign.center,
                                 controller: picklinglossecontroller,
                                 onChanged: (value) => setState(() {}),
                                 decoration: InputDecoration(

@@ -1,18 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/otp_verification_model.dart';
+import 'package:inframat/provider/opt_verify_provider.dart';
 import 'package:inframat/screens/new_password.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 
 class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({super.key});
-
+  ForgetPassword({super.key, this.mobileNo, this.otp});
+  final String? mobileNo;
+  final String? otp;
   @override
   State<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // pincode = widget.otp;
+    pinController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    pinController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +57,27 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             pincode != null
                 ? GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Provider.of<OptVerifyProvider>(
                       context,
-                      MaterialPageRoute(builder: (context) => NewPassword()),
-                    );
+                      listen: false,
+                    ).getVerifyOtp(widget.mobileNo!, widget.otp).then((value) {
+                      if (pincode == widget.otp!) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NewPassword(),
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("OTP Verified successfully")),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text("Invalid OTP")));
+                      }
+                    });
                   },
                   child: Container(
                     height: 40,
@@ -99,21 +135,22 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       borderRadius: BorderRadius.circular(20),
     ),
   );
+
   String? pincode;
+  late TextEditingController pinController;
   Widget pinCodeTextField() {
     return Pinput(
+      controller: pinController,
       defaultPinTheme: defaultPinTheme,
-      // focusedPinTheme: focusedPinTheme,
-      // submittedPinTheme: submittedPinTheme,
-      validator: (s) {
-        setState(() {
-          pincode = s;
-        });
-        return s == '2222' ? null : 'Pin is incorrect';
-      },
+      length: 4, // Make sure to match your OTP length
       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
       showCursor: true,
-      onCompleted: (pin) => print(pin),
+      onCompleted: (pin) {
+        setState(() {
+          pincode = pin;
+        });
+        print("Completed PIN: $pin");
+      },
     );
   }
 }

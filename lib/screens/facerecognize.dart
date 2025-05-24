@@ -131,7 +131,7 @@ class _FacerecognizeState extends State<Facerecognize> {
   }
 
   void splashScreen1() async {
-    await Future.delayed(Duration(seconds: 0), () {
+    await Future.delayed(Duration(seconds: 5), () {
       Navigator.pop(context);
       nextAlertDialoge();
     });
@@ -222,6 +222,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                       Flexible(
                         child: Container(
                           height: 62,
+
                           padding: EdgeInsets.symmetric(horizontal: 6),
                           decoration: BoxDecoration(
                             color: Color(0xffFDF4FF),
@@ -247,8 +248,8 @@ class _FacerecognizeState extends State<Facerecognize> {
                                     child: Text(
                                       "Work Station",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13,
+                                       fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -308,13 +309,10 @@ class _FacerecognizeState extends State<Facerecognize> {
                                 ],
                               ),
                               SizedBox(height: 2),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 23),
-                                child: Text(
-                                  "10:00 am to 6 pm",
-                                  style: TextStyle(fontSize: 12),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                              Text(
+                                "10:00 am to 6 pm",
+                                style: TextStyle(fontSize: 12),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
@@ -326,90 +324,94 @@ class _FacerecognizeState extends State<Facerecognize> {
                   SizedBox(height: 5),
                   Row(
                     children: [
-                      Container(
-                        height: 62,
-                        width: MediaQuery.of(context).size.width * .33,
-                        decoration: BoxDecoration(
-                          color: Color(0xffFDF4FF),
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            width: 1,
-                            color: Appcolor.deepPurple,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(AppImages.bi1),
-                                SizedBox(width: 2),
-                                Text(
-                                  "Work Station",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
+                      Flexible(
+                        child: Container(
+                          height: 62,
+                          // width: MediaQuery.of(context).size.width * .30,
+                          decoration: BoxDecoration(
+                            color: Color(0xffFDF4FF),
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              width: 1,
+                              color: Appcolor.deepPurple,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(
-                                "Machine A",
-                                style: TextStyle(fontSize: 13),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Container(
-                        height: 62,
-                        width: MediaQuery.of(context).size.width * .32,
-                        decoration: BoxDecoration(
-                          color: Color(0xffFDF4FF),
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            width: 1,
-                            color: Appcolor.deepPurple,
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SingleChildScrollView(
-                              child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
                                 children: [
-                                  Image.asset(AppImages.bi1),
-                                  SizedBox(width: 2),
+                                  Image.asset(AppImages.bi1,
+                                    width: 18,
+                                    height: 18),
+                                  SizedBox(width: .5),
                                   Text(
-                                    "Shift-A",
+                                    "Work Station",
                                     style: TextStyle(
-                                     fontWeight: FontWeight.w500,
-                                    fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "Machine A",
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Flexible(
+                        child: Container(
+                          height: 62,
+                          //width: MediaQuery.of(context).size.width * .30,
+                          decoration: BoxDecoration(
+                            color: Color(0xffFDF4FF),
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              width: 1,
+                              color: Appcolor.deepPurple,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 0),
-                              child: Text(
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SingleChildScrollView(
+                                child: Row(
+                                  children: [
+                                    Image.asset(AppImages.bi1, width: 18,
+                                    height: 18),
+                                    SizedBox(width: 2),
+                                    Text(
+                                      "Shift-A",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
                                 "10:00 am to 6 pm",
                                 style: TextStyle(fontSize: 13),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "*Note",
+                    "*Notes",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                   ),
                   SizedBox(height: 40),

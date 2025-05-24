@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -6,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/coil_slitting_model.dart';
+import 'package:inframat/models/coil_slitting_model2.dart';
 import 'package:inframat/provider/coil_slitting_provider.dart';
 import 'package:inframat/screens/coil_sliting_screen2.dart';
 import 'package:inframat/screens/coil_slitting_screen.dart';
@@ -334,7 +337,15 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   }
 
   List<File?> selectedImages = [];
+  List<String> base64Images = [];
+  List<CoilSlittingEntry> coilSlittingModel = [];
+
   TextEditingController searchcontroller = TextEditingController();
+  TextEditingController actualWeightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController widthController = TextEditingController();
+  TextEditingController lengthController = TextEditingController();
+  TextEditingController scrapeController = TextEditingController();
   void _showAlertDialog() {
     showDialog(
       context: context,
@@ -453,10 +464,11 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                         return buildItemBlock(
                           index,
                           selectedImages[index],
-                          (newImage) {
+                          (newImage, index) {
                             setState(() => selectedImages[index] = newImage);
                             setDialogState(() {});
                           },
+
                           index == selectedImages.length - 1 &&
                                   selectedImages.length < 3
                               ? () {
@@ -470,10 +482,11 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                         buildItemBlock(
                           0,
                           null,
-                          (newImage) {
-                            setState(() => selectedImages.add(newImage));
+                          (newImage, index) {
+                            setState(() => selectedImages[index] = newImage);
                             setDialogState(() {});
                           },
+
                           () {
                             setState(() => selectedImages.add(null));
                             setDialogState(() {});
@@ -585,7 +598,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                         );
                                       })
                                       .catchError((error) {
-                                        // Handle error here
                                         print("Error: $error");
                                       });
                                   Navigator.push(
@@ -632,7 +644,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   Widget buildItemBlock(
     int index,
     File? selectedImage,
-    Function(File) onImageSelected,
+    Function(File, int index) onImageSelected,
+
     VoidCallback? onAddPressed,
     //  TextEditingController? actualWeightController
   ) {
@@ -644,12 +657,33 @@ class _ContainerWidgetState extends State<ContainerWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              String.fromCharCode(65 + index), // A, B, C...
+              String.fromCharCode(65 + index), // A, B, C
               style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
             ),
             if (onAddPressed != null)
               GestureDetector(
-                onTap: onAddPressed,
+                onTap: () {
+                  onAddPressed();
+
+                  coilSlittingModel.add(
+                    CoilSlittingEntry(
+                      id: index,
+                      materialId: 6,
+                      inwardId: 7,
+                      length: int.tryParse(lengthController.text) ?? 0,
+                      thickness: double.tryParse(widthController.text) ?? 0.0,
+                      weight: int.tryParse(weightController.text) ?? 0,
+                      slitAt: "2025-04-28 10:00:00",
+                      issuedAt: "2025-04-28 10:00:00",
+                      departmentId: 2,
+                      unit: 23,
+                      plant: 23,
+                      image: base64Images[index],
+                      updatedAt: "2025-04-28 10:00:00",
+                      createdAt: "2025-04-28 10:00:00",
+                    ),
+                  );
+                },
                 child: const Icon(Icons.add_circle_outline, size: 25),
               ),
           ],
@@ -666,7 +700,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                // First TextField
                 Expanded(
                   flex: 2,
                   child: Container(
@@ -677,6 +710,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: TextField(
+                      controller: widthController,
                       decoration: const InputDecoration(
                         hintText: "00.00",
                         contentPadding: EdgeInsets.symmetric(
@@ -695,7 +729,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
 
                 const SizedBox(width: 6),
 
-                // Second TextField
                 Expanded(
                   flex: 2,
                   child: Container(
@@ -706,6 +739,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: TextField(
+                      controller: lengthController,
                       decoration: const InputDecoration(
                         hintText: "3.00",
                         contentPadding: EdgeInsets.symmetric(
@@ -737,7 +771,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                 height: 30,
                 width: MediaQuery.of(context).size.width * .5,
                 color: Colors.white,
-                child: const TextField(
+                child: TextField(
+                  controller: weightController,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     hintText: "00.00",
@@ -776,7 +811,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       child: TextField(
                         textAlign: TextAlign.center,
 
-                        // controller: actualWeightController,
+                        controller: actualWeightController,
                         decoration: InputDecoration(
                           hintText: "00.00",
                           border: InputBorder.none,
@@ -799,7 +834,17 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   source: ImageSource.camera,
                 );
                 if (pickedImage != null) {
-                  onImageSelected(File(pickedImage.path));
+                  File imageFile = File(pickedImage.path);
+                  onImageSelected(imageFile, index);
+
+                  final bytes = await imageFile.readAsBytes();
+                  final base64String = base64Encode(bytes);
+
+                  if (index < base64Images.length) {
+                    base64Images[index] = base64String;
+                  } else {
+                    base64Images.add(base64String);
+                  }
                 }
               },
               child: Container(

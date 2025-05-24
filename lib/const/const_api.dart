@@ -24,4 +24,11 @@ class ConstApi {
 
   static const subCatagoryApi =
       "http://inframart.goproject.in/api/inward-subcategory-list";
+
+  static const forgetPasswordApi =
+      "http://inframart.goproject.in/api/forgot-password";
+  static const verifyotp = "http://inframart.goproject.in/api/verify-otp";
+
+  static const reSetPassword =
+      "http://inframart.goproject.in/api/reset-password";
 }

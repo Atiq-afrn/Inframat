@@ -102,6 +102,12 @@ class _DashboardState extends State<Dashboard> {
                       context,
                       MaterialPageRoute(builder: (context) => SplashScreen()),
                     );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Appcolor.deepPurple,
+                        content: Center(child: Text("Logout successful.")),
+                      ),
+                    );
                   } else {
                     print("${await AppStorage.gettingAuthId()}");
                     print("${await AppStorage.getConnectionId()}");
@@ -177,9 +183,11 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * .05),
 
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.more_vert, color: Colors.white),
+                  Expanded(
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.more_vert, color: Colors.white),
+                    ),
                   ),
                 ],
               ),
