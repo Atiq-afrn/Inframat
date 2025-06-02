@@ -149,24 +149,24 @@ class _LoginState extends State<Login> {
                     mobileNoController.text.isNotEmpty
                         ? GestureDetector(
                           onTap: () {
-                            _formKey.currentState!.validate();
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+
+                            final mobile = mobileNoController.text.trim();
+                            final password = passwordController.text;
+
                             Provider.of<OperatorLoginProvider>(
                                   context,
                                   listen: false,
                                 )
-                                .getOperatorLogin(
-                                  mobileNoController.text,
-                                  passwordController.text,
-                                )
+                                .getOperatorLogin(mobile, password)
                                 .then((value) {
-                                  if (value?.authCode != null) {
-                                    AppStorage.storeAuthId(value!.authCode);
-
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Dashboard(),
-                                      ),
+                                  if (value != null &&
+                                      value.authCode != null &&
+                                      value.status == true) {
+                                    AppStorage.storeAuthId(
+                                      value.authCode.toString(),
                                     );
 
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -183,17 +183,46 @@ class _LoginState extends State<Login> {
                                         ),
                                       ),
                                     );
+
+                                    Future.delayed(
+                                      Duration(milliseconds: 300),
+                                      () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Dashboard(),
+                                          ),
+                                        );
+                                      },
+                                    );
                                   } else {
+                                    final errorMessage =
+                                        value?.message?.isNotEmpty == true
+                                            ? value!.message
+                                            : value!.message;
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          "Invalid Mobile No or Password",
+                                          errorMessage,
                                           style: TextStyle(fontSize: 15),
                                         ),
                                         backgroundColor: Colors.red,
+                                        duration: Duration(seconds: 2),
                                       ),
                                     );
                                   }
+                                })
+                                .catchError((e) {
+                                  // Catch any unexpected errors
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "Something went wrong. Please try again.",
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
                                 });
                           },
                           child: Loginbutton(

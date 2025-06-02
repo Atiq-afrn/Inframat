@@ -6,6 +6,7 @@ import 'package:inframat/provider/qr_scann_provider.dart';
 import 'package:inframat/screens/dashboard.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/splash_screen.dart';
+import 'package:inframat/shared_pref/shared_preferance.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,14 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
     super.dispose();
     scanController.dispose();
     qrcodedata;
+  }
+
+  void storeid(String machineid, String plantid, String siteid) async {
+    print(machineid);
+    await AppStorage.storemachineId(machineid);
+    await AppStorage.storeplantId(plantid);
+    await AppStorage.storesiteId(siteid);
+    print("${machineid + plantid + siteid}");
   }
 
   @override
@@ -64,10 +73,15 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
               ),
             ),
           ),
-          Text(
-            "${qrcodedata} ",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
+          qrcodedata != null
+              ? Text(
+                "${qrcodedata}",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              )
+              : Text(
+                "Scan QR code to get  machine name",
+                style: TextStyle(fontSize: 12),
+              ),
           SizedBox(height: 23),
           Container(
             height: 30,
@@ -85,14 +99,24 @@ class _BarcodeScannerState extends State<BarcodeScanner> {
           ),
           SizedBox(height: 20),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               Provider.of<QrScannProvider>(
                 context,
                 listen: false,
               ).getQrcodeData(qrcodedata!).then((value) {
                 if (value != null) {
+                  storeid(
+                    value.machineId.toString(),
+                    value.plantId.toString(),
+                    value.siteId.toString(),
+                  );
                   splashScreen2();
                   rightchecked();
+                  print("87074");
+
+                  print(
+                    "AppStorage.gettingSiteId() ${AppStorage.gettingSiteId().toString()}",
+                  );
                 }
               });
             },

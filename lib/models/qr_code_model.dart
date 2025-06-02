@@ -9,6 +9,7 @@ class QrCodeModel {
   final String siteName;
   final String machineName;
   final String workstationName;
+  final int? workstationId;
   final String message;
 
   QrCodeModel({
@@ -22,6 +23,7 @@ class QrCodeModel {
     required this.siteName,
     required this.machineName,
     required this.workstationName,
+    required this.workstationId,
     required this.message,
   });
 
@@ -37,6 +39,7 @@ class QrCodeModel {
       siteName: json['site_name'],
       machineName: json['machine_name'],
       workstationName: json['workstation_name'],
+      workstationId: json['workstation_id'],
       message: json['message'],
     );
   }
@@ -53,6 +56,7 @@ class QrCodeModel {
       'site_name': siteName,
       'machine_name': machineName,
       'workstation_name': workstationName,
+      'workstation_id': workstationId,
       'message': message,
     };
   }

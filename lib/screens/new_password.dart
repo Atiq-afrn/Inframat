@@ -121,29 +121,48 @@ class _NewPasswordState extends State<NewPassword> {
               GestureDetector(
                 onTap: () {
                   if (_formkey.currentState!.validate()) {
+                    // Check if passwords match
+                    if (_newPasswordController.text !=
+                        _confirmPasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Appcolor.red,
+                          content: Center(
+                            child: Text(
+                              "Passwords do not match",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      // If everything is okay, proceed
+                      Provider.of<NewPasswordProvider>(context, listen: false)
+                          .gettingNewPassword(
+                            _newPasswordController.text,
+                            _confirmPasswordController.text,
+                          )
+                          .then((value) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Login()),
+                            );
+                          });
+                    }
+                  } else {
+                    // Show validation error
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Appcolor.red,
                         content: Center(
                           child: Text(
-                            "please enter the password field",
+                            "Please fill in all required fields",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                     );
                   }
-                  Provider.of<NewPasswordProvider>(context, listen: false)
-                      .gettingNewPassword(
-                        _newPasswordController.text,
-                        _confirmPasswordController.text,
-                      )
-                      .then((value) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Login()),
-                        );
-                      });
                 },
                 child: Container(
                   height: 40,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/coil_slitting_response_model.dart';
 
 import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:inframat/screens/dashboard.dart';
@@ -9,7 +10,10 @@ import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/issue.dart';
 
 class CoilSlitingScreen2 extends StatefulWidget {
-  const CoilSlitingScreen2({super.key});
+  CoilSlitingScreen2({super.key, this.batchNo1, this.batchNo2, this.batchNo3});
+  final CoilSlittingEntry? batchNo1;
+  final CoilSlittingEntry? batchNo2;
+  final CoilSlittingEntry? batchNo3;
 
   @override
   State<CoilSlitingScreen2> createState() => _CoilSlitingScreen2State();
@@ -204,10 +208,18 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-                Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-                Text("7.50", style: TextStyle(fontSize: 12)),
-                Text("13.450"),
+                Text(
+                  widget.batchNo1?.batchNo ?? "Server issue",
+                  style: const TextStyle(fontSize: 12),
+                ),
+                Text(
+                  "${widget.batchNo1?.length} MM x\n ${widget.batchNo1?.width} MM\n x CR-2 x SAIL",
+                ),
+                Text(
+                  widget.batchNo1?.weight.toString() ?? "null",
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(widget.batchNo1?.expectedWeight.toString() ?? "null"),
                 GestureDetector(
                   onTap: () {
                     openDialoge4();
@@ -233,10 +245,18 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-                Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-                Text("7.056", style: TextStyle(fontSize: 12)),
-                Text("13.450"),
+                Text(
+                  widget.batchNo2?.batchNo ?? " server issue",
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(
+                  "${widget.batchNo2?.length} MM x\n ${widget.batchNo2?.width} MM\n x CR-2 x SAIL",
+                ),
+                Text(
+                  widget.batchNo2?.weight.toString() ?? "null",
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(widget.batchNo2?.expectedWeight.toString() ?? "null"),
 
                 GestureDetector(
                   onTap: () {
@@ -264,10 +284,18 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-                Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-                Text("7.056", style: TextStyle(fontSize: 12)),
-                Text("13.450"),
+                Text(
+                  widget.batchNo3?.batchNo ?? "server issue",
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(
+                  "${widget.batchNo3?.length} MM x\n ${widget.batchNo1?.width} MM\n x CR-2 x SAIL",
+                ),
+                Text(
+                  widget.batchNo3?.expectedWeight.toString() ?? "null",
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(widget.batchNo3?.weight.toString() ?? "null"),
                 GestureDetector(
                   onTap: () {
                     openDialoge4();

@@ -1,60 +1,59 @@
 class OperatorLoginModel {
+  final bool status;
   final String message;
-  final Operator operator;
-  final String authCode;
+  final OperatorData? operator;
+  final String? authCode;
 
   OperatorLoginModel({
+    required this.status,
     required this.message,
-    required this.operator,
-    required this.authCode,
+    this.operator,
+    this.authCode,
   });
 
   factory OperatorLoginModel.fromJson(Map<String, dynamic> json) {
     return OperatorLoginModel(
-      message: json['message'],
-      operator: Operator.fromJson(json['operator']),
+      status: json['status'] ?? false,
+      message: json['message'] ?? '',
+      operator: json['operator'] != null
+          ? OperatorData.fromJson(json['operator'])
+          : null,
       authCode: json['auth_code'],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'message': message,
-        'operator': operator.toJson(),
-        'auth_code': authCode,
-      };
 }
 
-class Operator {
-  final int id;
-  final String name;
-  final String mobile;
-  final int mobileVerified;
-  final String email;
+class OperatorData {
+  final int? id;
+  final String? name;
+  final String? mobile;
+  final int? mobileVerified;
+  final String? email;
   final String? emailVerifiedAt;
-  final int role;
-  final int status;
-  final String state;
-  final String city;
-  final int pincode;
-  final String address;
-  final String religion;
-  final String nationality;
-  final String citizenship;
-  final String dob;
-  final String gender;
-  final String maritialStatus;
-  final String bloodGroup;
+  final int? role;
+  final int? status;
+  final String? state;
+  final String? city;
+  final int? pincode;
+  final String? address;
+  final String? religion;
+  final String? nationality;
+  final String? citizenship;
+  final String? dob;
+  final String? gender;
+  final String? maritialStatus;
+  final String? bloodGroup;
   final String? image;
-  final dynamic userId;
+  final int? userId;
   final String? emergencyName;
   final String? emergencyNumber;
-  final String createdAt;
-  final String updatedAt;
+  final String? createdAt;
+  final String? updatedAt;
   final String? deletedAt;
   final String? fcmToken;
-  final dynamic plantId;
-  final dynamic unitId;
-  final dynamic functionalAreaId;
+  final int? plantId;
+  final int? unitId;
+  final int? functionalAreaId;
   final String? responsibility;
   final String? shift;
   final String? version;
@@ -64,32 +63,32 @@ class Operator {
   final String? employeeCode;
   final String? adhar;
 
-  Operator({
-    required this.id,
-    required this.name,
-    required this.mobile,
-    required this.mobileVerified,
-    required this.email,
+  OperatorData({
+    this.id,
+    this.name,
+    this.mobile,
+    this.mobileVerified,
+    this.email,
     this.emailVerifiedAt,
-    required this.role,
-    required this.status,
-    required this.state,
-    required this.city,
-    required this.pincode,
-    required this.address,
-    required this.religion,
-    required this.nationality,
-    required this.citizenship,
-    required this.dob,
-    required this.gender,
-    required this.maritialStatus,
-    required this.bloodGroup,
+    this.role,
+    this.status,
+    this.state,
+    this.city,
+    this.pincode,
+    this.address,
+    this.religion,
+    this.nationality,
+    this.citizenship,
+    this.dob,
+    this.gender,
+    this.maritialStatus,
+    this.bloodGroup,
     this.image,
     this.userId,
     this.emergencyName,
     this.emergencyNumber,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
     this.deletedAt,
     this.fcmToken,
     this.plantId,
@@ -105,8 +104,8 @@ class Operator {
     this.adhar,
   });
 
-  factory Operator.fromJson(Map<String, dynamic> json) {
-    return Operator(
+  factory OperatorData.fromJson(Map<String, dynamic> json) {
+    return OperatorData(
       id: json['id'],
       name: json['name'],
       mobile: json['mobile'],
@@ -147,45 +146,4 @@ class Operator {
       adhar: json['adhar'],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'mobile': mobile,
-        'mobile_verified': mobileVerified,
-        'email': email,
-        'email_verified_at': emailVerifiedAt,
-        'role': role,
-        'status': status,
-        'state': state,
-        'city': city,
-        'pincode': pincode,
-        'address': address,
-        'religion': religion,
-        'nationality': nationality,
-        'citizenship': citizenship,
-        'dob': dob,
-        'gender': gender,
-        'maritial_status': maritialStatus,
-        'blood_group': bloodGroup,
-        'image': image,
-        'user_id': userId,
-        'emergency_name': emergencyName,
-        'emergency_number': emergencyNumber,
-        'created_at': createdAt,
-        'updated_at': updatedAt,
-        'deleted_at': deletedAt,
-        'fcm_token': fcmToken,
-        'plant_id': plantId,
-        'unit_id': unitId,
-        'functional_area_id': functionalAreaId,
-        'responsibility': responsibility,
-        'shift': shift,
-        'version': version,
-        'designation': designation,
-        'doj': doj,
-        'device_code': deviceCode,
-        'employee_code': employeeCode,
-        'adhar': adhar,
-      };
 }

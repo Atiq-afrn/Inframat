@@ -19,8 +19,8 @@ class NewPasswordProvider extends ChangeNotifier {
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "mobile_no": "8707435104",
-        "new_password": newPassword,
-        "confirm_password": confirmPassword,
+        "password": newPassword,
+        "password_confirmation": confirmPassword,
       },
     );
     print(response.body);

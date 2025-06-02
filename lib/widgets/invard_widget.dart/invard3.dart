@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/models/invard_model2.dart';
 import 'package:inframat/provider/invards_all_details_provider.dart';
+import 'package:inframat/screens/vendors_search_list.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 import 'package:inframat/widgets/invard_widget.dart/invard4.dart';
 import 'package:inframat/widgets/invard_widget.dart/custome_textfield.dart';
 import 'package:inframat/widgets/invard_widget.dart/gate_entry.dart';
 import 'package:inframat/widgets/invard_widget.dart/invard_file_upload.dart';
 import 'package:inframat/widgets/invard_widget.dart/next_container.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 class Invard3 extends StatefulWidget {
@@ -27,7 +29,15 @@ class _Invard3State extends State<Invard3> {
   TextEditingController poNoController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
   TextEditingController vendorsTicketNo = TextEditingController();
+  TextEditingController vendorsNameController1 = TextEditingController();
   String? invoiceImageBase64 = "";
+  String? pieces = "";
+  String? inwardId;
+  Future<String?> getinwardId() async {
+    inwardId = await AppStorage.gettinginwardId();
+    return inwardId;
+  }
+
   getvalue() {
     print("${widget.invardAllPageValue!.netWeight} netwight");
     print("${widget.invardAllPageValue!.catagory}");
@@ -42,10 +52,14 @@ class _Invard3State extends State<Invard3> {
     print("${widget.invardAllPageValue!.gooodsPhotoBase64}");
   }
 
+  // List<String> vendorsList = ["Atiq", "abhishek", "John Doe"];
+  // List<String> filteredVendorsList = [];
+  // FocusNode focusNode = FocusNode();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getvalue();
   }
 
@@ -56,7 +70,7 @@ class _Invard3State extends State<Invard3> {
       appBar: AppBar(
         elevation: 5,
         shadowColor: Colors.grey.withValues(alpha: .5),
-        title: Text("Invard Good 3"),
+        title: Text("Inward Good 3"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -87,8 +101,22 @@ class _Invard3State extends State<Invard3> {
                         padding: const EdgeInsets.only(left: 10),
                         child: Text("Vendor Name"),
                       ),
+
                       SizedBox(height: 8),
-                      CustomeTextfield(texthint: "Enter Vendor name"),
+                      // CustomeTextfield(
+                      //   texthint: "Enter Vendor name",
+                      //   suffixIconName: Icon(Icons.search),
+                      // ),
+                      VendorsSearchDropdown(
+                        onVendorSelected: (vendorId, vendorName) {
+                          setState(() {
+                            vendorsNameController.text = vendorName;
+                            widget.invardAllPageValue!.vendorsName = vendorName;
+                          });
+
+                          print("Selected Vendor ID: $vendorId");
+                        },
+                      ),
                       SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
@@ -219,19 +247,26 @@ class _Invard3State extends State<Invard3> {
                           Provider.of<InvardsAllDetailsProvider>(
                             context,
                             listen: false,
-                          ).getInertInvardsDetails(invardModel3).then((value) {
-                            AppStorage.storeInwardId(
-                              value!.inwardId.toString(),
-                            );
+                          ).getInertInvardsDetails(invardModel3).then((
+                            value,
+                          ) async {
                             if (value?.status == "success") {
+                              _storeInward(value!.inwardId.toString());
+
+                              pieces = value.pieces.toString();
                               print("data inserted successfully");
+                              print(
+                                " inward id ==${value.inwardId.toString()}",
+                              );
                             } else {
                               print("error");
                             }
                           });
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Invard4()),
+                            MaterialPageRoute(
+                              builder: (context) => Invard4(pieces: pieces),
+                            ),
                           );
                         },
                         child: Center(
@@ -244,6 +279,15 @@ class _Invard3State extends State<Invard3> {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [const SizedBox(height: 8)],
+          ),
         ),
       ),
     );
@@ -260,5 +304,10 @@ class _Invard3State extends State<Invard3> {
         dateController.text = pickedDate.toString().split(" ")[0];
       });
     }
+  }
+
+  void _storeInward(String string) async {
+    print("009 $string");
+    await AppStorage.storeInwardId(string);
   }
 }

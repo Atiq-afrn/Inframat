@@ -10,6 +10,7 @@ class CustomeTextfield extends StatelessWidget {
   });
   final String texthint;
   final Widget? iconname;
+
   TextEditingController? customTextcontroller = TextEditingController();
 
   @override
@@ -32,7 +33,6 @@ class CustomeTextfield extends StatelessWidget {
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 suffixIcon: iconname,
-
                 hintText: texthint,
                 hintStyle: TextStyle(color: Appcolor.greycolor),
               ),

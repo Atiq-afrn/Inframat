@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/const/imageconst.dart';
@@ -8,8 +10,10 @@ import 'package:inframat/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 class Facerecognize extends StatefulWidget {
-  Facerecognize({super.key, this.operatorImage});
-  dynamic operatorImage;
+  Facerecognize({super.key, this.operatorImage, this.lat, this.log});
+  File? operatorImage;
+  String? lat;
+  String? log;
   @override
   State<Facerecognize> createState() => _FacerecognizeState();
 }
@@ -69,7 +73,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: FileImage(widget.operatorImage),
+                    image: FileImage(widget.operatorImage!),
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -89,13 +93,17 @@ class _FacerecognizeState extends State<Facerecognize> {
 
             GestureDetector(
               onTap: () {
-                Provider.of<PunchInProvider>(
-                  context,
-                  listen: false,
-                ).getOperatorPunchIn().then((value) {
-                  openAlertDialoge();
-                  splashScreen1();
-                });
+                Provider.of<PunchInProvider>(context, listen: false)
+                    .getOperatorPunchIn(
+                      widget.operatorImage!.toString(),
+                      widget.lat,
+                      widget.log,
+                    )
+                    .then((value) {
+                      openAlertDialoge();
+
+                      splashScreen1();
+                    });
               },
               child: Container(
                 height: 43,
@@ -130,8 +138,8 @@ class _FacerecognizeState extends State<Facerecognize> {
     );
   }
 
-  void splashScreen1() async {
-    await Future.delayed(Duration(seconds: 5), () {
+  void splashScreen1() {
+    Future.delayed(Duration(seconds: 5), () {
       Navigator.pop(context);
       nextAlertDialoge();
     });
@@ -154,7 +162,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                 children: [
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * .17,
-                    backgroundImage: AssetImage(AppImages.punchinimage),
+                    backgroundImage: FileImage(widget.operatorImage!),
                   ),
                   Text(
                     "shivansh Sharma",
@@ -173,7 +181,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                       Text(
                         "Punch in at  09:00 am  |  09 Apr 2024",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -188,7 +196,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                       Text(
                         "1/5 Sec-A Omax City, Sharda Nagar ,",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -196,7 +204,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                   ),
                   Text(
                     " Extention,Lucknow, Uttar Pradesh, 226002, India",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -240,16 +248,16 @@ class _FacerecognizeState extends State<Facerecognize> {
                                 children: [
                                   Image.asset(
                                     AppImages.bi1,
-                                    width: 18,
-                                    height: 18,
+                                    width: 30,
+                                    height: 30,
                                   ),
                                   SizedBox(width: 5),
                                   Expanded(
                                     child: Text(
-                                      "Work Station",
+                                      "Plant ",
                                       style: TextStyle(
-                                       fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -261,7 +269,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 23),
                                 child: Text(
-                                  "Machine A",
+                                  "Inframat pvt.ltd",
                                   style: TextStyle(fontSize: 12),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -291,15 +299,15 @@ class _FacerecognizeState extends State<Facerecognize> {
                                 children: [
                                   Image.asset(
                                     AppImages.bi1,
-                                    width: 18,
-                                    height: 18,
+                                    width: 30,
+                                    height: 30,
                                   ),
                                   SizedBox(width: 5),
                                   Expanded(
                                     child: Text(
-                                      "Shift-A",
+                                      "Site",
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -309,10 +317,15 @@ class _FacerecognizeState extends State<Facerecognize> {
                                 ],
                               ),
                               SizedBox(height: 2),
-                              Text(
-                                "10:00 am to 6 pm",
-                                style: TextStyle(fontSize: 12),
-                                overflow: TextOverflow.ellipsis,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                ),
+                                child: Text(
+                                  " Unit 1",
+                                  style: TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
@@ -342,14 +355,16 @@ class _FacerecognizeState extends State<Facerecognize> {
                             children: [
                               Row(
                                 children: [
-                                  Image.asset(AppImages.bi1,
-                                    width: 18,
-                                    height: 18),
-                                  SizedBox(width: .5),
+                                  Image.asset(
+                                    AppImages.bi1,
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                  SizedBox(width: 1),
                                   Text(
                                     "Work Station",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -386,8 +401,11 @@ class _FacerecognizeState extends State<Facerecognize> {
                               SingleChildScrollView(
                                 child: Row(
                                   children: [
-                                    Image.asset(AppImages.bi1, width: 18,
-                                    height: 18),
+                                    Image.asset(
+                                      AppImages.bi1,
+                                      width: 30,
+                                      height: 30,
+                                    ),
                                     SizedBox(width: 2),
                                     Text(
                                       "Shift-A",

@@ -2,66 +2,43 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:inframat/const/const_api.dart';
 import 'package:inframat/logger.dart';
-import 'package:inframat/models/coil_slitting_model.dart';
+import 'package:inframat/models/coil_slitting_body_model.dart';
+
+import 'package:inframat/models/coil_slitting_response_model.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 
 class CoilSlittingProvider extends ChangeNotifier {
-  CoilSlittingModel? _coilSlittingModel;
-  CoilSlittingModel? get coilSlitingdata => _coilSlittingModel;
+  CoilSlittingResponseModel? _coilSlittingModel;
+  CoilSlittingResponseModel? get coilSlitingdata => _coilSlittingModel;
 
   final client = LoggingHttpClient();
 
   // Base body with static data
-  final Map<String, dynamic> apibody = {
-    "data": [
-      {
-        "material_id": 123,
-        "inward_id": 456,
-        "length": 1500,
-        "thickness": 2.5,
-        "weight": 1000,
-        "slit_at": "2025-04-28 10:00:00",
-        "issued_at": "2025-04-28 12:00:00",
-        "unit_id": 1,
-        "plant_id": 2,
-        "department_id": 3,
-        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...",
-      },
-      {
-        "material_id": 124,
-        "inward_id": 457,
-        "length": 1600,
-        "thickness": 3.0,
-        "weight": 1100,
-        "slit_at": "2025-04-28 14:00:00",
-        "issued_at": "2025-04-28 15:00:00",
-        "unit_id": 1,
-        "plant_id": 2,
-        "department_id": 3,
-        "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD...",
-      },
-    ],
-  };
+  final Map<String, dynamic> apibody = {};
 
-  Future<CoilSlittingModel?> gettingCoilSlitting() async {
-    // Inject runtime values into apibody
+  Future<CoilSlittingResponseModel?> gettingCoilSlitting(
+    List<CoilSlittingBodyModel> coilSlittingModellist,
+    String scrapWeight,
+  ) async {
     apibody["connection_id"] = await AppStorage.getConnectionId();
-    apibody["auth_code"] =
-        await AppStorage.gettingAuthId(); 
+    apibody["auth_code"] = await AppStorage.gettingAuthId();
+    apibody["scrap_weight"] = scrapWeight;
+
+    apibody["data"] = coilSlittingModellist;
 
     final response = await client.post(
       Uri.parse(ConstApi.coilSlittingApi),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(apibody), 
+      body: jsonEncode(apibody),
     );
 
     print('Response: ${response.body}');
 
     if (response.statusCode == 200) {
-      _coilSlittingModel = CoilSlittingModel.fromJson(
+      _coilSlittingModel = CoilSlittingResponseModel.fromJson(
         jsonDecode(response.body),
       );
-      print("coil slitting data: ${_coilSlittingModel?.data}");
+      print("coil slitting data: ${_coilSlittingModel?.toJson()}");
     } else {
       print("Request failed with status: ${response.statusCode}");
     }

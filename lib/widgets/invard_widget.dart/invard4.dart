@@ -11,8 +11,8 @@ import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:provider/provider.dart';
 
 class Invard4 extends StatefulWidget {
-  const Invard4({super.key});
-
+  const Invard4({super.key, this.pieces});
+  final String? pieces;
   @override
   State<Invard4> createState() => _Invard4State();
 }
@@ -25,6 +25,12 @@ class _Invard4State extends State<Invard4> {
 
   List<File> myDocs = [];
   List<String> myBase64images = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.pieces;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +110,12 @@ class _Invard4State extends State<Invard4> {
                 ),
               ],
             ),
+
             SizedBox(height: MediaQuery.of(context).size.height * .1),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(children: [Text("pices: ${widget.pieces}")]),
+            ),
             Container(
               height: 500,
               width: MediaQuery.of(context).size.width * .9,
@@ -137,7 +148,8 @@ class _Invard4State extends State<Invard4> {
                           child: Row(
                             children: [
                               Text(
-                                "${myDocs.length}",
+                                "  Pieces ${widget.pieces} ",
+                                //{myDocs.length}
                                 style: TextStyle(fontSize: 18),
                               ),
                               Spacer(),
@@ -275,45 +287,46 @@ class _Invard4State extends State<Invard4> {
               ),
             ),
             SizedBox(height: 20),
-            GestureDetector(
-              onTap: () async {
-                await Provider.of<QualityCheckProvider>(
-                  context,
-                  listen: false,
-                ).gettingQualityCheck(myBase64images).then((value) {
-                  if (value!.status == "success") {
-                    print("images added");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => CoilSlittingScreen(modelData: value),
-                      ),
-                    );
-                  }
-                });
-              },
-              child: Container(
-                height: 40,
-                width: MediaQuery.of(context).size.width * .9,
-                decoration: BoxDecoration(
-                  color: Appcolor.deepPurple,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    "Next",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Appcolor.whitecolor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+
             SizedBox(height: 20),
           ],
+        ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        onTap: () async {
+          await Provider.of<QualityCheckProvider>(
+            context,
+            listen: false,
+          ).gettingQualityCheck(myBase64images).then((value) {
+            print("value is ${value}");
+            if (value!.status == "success") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CoilSlittingScreen()),
+              );
+              print("images added");
+            } else {
+              print("navigation failed");
+            }
+          });
+        },
+        child: Container(
+          height: 40,
+          width: MediaQuery.of(context).size.width * .9,
+          decoration: BoxDecoration(
+            color: Appcolor.deepPurple,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              "Next",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Appcolor.whitecolor,
+              ),
+            ),
+          ),
         ),
       ),
     );

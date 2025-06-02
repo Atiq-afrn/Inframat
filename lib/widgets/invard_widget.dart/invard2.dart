@@ -58,7 +58,7 @@ class _Invard2State extends State<Invard2> {
       appBar: AppBar(
         elevation: 4,
         shadowColor: Colors.grey.withValues(alpha: .6),
-        title: Text("Invard Goods 2"),
+        title: Text("Inward Goods 2"),
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -1,19 +1,20 @@
 import 'dart:convert';
-import 'dart:ffi';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
-import 'package:inframat/const/imageconst.dart';
-import 'package:inframat/models/coil_slitting_model.dart';
-import 'package:inframat/models/coil_slitting_model2.dart';
+
+import 'package:inframat/models/coil_slitting_body_model.dart';
+
 import 'package:inframat/provider/coil_slitting_provider.dart';
 import 'package:inframat/screens/coil_sliting_screen2.dart';
-import 'package:inframat/screens/coil_slitting_screen.dart';
+
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:inframat/shared_pref/shared_preferance.dart';
+
 import 'package:provider/provider.dart';
 
 class CoilslittingIssueScreen extends StatefulWidget {
@@ -43,6 +44,8 @@ class _CoilslittingIssueScreenState extends State<CoilslittingIssueScreen> {
     searchbyplancontroller.dispose();
     super.dispose();
   }
+
+  String? base64String;
 
   @override
   Widget build(BuildContext context) {
@@ -336,9 +339,31 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     );
   }
 
+  String? base64String;
   List<File?> selectedImages = [];
   List<String> base64Images = [];
-  List<CoilSlittingEntry> coilSlittingModel = [];
+  List<CoilSlittingBodyModel> coilSlittingModellist = [];
+  // CoilSlittingBodyModel coilSlittingModel = CoilSlittingBodyModel(
+  //   inwardId: 0,
+  //   machineId: 23,
+  //   length: ,
+  //   width: 0,
+  //   thickness: 0.0,
+  //   weight: 0.0,
+  //   scrapWeight: 0.0,
+  //   image: '',
+  // );
+  String? inwardId;
+  String? machineId;
+  Future<String?> gettingInvardid() async {
+    return inwardId = await AppStorage.gettinginwardId();
+  }
+
+  Future<String?> gettingMachineId() async {
+    machineId = await AppStorage.gettingMachineId();
+    print(machineId);
+    return machineId;
+  }
 
   TextEditingController searchcontroller = TextEditingController();
   TextEditingController actualWeightController = TextEditingController();
@@ -413,35 +438,40 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                               ),
                             ),
                           ),
-                          Container(
-                            height: 27,
-                            width: MediaQuery.of(context).size.width * .18,
-                            decoration: BoxDecoration(
-                              color: Appcolor.gcol,
-                              borderRadius: BorderRadius.circular(17),
-                              border: Border.all(
-                                color: Appcolor.greycolor,
-                                width: 1,
+                          GestureDetector(
+                            onTap: () {
+                              timeStopalertDialoge(context);
+                            },
+                            child: Container(
+                              height: 27,
+                              width: MediaQuery.of(context).size.width * .18,
+                              decoration: BoxDecoration(
+                                color: Appcolor.gcol,
+                                borderRadius: BorderRadius.circular(17),
+                                border: Border.all(
+                                  color: Appcolor.greycolor,
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Icon(
-                                    Icons.pause,
-                                    color: Appcolor.whitecolor,
-                                    size: 15,
-                                  ),
-                                  Text(
-                                    "Pause",
-                                    style: TextStyle(
-                                      fontSize: 10,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Icon(
+                                      Icons.pause,
                                       color: Appcolor.whitecolor,
+                                      size: 15,
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      "Pause",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Appcolor.whitecolor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -517,7 +547,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                               height: 30,
                               width: MediaQuery.of(context).size.width * .5,
                               color: Colors.white,
-                              child: const TextField(
+                              child: TextField(
+                                controller: scrapeController,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
@@ -557,7 +588,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                             ),
                           ),
 
-                          searchcontroller.text.isNotEmpty
+                          scrapeController.text.isEmpty
                               ? GestureDetector(
                                 onTap: () {},
                                 child: Container(
@@ -565,7 +596,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                   width: MediaQuery.of(context).size.width * .3,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Appcolor.deepPurple,
+                                    color: Appcolor.greycolor,
                                   ),
                                   child: Center(
                                     child: Text(
@@ -586,14 +617,21 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                         context,
                                         listen: false,
                                       )
-                                      .gettingCoilSlitting()
+                                      .gettingCoilSlitting(
+                                        coilSlittingModellist,
+                                        scrapeController.text,
+                                      )
                                       .then((value) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder:
-                                                (context) =>
-                                                    CoilSlitingScreen2(),
+                                                (context) => CoilSlitingScreen2(
+                                                  batchNo1: value?.data[0],
+
+                                                  batchNo2: value?.data[1],
+                                                  batchNo3: value?.data[3],
+                                                ),
                                           ),
                                         );
                                       })
@@ -613,7 +651,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                   width: MediaQuery.of(context).size.width * .3,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Appcolor.greycolor,
+                                    color: Appcolor.deepPurple,
                                   ),
                                   child: Center(
                                     child: Text(
@@ -647,7 +685,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     Function(File, int index) onImageSelected,
 
     VoidCallback? onAddPressed,
-    //  TextEditingController? actualWeightController
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -662,27 +699,24 @@ class _ContainerWidgetState extends State<ContainerWidget> {
             ),
             if (onAddPressed != null)
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   onAddPressed();
+                  CoilSlittingBodyModel newEntry = CoilSlittingBodyModel(
+                    inwardId: (await gettingInvardid() ?? " default id"),
+                    machineId: (await gettingMachineId()) ?? 'default_id',
+                    length: lengthController.text,
+                    expectedWeight: actualWeightController.text,
+                    width: "",
+                    thickness: widthController.text,
+                    weight: weightController.text,
 
-                  coilSlittingModel.add(
-                    CoilSlittingEntry(
-                      id: index,
-                      materialId: 6,
-                      inwardId: 7,
-                      length: int.tryParse(lengthController.text) ?? 0,
-                      thickness: double.tryParse(widthController.text) ?? 0.0,
-                      weight: int.tryParse(weightController.text) ?? 0,
-                      slitAt: "2025-04-28 10:00:00",
-                      issuedAt: "2025-04-28 10:00:00",
-                      departmentId: 2,
-                      unit: 23,
-                      plant: 23,
-                      image: base64Images[index],
-                      updatedAt: "2025-04-28 10:00:00",
-                      createdAt: "2025-04-28 10:00:00",
-                    ),
+                    image: "asfdjsadgfs",
+                    //base64String!,
                   );
+
+                  coilSlittingModellist.add(newEntry);
+
+                  print(newEntry.length);
                 },
                 child: const Icon(Icons.add_circle_outline, size: 25),
               ),
@@ -838,12 +872,12 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   onImageSelected(imageFile, index);
 
                   final bytes = await imageFile.readAsBytes();
-                  final base64String = base64Encode(bytes);
+                  base64String = base64Encode(bytes);
 
                   if (index < base64Images.length) {
-                    base64Images[index] = base64String;
+                    base64Images[index] = base64String!;
                   } else {
-                    base64Images.add(base64String);
+                    base64Images.add(base64String!);
                   }
                 }
               },
@@ -875,6 +909,64 @@ class _ContainerWidgetState extends State<ContainerWidget> {
             ),
         const Divider(thickness: 1),
       ],
+    );
+  }
+
+  String? selectedValue;
+  List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
+  void timeStopalertDialoge(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        return Dialog(
+          backgroundColor: Appcolor.whitecolor,
+          insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            width: screenWidth * 0.9,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Paused", style: TextStyle(fontSize: 12)),
+                SizedBox(height: 16),
+                Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Appcolor.lightgrey2, // Replace with your color
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: selectedValue,
+                      hint: Text("Select an option"),
+                      icon: Icon(Icons.arrow_drop_down),
+                      items:
+                          dropdownItems.map((String item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedValue = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

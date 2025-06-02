@@ -21,6 +21,7 @@ class Punchnow extends StatefulWidget {
 class _PunchnowState extends State<Punchnow> {
   dynamic selectedImage;
   bool isLocationServiceEnabled = false;
+  Position? currentPosition;
   Future<void> getUserLocation() async {
     try {
       // Check if location services are enabled
@@ -47,16 +48,16 @@ class _PunchnowState extends State<Punchnow> {
         return;
       }
 
-      Position currentPosition = await Geolocator.getCurrentPosition(
+      currentPosition = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
 
       // Store location if valid
-      AppStorage.storeLat(currentPosition.latitude.toString());
-      AppStorage.storeLong(currentPosition.longitude.toString());
+      AppStorage.storeLat(currentPosition!.latitude.toString());
+      AppStorage.storeLong(currentPosition!.longitude.toString());
 
       print(
-        "Location retrieved: ${currentPosition.latitude}, ${currentPosition.longitude}",
+        "Location retrieved: ${currentPosition!.latitude}, ${currentPosition!.longitude}",
       );
     } catch (e) {
       print("Failed to get location: $e");
@@ -133,8 +134,11 @@ class _PunchnowState extends State<Punchnow> {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) =>
-                            Facerecognize(operatorImage: selectedImage),
+                        (context) => Facerecognize(
+                          operatorImage: selectedImage,
+                          lat: currentPosition!.latitude.toString(),
+                          log: currentPosition!.longitude.toString(),
+                        ),
                   ),
                 );
               } else {

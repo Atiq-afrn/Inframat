@@ -83,7 +83,7 @@ class _PunchoutState extends State<Punchout> {
 
           GestureDetector(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder:

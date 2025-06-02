@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/screens/coil_slitting_screen.dart';
+import 'package:inframat/models/pickling_plane_listing_model.dart';
+import 'package:inframat/provider/picling_plan_list_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/coilslitting_issue_screen.dart';
-import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:provider/provider.dart';
 
 class PiicklingProcess extends StatefulWidget {
   const PiicklingProcess({super.key});
@@ -17,9 +17,24 @@ class PiicklingProcessState extends State<PiicklingProcess> {
   TextEditingController searchWithbatchcontroller = TextEditingController();
   @override
   void dispose() {
-    // TODO: implement dispose
     searchWithbatchcontroller.dispose();
     super.dispose();
+  }
+
+  List<PicklingData> picklingPlanList = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<PicklingPlanProvider>(
+      context,
+      listen: false,
+    ).gettingPicklingPlanList().then((values) {
+      if (values!.status == "success") {
+        picklingPlanList.clear();
+        picklingPlanList.addAll(values.data);
+      }
+    });
   }
 
   @override
@@ -49,7 +64,7 @@ class PiicklingProcessState extends State<PiicklingProcess> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Row(children: [Text("Search plane :")]),
+              child: Row(children: [Text("Search plan :")]),
             ),
 
             Container(
@@ -70,7 +85,7 @@ class PiicklingProcessState extends State<PiicklingProcess> {
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     // disabledBorder: InputBorder.none,
-                    hintText: "Search by Batch No Plane no",
+                    hintText: "Search by Batch No Plan no",
                     suffixIcon: Container(
                       width: 60,
                       child: Row(
@@ -150,14 +165,28 @@ class PiicklingProcessState extends State<PiicklingProcess> {
             ),
 
             searchWithbatchcontroller.text.isNotEmpty
-                ? Column(
-                  children: [
-                    SizedBox(height: 20),
+                ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: picklingPlanList.length,
+                  itemBuilder: (BuildContext, index) {
+                    return Column(
+                      children: [
+                        SizedBox(height: 20),
 
-                    ContainerWidgetforpickling(textnameforpickling: "Select"),
-                    SizedBox(height: 20),
-                    ContainerWidgetforpickling(textnameforpickling: "Select"),
-                  ],
+                        ContainerWidgetforpickling(
+                          textnameforpickling: "Select",
+                          batchNo: picklingPlanList[index].batchNo,
+                          supplierIdno:
+                              picklingPlanList[index].inwardId.toString(),
+                          size: picklingPlanList[index].length.toString(),
+                          weight: picklingPlanList[index].weight,
+                          planNo: picklingPlanList[index].id.toString(),
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    );
+                  },
                 )
                 : Container(),
           ],

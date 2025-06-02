@@ -53,6 +53,7 @@ class AppStorage {
     final remuser = await SharedPreferences.getInstance();
     remuser.remove("auth_code");
     remuser.remove("connection_id");
+    remuser.clear();
 
     return true;
   }
@@ -106,9 +107,9 @@ class AppStorage {
     return pref.getString("image");
   }
 
-  static Future<void> storeInwardId(String id) async {
+  static storeInwardId(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('inward_id', id);
+    prefs.setString('inward_id', id);
   }
 
   static Future<String?> gettinginwardId() async {
@@ -124,5 +125,37 @@ class AppStorage {
   static Future<String?> gettingCategoryId() async {
     final pref = await SharedPreferences.getInstance();
     return pref.getString("id");
+  }
+
+  // id store and get methods for plant, machine, and site
+  static storeplantId(String id) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.setString("plant_id", id);
+  }
+
+  static Future<String?> gettingPlantId() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.getString("plant_id");
+  }
+
+  static storemachineId(String id) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.setString("machine_id", id);
+  }
+
+  static Future<String?> gettingMachineId() async {
+    final pref = await SharedPreferences.getInstance();
+    print("${pref.getString("machine_id")}");
+    return pref.getString("machine_id");
+  }
+
+  static storesiteId(String id) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.setString("site_id", id);
+  }
+
+  static Future<String?> gettingSiteId() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.getString("site_id");
   }
 }

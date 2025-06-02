@@ -89,32 +89,43 @@ class _DashboardState extends State<Dashboard> {
                   style: TextStyle(color: Appcolor.whitecolor, fontSize: 20),
                 ),
                 onTap: () async {
-                  final value =
-                      await Provider.of<OperatorLogOutProvider>(
-                        context,
-                        listen: false,
-                      ).getoperatorLogout();
+                  final logoutProvider = Provider.of<OperatorLogOutProvider>(
+                    context,
+                    listen: false,
+                  );
+
+                  final value = await logoutProvider.getoperatorLogout();
 
                   if (value != null && value.status == "success") {
                     await AppStorage.remAuthcode();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Appcolor.deepPurple,
+                        content: Center(child: Text("Logout successful.")),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+
+                    await Future.delayed(Duration(milliseconds: 500));
+
+                    if (!context.mounted) return;
 
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SplashScreen()),
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Appcolor.deepPurple,
-                        content: Center(child: Text("Logout successful.")),
-                      ),
-                    );
                   } else {
-                    print("${await AppStorage.gettingAuthId()}");
-                    print("${await AppStorage.getConnectionId()}");
+                    print("AuthCode: ${await AppStorage.gettingAuthId()}");
+                    print(
+                      "ConnectionID: ${await AppStorage.getConnectionId()}",
+                    );
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text("Logout failed. Please try again."),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 2),
                       ),
                     );
                   }

@@ -25,7 +25,9 @@ class QualityCheckProvider extends ChangeNotifier {
       }),
     );
 
-    print(response.body);
+    print("Api response=${response.body}");
+    print(response.statusCode);
+
     if (response.statusCode == 200) {
       _checkModel = QualityCheckModel.fromJson(jsonDecode(response.body));
       print("success");

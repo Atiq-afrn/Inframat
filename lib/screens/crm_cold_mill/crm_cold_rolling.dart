@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/crm_plan_listing_responsemodel.dart';
+import 'package:inframat/provider/crm_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:provider/provider.dart';
 
 class Crmcoldmill extends StatefulWidget {
   const Crmcoldmill({super.key});
@@ -19,6 +22,21 @@ class CrmcoldmillState extends State<Crmcoldmill> {
     // TODO: implement dispose
     searchWithbatchcontroller.dispose();
     super.dispose();
+  }
+
+  List<ColdRollMillingData> crmPlanelist = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<CrmProvider>(context, listen: false).gettingPlanListcrm().then((
+      value,
+    ) {
+      if (value!.status == "success") {
+        crmPlanelist.clear();
+        crmPlanelist.addAll(value.data);
+      }
+    });
   }
 
   @override
@@ -149,18 +167,32 @@ class CrmcoldmillState extends State<Crmcoldmill> {
             ),
 
             searchWithbatchcontroller.text.isNotEmpty
-                ? Column(
-                  children: [
-                    SizedBox(height: 20),
+                ? ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: crmPlanelist.length,
+                  itemBuilder: (Context, index) {
+                    return Column(
+                      children: [
+                        Containerwidgetforcrm(
+                          textnameforcrm: "Select",
+                          batchNo: "${crmPlanelist[index].batchNo.toString()}",
 
-                    Containerwidgetforcrm(textnameforcrm: "Select"),
-                    SizedBox(height: 20),
-                    Containerwidgetforcrm(textnameforcrm: "Select"),
-                    SizedBox(height: 20),
-                    Containerwidgetforcrm(textnameforcrm: "Select"),
-                  ],
+                          supplierID: "${crmPlanelist[index].id.toString()}",
+                          size: "${crmPlanelist[index].length.toString()}",
+                          width: "${crmPlanelist[index].width}",
+                          weight:
+                              "${crmPlanelist[index].actualWeight.toString()}",
+                              
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    );
+                  },
                 )
-                : Container(),
+                : Container(child: Center(child: CircularProgressIndicator())),
+
+            SizedBox(height: 20),
           ],
         ),
       ),

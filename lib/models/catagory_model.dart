@@ -14,17 +14,14 @@ class CatagoryModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'data': data.map((x) => x.toJson()).toList(),
-    };
+    return {'success': success, 'data': data.map((x) => x.toJson()).toList()};
   }
 }
 
 class CategoryData {
   final int id;
   final String name;
-  final int status;
+  final dynamic status;
 
   CategoryData({required this.id, required this.name, required this.status});
 
@@ -37,10 +34,6 @@ class CategoryData {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'status': status,
-    };
+    return {'id': id, 'name': name, 'status': status};
   }
 }

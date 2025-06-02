@@ -3,8 +3,21 @@ import 'package:inframat/const/Color.dart';
 import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
 
 class ContainerWidgetforpickling extends StatefulWidget {
-  const ContainerWidgetforpickling({super.key, this.textnameforpickling});
+  const ContainerWidgetforpickling({
+    super.key,
+    this.textnameforpickling,
+    this.batchNo,
+    this.planNo,
+    this.size,
+    this.supplierIdno,
+    this.weight,
+  });
   final String? textnameforpickling;
+  final String? batchNo;
+  final String? supplierIdno;
+  final String? size;
+  final String? weight;
+  final String? planNo;
 
   @override
   State<ContainerWidgetforpickling> createState() =>
@@ -41,10 +54,13 @@ class _ContainerWidgetforpicklingState
             child: Row(
               children: [
                 Text(
-                  "Batch no  : ",
+                  "Batch no ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo!,
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -58,8 +74,8 @@ class _ContainerWidgetforpicklingState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
-                  style: TextStyle(color: Appcolor.greycolor),
+                  widget.supplierIdno!,
+                  style: TextStyle(color: Appcolor.greycolor, fontSize: 10),
                 ),
               ],
             ),
@@ -73,10 +89,7 @@ class _ContainerWidgetforpicklingState
                   "Size :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
-                  style: TextStyle(color: Appcolor.greycolor),
-                ),
+                Text(widget.size!, style: TextStyle(color: Appcolor.greycolor)),
               ],
             ),
           ),
@@ -89,7 +102,10 @@ class _ContainerWidgetforpicklingState
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.weight!,
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -102,7 +118,10 @@ class _ContainerWidgetforpicklingState
                   "Plan no :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.planNo!,
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -138,7 +157,15 @@ class _ContainerWidgetforpicklingState
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PiicklingProcess2()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => PiicklingProcess2(
+                        batchNo: widget.batchNo,
+                        size: widget.size,
+                        supplierIdno: widget.supplierIdno,
+                        weight: widget.weight,
+                      ),
+                ),
               );
             },
             child: Padding(
@@ -165,316 +192,6 @@ class _ContainerWidgetforpicklingState
           ),
         ],
       ),
-    );
-  }
-
-  Future alertDialog1() async {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: Appcolor.whitecolor,
-            actions: [
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    height: 27,
-                    width: MediaQuery.of(context).size.width * .18,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Appcolor.greycolor, width: 1),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Started 9 P.M",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 27,
-                    width: MediaQuery.of(context).size.width * .18,
-                    decoration: BoxDecoration(
-                      color: Appcolor.lightpurple,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Appcolor.lightpurple, width: 1),
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            "00:30 :55",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Appcolor.whitecolor,
-                            ),
-                          ),
-                          Icon(
-                            Icons.watch_later_outlined,
-                            color: Appcolor.whitecolor,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 27,
-                    width: MediaQuery.of(context).size.width * .18,
-                    decoration: BoxDecoration(
-                      color: Appcolor.gcol,
-                      borderRadius: BorderRadius.circular(17),
-                      border: Border.all(color: Appcolor.greycolor, width: 1),
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Icon(
-                            Icons.pause,
-                            color: Appcolor.whitecolor,
-                            size: 15,
-                          ),
-                          Text(
-                            "Pause",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Appcolor.whitecolor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(
-                    "ADD New IM pickiling No",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-
-              Container(
-                height: 43,
-                width: double.infinity,
-                color: Appcolor.lightgrey,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      height: 30,
-
-                      width: MediaQuery.of(context).size.width * .11,
-
-                      decoration: BoxDecoration(
-                        color: Appcolor.whitecolor,
-                        border: Border.all(color: Appcolor.greycolor),
-                      ),
-                      child: Center(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "00.00",
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Text("MM x"),
-                    Container(
-                      height: 30,
-
-                      width: MediaQuery.of(context).size.width * .11,
-
-                      decoration: BoxDecoration(
-                        color: Appcolor.whitecolor,
-                        border: Border.all(color: Appcolor.greycolor),
-                      ),
-                      child: Center(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: "3.300",
-
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    Text("MMX CR-2 x SAIL"),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                height: 43,
-                width: double.infinity,
-                color: Appcolor.lightgrey,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                  children: [
-                    Container(
-                      height: 30,
-                      width: MediaQuery.of(context).size.width * .5,
-                      color: Appcolor.whitecolor,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "00.00",
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    Text("MT"),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Actual Weight",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width * .37,
-                    color: Appcolor.lightgrey2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width * .17,
-                          color: Appcolor.whitecolor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text("(in MT)"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Pickling Loss",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width * .37,
-                    color: Appcolor.lightgrey2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width * .17,
-                          color: Appcolor.whitecolor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text("(in MT)"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Container(
-                height: 140,
-                width: MediaQuery.of(context).size.width * .8,
-                color: Appcolor.lightgrey2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.camera_alt_outlined),
-                    SizedBox(width: 6),
-                    Text("Take Pickture"),
-                  ],
-                ),
-              ),
-              SizedBox(height: 120),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width * .3,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Appcolor.red,
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Appcolor.whitecolor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Container(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width * .3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Appcolor.greycolor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-
-                          color: Appcolor.whitecolor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
     );
   }
 }

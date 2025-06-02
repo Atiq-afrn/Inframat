@@ -28,7 +28,7 @@ class QrScannProvider extends ChangeNotifier {
       print("error 000");
     }
 
-    ChangeNotifier();
+    notifyListeners();
     return _qrCodeModel;
   }
 }

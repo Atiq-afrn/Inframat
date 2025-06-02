@@ -1,16 +1,34 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/provider/crm_process_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/crm_cold_mill/crm_cold_mill3.dart';
 
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:provider/provider.dart';
 
 class Crmcoldmill2 extends StatefulWidget {
-  const Crmcoldmill2({super.key});
+  const Crmcoldmill2({
+    super.key,
+    this.textnameforcrm,
+    this.batchno,
+    this.supplieridNO,
+    this.size,
+    this.width,
+    this.actualWeight,
+  });
+
+  final String? textnameforcrm;
+  final String? batchno;
+  final String? supplieridNO;
+  final String? size;
+  final String? width;
+  final String? actualWeight;
 
   @override
   State<Crmcoldmill2> createState() => Crmcoldmill2State();
@@ -154,7 +172,14 @@ class Crmcoldmill2State extends State<Crmcoldmill2> {
               children: [
                 SizedBox(height: 20),
 
-                Containerwidgetforcrm2(textnameforcrm: "Proceed"),
+                Containerwidgetforcrm2(
+                  textnameforcrm: "Proceed",
+                  batchno: widget.batchno,
+                  supplieridNO: widget.supplieridNO,
+                  size: widget.size,
+                  width: widget.width,
+                  actualWeight: widget.actualWeight,
+                ),
                 SizedBox(height: 20),
               ],
             ),
@@ -166,8 +191,21 @@ class Crmcoldmill2State extends State<Crmcoldmill2> {
 }
 
 class Containerwidgetforcrm2 extends StatefulWidget {
-  const Containerwidgetforcrm2({super.key, this.textnameforcrm});
+  const Containerwidgetforcrm2({
+    super.key,
+    this.textnameforcrm,
+    this.batchno,
+    this.supplieridNO,
+    this.size,
+    this.width,
+    this.actualWeight,
+  });
   final String? textnameforcrm;
+  final String? batchno;
+  final String? supplieridNO;
+  final String? size;
+  final String? width;
+  final String? actualWeight;
 
   @override
   State<Containerwidgetforcrm2> createState() => _ContainerwidgetforcrmState();
@@ -175,8 +213,8 @@ class Containerwidgetforcrm2 extends StatefulWidget {
 
 class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
   dynamic selectedImage;
+  dynamic base64image;
 
-  TextEditingController picklinglossecontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -208,7 +246,10 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchno.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -222,83 +263,54 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.supplieridNO.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
             ),
           ),
 
-          SizedBox(height: 10),
-          Container(
-            height: 43,
-            width: double.infinity,
-            color: Appcolor.lightgrey,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  height: 30,
-
-                  width: MediaQuery.of(context).size.width * .11,
-
-                  decoration: BoxDecoration(
-                    color: Appcolor.whitecolor,
-                    border: Border.all(color: Appcolor.greycolor),
-                  ),
-                  child: Center(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "00.00",
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                Text("MM x"),
-                Container(
-                  height: 30,
-
-                  width: MediaQuery.of(context).size.width * .11,
-
-                  decoration: BoxDecoration(
-                    color: Appcolor.whitecolor,
-                    border: Border.all(color: Appcolor.greycolor),
-                  ),
-                  child: Center(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "3.300",
-
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-
-                Text("MMX CR-2 x SAIL"),
-              ],
-            ),
-          ),
           SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Row(
-              children: [
-                Text(
-                  "Size :",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                ),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              height: 43,
+              width: double.infinity,
+              color: Appcolor.lightgrey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    height: 30,
 
-                Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
-                  style: TextStyle(color: Appcolor.greycolor),
-                ),
-              ],
+                    width: MediaQuery.of(context).size.width * .11,
+
+                    decoration: BoxDecoration(
+                      color: Appcolor.whitecolor,
+                      border: Border.all(color: Appcolor.greycolor),
+                    ),
+                    child: Center(child: Text(widget.size.toString())),
+                  ),
+                  Text("MM x"),
+                  Container(
+                    height: 30,
+
+                    width: MediaQuery.of(context).size.width * .11,
+
+                    decoration: BoxDecoration(
+                      color: Appcolor.whitecolor,
+                      border: Border.all(color: Appcolor.greycolor),
+                    ),
+                    child: Center(child: Text(widget.width.toString())),
+                  ),
+
+                  Text("MMX CR-2 x SAIL"),
+                ],
+              ),
             ),
           ),
+          SizedBox(height: 10),
+
           SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.only(left: 20),
@@ -308,7 +320,10 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.actualWeight.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -372,6 +387,11 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
     );
   }
 
+  TextEditingController lenghtController = TextEditingController();
+  TextEditingController widthController = TextEditingController();
+  TextEditingController mtcontroller = TextEditingController();
+  TextEditingController scrapController = TextEditingController();
+  TextEditingController actualWeightController = TextEditingController();
   Future alertDialog1() async {
     showDialog(
       context: context,
@@ -498,6 +518,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                           ),
                           child: Center(
                             child: TextField(
+                              controller: lenghtController,
                               decoration: InputDecoration(
                                 hintText: "00.00",
                                 focusedBorder: InputBorder.none,
@@ -518,6 +539,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                           ),
                           child: Center(
                             child: TextField(
+                              controller: widthController,
                               decoration: InputDecoration(
                                 hintText: "3.300",
 
@@ -546,6 +568,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                           width: MediaQuery.of(context).size.width * .5,
                           color: Appcolor.whitecolor,
                           child: TextField(
+                            controller: mtcontroller,
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
@@ -583,6 +606,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: TextField(
+                                  controller: scrapController,
                                   decoration: InputDecoration(
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
@@ -621,7 +645,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: TextField(
-                                  controller: picklinglossecontroller,
+                                  controller: actualWeightController,
                                   onChanged: (value) => setState(() {}),
                                   decoration: InputDecoration(
                                     focusedBorder: InputBorder.none,
@@ -648,6 +672,8 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                         setState(() {
                           selectedImage = imagepath;
                         });
+                        final bytes = await imagepath.readAsBytes();
+                        base64image = base64Encode(bytes);
                       }
                     },
                     child:
@@ -700,9 +726,25 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                         ),
                       ),
 
-                      picklinglossecontroller != null
+                      actualWeightController.text.isNotEmpty
                           ? GestureDetector(
                             onTap: () {
+                              Provider.of<CrmProcessProvider>(
+                                    context,
+                                    listen: false,
+                                  )
+                                  .gettingCrmProcess(
+                                    lenghtController.text.toString(),
+                                    widthController.text.toString(),
+                                    mtcontroller.text,
+                                    scrapController.text.toString(),
+                                    actualWeightController.text.toString(),
+                                    base64image,
+                                    widget.batchno!,
+                                  )
+                                  .then((value) {
+                                    print(value);
+                                  });
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

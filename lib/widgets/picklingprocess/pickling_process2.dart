@@ -1,14 +1,30 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/pickling_process_response_model.dart';
+import 'package:inframat/provider/pickling_process_provider.dart';
 
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/widgets/picklingprocess/pickling_process3.dart';
+import 'package:provider/provider.dart';
 
 class PiicklingProcess2 extends StatefulWidget {
-  const PiicklingProcess2({super.key});
+  const PiicklingProcess2({
+    super.key,
+    this.batchNo,
+    this.size,
+    this.supplierIdno,
+    this.weight,
+  });
+  final String? batchNo;
+  final String? supplierIdno;
+  final String? size;
+  final String? weight;
 
   @override
   State<PiicklingProcess2> createState() => PiicklingProcess2State();
@@ -51,7 +67,7 @@ class PiicklingProcess2State extends State<PiicklingProcess2> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Row(children: [Text("Search plane :")]),
+              child: Row(children: [Text("Search plan :")]),
             ),
 
             Container(
@@ -72,7 +88,7 @@ class PiicklingProcess2State extends State<PiicklingProcess2> {
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     // disabledBorder: InputBorder.none,
-                    hintText: "Search by Batch No Plane no",
+                    hintText: "Search by Batch No Plan no",
                     suffixIcon: Container(
                       width: 60,
                       child: Row(
@@ -148,7 +164,13 @@ class PiicklingProcess2State extends State<PiicklingProcess2> {
             Column(
               children: [
                 SizedBox(height: 20),
-                ContainerWidgetforpickling2(textnameforpickling: "Proceed"),
+                ContainerWidgetforpickling2(
+                  batchNo: widget.batchNo,
+                  supplierIdno: widget.supplierIdno,
+                  size: widget.size,
+                  weight: widget.weight,
+                  textnameforpickling: "Proceed",
+                ),
               ],
             ),
           ],
@@ -159,8 +181,20 @@ class PiicklingProcess2State extends State<PiicklingProcess2> {
 }
 
 class ContainerWidgetforpickling2 extends StatefulWidget {
-  const ContainerWidgetforpickling2({super.key, this.textnameforpickling});
+  const ContainerWidgetforpickling2({
+    super.key,
+    this.textnameforpickling,
+    this.batchNo,
+    this.size,
+    this.supplierIdno,
+    this.weight,
+  });
   final String? textnameforpickling;
+
+  final String? batchNo;
+  final String? supplierIdno;
+  final String? size;
+  final String? weight;
 
   @override
   State<ContainerWidgetforpickling2> createState() =>
@@ -169,7 +203,15 @@ class ContainerWidgetforpickling2 extends StatefulWidget {
 
 class _ContainerWidgetforpickling2State
     extends State<ContainerWidgetforpickling2> {
+  TextEditingController lengthcontroller = TextEditingController();
+  TextEditingController widthcontroller = TextEditingController();
+  TextEditingController weightcontroller = TextEditingController();
+  TextEditingController actualweightcontroller = TextEditingController();
+  TextEditingController picklingLossweightcontroller = TextEditingController();
+
   dynamic selectedImage;
+  File? imagepath;
+  PicklingProcessResponseModel? responsedata;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -201,7 +243,10 @@ class _ContainerWidgetforpickling2State
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -215,8 +260,8 @@ class _ContainerWidgetforpickling2State
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
-                  style: TextStyle(color: Appcolor.greycolor),
+                  widget.supplierIdno.toString(),
+                  style: TextStyle(color: Appcolor.greycolor, fontSize: 10),
                 ),
               ],
             ),
@@ -231,7 +276,7 @@ class _ContainerWidgetforpickling2State
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  widget.size.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -246,7 +291,10 @@ class _ContainerWidgetforpickling2State
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.weight.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -408,9 +456,9 @@ class _ContainerWidgetforpickling2State
                   Row(
                     children: [
                       Text(
-                        "ADD New IM pickiling No",
+                        "Add New IM pickiling No",
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -436,6 +484,8 @@ class _ContainerWidgetforpickling2State
                           ),
                           child: Center(
                             child: TextField(
+                              keyboardType: TextInputType.numberWithOptions(),
+                              controller: lengthcontroller,
                               decoration: InputDecoration(
                                 hintText: "00.00",
                                 focusedBorder: InputBorder.none,
@@ -456,6 +506,8 @@ class _ContainerWidgetforpickling2State
                           ),
                           child: Center(
                             child: TextField(
+                              keyboardType: TextInputType.numberWithOptions(),
+                              controller: widthcontroller,
                               decoration: InputDecoration(
                                 hintText: "3.300",
 
@@ -487,6 +539,8 @@ class _ContainerWidgetforpickling2State
                             border: Border.all(color: Appcolor.greycolor),
                           ),
                           child: TextField(
+                            keyboardType: TextInputType.numberWithOptions(),
+                            controller: weightcontroller,
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
@@ -525,6 +579,8 @@ class _ContainerWidgetforpickling2State
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(),
+                                controller: actualweightcontroller,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
@@ -565,6 +621,7 @@ class _ContainerWidgetforpickling2State
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(),
                                 textAlign: TextAlign.center,
                                 controller: picklinglossecontroller,
                                 onChanged: (value) => setState(() {}),
@@ -589,13 +646,12 @@ class _ContainerWidgetforpickling2State
                         source: ImageSource.camera,
                       );
                       if (pickedImage != null) {
-                        File imagepath = File(pickedImage.path);
-                        if (mounted) {
-                          setState(() {
-                            selectedImage = imagepath;
-                            print(selectedImage.toString());
-                          });
-                        }
+                        imagepath = File(pickedImage.path);
+                        final readbyte = await imagepath!.readAsBytes();
+                        final base64 = base64Encode(readbyte);
+                        setState(() {
+                          selectedImage = base64;
+                        });
                       }
                     },
                     child:
@@ -603,7 +659,7 @@ class _ContainerWidgetforpickling2State
                             ? Container(
                               height: 50,
                               width: 50,
-                              child: Center(child: Image.file(selectedImage)),
+                              child: Center(child: Image.file(imagepath!)),
                             )
                             : Container(
                               height: 140,
@@ -649,13 +705,41 @@ class _ContainerWidgetforpickling2State
                         ),
                       ),
                       //selectedImage
-                      picklinglossecontroller != null
+                      picklinglossecontroller.text.isNotEmpty
                           ? GestureDetector(
                             onTap: () {
+                              Provider.of<PicklingProcessProvider>(
+                                    context,
+                                    listen: false,
+                                  )
+                                  .gettingPicklingProcess(
+                                    widget.batchNo.toString(),
+                                    actualweightcontroller.text,
+                                    picklinglossecontroller.text,
+                                    selectedImage,
+                                    lengthcontroller.text,
+                                    widthcontroller.text,
+                                  )
+                                  .then((value) {
+                                    if (value != null) {
+                                      responsedata = value;
+                                    }
+                                  });
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Picklingprocess3(),
+                                  builder:
+                                      (context) => Picklingprocess3(
+                                        batchNo: responsedata?.data.batchNo,
+                                        length:
+                                            responsedata?.data.length
+                                                .toString(),
+                                        width:
+                                            responsedata?.data.actualWeight
+                                                .toString(),
+                                        picklingLoss:
+                                            responsedata?.data.id.toString(),
+                                      ),
                                 ),
                               );
                             },

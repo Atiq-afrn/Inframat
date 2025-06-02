@@ -155,7 +155,9 @@ class _Dashboard2State extends State<Dashboard2> {
                           ),
                         ),
                         Padding(
-                          padding:  EdgeInsets.all(MediaQuery.of(context).size.width*.001),
+                          padding: EdgeInsets.all(
+                            MediaQuery.of(context).size.width * .001,
+                          ),
                           child: CircleAvatar(
                             backgroundColor: Appcolor.whitecolor,
                           ),
@@ -174,7 +176,6 @@ class _Dashboard2State extends State<Dashboard2> {
                     ),
                   ),
                 ),
-
               ],
             ),
           ),

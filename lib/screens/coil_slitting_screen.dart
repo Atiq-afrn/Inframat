@@ -3,19 +3,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:inframat/const/color.dart';
-import 'package:inframat/const/imageconst.dart';
-import 'package:inframat/models/quality_check_model.dart';
-import 'package:inframat/screens/coil_sliting_screen2.dart';
+import 'package:inframat/models/coilslitting_search_plan.dart';
+
+import 'package:inframat/provider/coilslitting_plan_seaarch_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/coilslitting_issue_screen.dart';
+
 import 'package:inframat/widgets/container_widget_for_coilslitting.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CoilSlittingScreen extends StatefulWidget {
-  const CoilSlittingScreen({super.key, this.modelData});
-  final QualityCheckModel? modelData;
+  const CoilSlittingScreen({super.key});
 
   @override
   State<CoilSlittingScreen> createState() => _CoilSlittingScreenState();
@@ -29,6 +30,40 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
     // TODO: implement dispose
     searchbyplancontroller.dispose();
     super.dispose();
+  }
+
+  List<CoilSlittingPlanData> filteredItems = [];
+
+  List<CoilSlittingPlanData> planListing = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    filteredItems = planListing;
+    Provider.of<CoilslittingPlanSeaarchProvider>(
+      context,
+      listen: false,
+    ).gettingcoilSlittingPlanDataList().then((value) {
+      if (value?.status == "success") {
+        planListing.clear();
+        print(value?.data.length ?? []);
+        planListing.addAll(value!.data);
+        print("datafetched");
+      } else {
+        print("network error");
+      }
+    });
+  }
+
+  void filterList(String query) {
+    final lowerQuery = query.toLowerCase();
+    setState(() {
+      filteredItems =
+          planListing.where((plan) {
+            return plan.batchNo.toLowerCase().contains(lowerQuery);
+          }).toList();
+    });
   }
 
   @override
@@ -61,9 +96,7 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
                 padding: EdgeInsets.only(left: 10),
                 child: TextField(
                   controller: searchbyplancontroller,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
+                  onChanged: (value) => filterList(value),
                   decoration: InputDecoration(
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
@@ -144,74 +177,61 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
               ],
             ),
             SizedBox(height: 20),
-            searchbyplancontroller.text.isNotEmpty
-                ? Column(
-                  children: [
-                    SizedBox(height: 20),
-                    ContainerWidgetforall(
-                      textname: "Select",
-                      supplyerIdNo:
-                          widget.modelData?.data.id.toString() != null
-                              ? widget.modelData!.data.id.toString()
-                              : "No Data found",
-                      size:
-                          widget.modelData?.data.loadedWeight.toString() != null
-                              ? widget.modelData!.data.loadedWeight.toString()
-                              : "No Data found",
-                      weight:
-                          widget.modelData?.data.emptyWeight != null
-                              ? widget.modelData!.data.emptyWeight.toString()
-                              : "No Data found",
+            planListing.isEmpty
+                ? Shimmer.fromColors(
+                  baseColor: Appcolor.lightgrey,
+                  highlightColor: Appcolor.greycolor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: planListing.length,
+                      itemBuilder: (BuildContext, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: ContainerWidgetforall(
+                            textname: "Select",
+                            supplyerIdNo:
+                                planListing[index].vendorId.toString().isEmpty
+                                    ? "no plan found"
+                                    : planListing[index].vendorId.toString(),
 
-                      batchNo:
-                          widget.modelData?.data.coilWeight.toString() != null
-                              ? widget.modelData!.data.coilWeight.toString()
-                              : "No Data found",
-                    ),
-                    SizedBox(height: 20),
+                            size: planListing[index].expectedLength.toString(),
+                            weight: planListing[index].expectedWeight,
 
-                    ContainerWidgetforall(
-                      supplyerIdNo:
-                          widget.modelData?.data.id.toString() != null
-                              ? widget.modelData!.data.id.toString()
-                              : "No Data found",
-                      size:
-                          widget.modelData?.data.loadedWeight.toString() != null
-                              ? widget.modelData!.data.loadedWeight.toString()
-                              : "No Data found",
-                      weight:
-                          widget.modelData?.data.emptyWeight != null
-                              ? widget.modelData!.data.emptyWeight.toString()
-                              : "No Data found",
-                      textname: "Select",
-                      batchNo:
-                          widget.modelData?.data.materialId.toString() != null
-                              ? widget.modelData!.data.materialId.toString()
-                              : "No Data found",
+                            batchNo: planListing[index].batchNo,
+                          ),
+                        );
+                      },
                     ),
-                    SizedBox(height: 20),
-                    ContainerWidgetforall(
-                      supplyerIdNo:
-                          widget.modelData?.data.id.toString() != null
-                              ? widget.modelData!.data.id.toString()
-                              : "No Data found",
-                      size:
-                          widget.modelData?.data.loadedWeight.toString() != null
-                              ? widget.modelData!.data.loadedWeight.toString()
-                              : "No Data found",
-                      weight:
-                          widget.modelData?.data.emptyWeight != null
-                              ? widget.modelData!.data.emptyWeight.toString()
-                              : "No Data found",
-                      textname: "Select",
-                      batchNo:
-                          widget.modelData?.data.materialId.toString() != null
-                              ? widget.modelData!.data.materialId.toString()
-                              : "No Data found",
-                    ),
-                  ],
+                  ),
                 )
-                : Container(),
+                : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: planListing.length,
+                    itemBuilder: (BuildContext, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: ContainerWidgetforall(
+                          textname: "Select",
+                          supplyerIdNo:
+                              planListing[index].vendorId.toString().isEmpty
+                                  ? "no plan found"
+                                  : planListing[index].vendorId.toString(),
+
+                          size: planListing[index].expectedLength.toString(),
+                          weight: planListing[index].expectedWeight,
+
+                          batchNo: planListing[index].batchNo,
+                        ),
+                      );
+                    },
+                  ),
+                ),
           ],
         ),
       ),

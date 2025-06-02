@@ -1,34 +1,39 @@
 class ConstApi {
-  static const getconnectionApi =
-      "http://inframart.goproject.in/api/getconnection";
-  static const operatorLogin =
-      "http://inframart.goproject.in/api/login-operator";
-  static const operatorLogoutapi =
-      "http://inframart.goproject.in/api/logout-operator?=null";
-  static const operatorPunchIn = "http://inframart.goproject.in/api/punch_in";
+  static const baseApiUrl = "http://inframart.goproject.in/api";
+  static const getconnectionApi = "$baseApiUrl/getconnection";
+  static const operatorLogin = "$baseApiUrl/login-operator";
+  static const operatorLogoutapi = "$baseApiUrl/logout-operator?=null";
+  static const operatorPunchIn = "$baseApiUrl/punch_in";
 
-  static const punchOutOperator = "http://inframart.goproject.in/api/punch_out";
+  static const punchOutOperator = "$baseApiUrl/punch_out";
 
-  static const invardDetailsApi =
-      "http://inframart.goproject.in/api/inward-store-allDetails";
+  static const invardDetailsApi = "$baseApiUrl/store_inwards";
 
-  static const qualitycheckApi =
-      "http://inframart.goproject.in/api/qualityCheck";
+  static const qualitycheckApi = "$baseApiUrl/qualityCheck";
 
-  static const qrCodeapi = "http://inframart.goproject.in/api/qr_scan_store";
+  static const qrCodeapi = "$baseApiUrl/qr_scan_store";
 
-  static const coilSlittingApi =
-      "http://inframart.goproject.in/api/coil-slitting";
-  static const catagoryApi =
-      "http://inframart.goproject.in/api/inward-category-list";
+  static const coilSlittingApi = "$baseApiUrl/coilSlitting";
+  static const catagoryApi = "$baseApiUrl/inward_type_list";
 
-  static const subCatagoryApi =
-      "http://inframart.goproject.in/api/inward-subcategory-list";
+  static const subCatagoryApi = "$baseApiUrl/inward_category_list";
 
-  static const forgetPasswordApi =
-      "http://inframart.goproject.in/api/forgot-password";
-  static const verifyotp = "http://inframart.goproject.in/api/verify-otp";
+  static const forgetPasswordApi = "$baseApiUrl/forgot-password";
+  static const verifyotp = "$baseApiUrl/verify-otp";
 
-  static const reSetPassword =
-      "http://inframart.goproject.in/api/reset-password";
+  static const reSetPassword = "$baseApiUrl/reset-password";
+
+  static const vendorsListApi = "$baseApiUrl/vendor_list";
+
+  static const coilslittingPlanSearchapi = "$baseApiUrl/searchCoilSlittingPlan";
+
+  static const piklingPlanlistApi = "$baseApiUrl/pickling_plan_list";
+
+  static const picklingProcessApi = "$baseApiUrl/pickling";
+  static const crmplanListingApi = "$baseApiUrl/crm_plan_list";
+
+  static const  crmProcessingApi="$baseApiUrl/cold_rolling_mill";
 }
+
+
+

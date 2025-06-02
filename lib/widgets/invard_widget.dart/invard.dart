@@ -171,45 +171,44 @@ class _InvardState extends State<Invard> {
     );
   }
 
- Future<void> datepicker() async {
-  // Pick a date
-  DateTime? pickedDate = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime(2101),
-  );
-
-  if (pickedDate != null) {
-    // Pick a time
-    TimeOfDay? pickedTime = await showTimePicker(
+  Future<void> datepicker() async {
+    // Pick a date
+    DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
 
-    if (pickedTime != null) {
-      // Combine date and time
-      final DateTime fullDateTime = DateTime(
-        pickedDate.year,
-        pickedDate.month,
-        pickedDate.day,
-        pickedTime.hour,
-        pickedTime.minute,
+    if (pickedDate != null) {
+      // Pick a time
+      TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
       );
 
-      // Format the DateTime
-      final String formattedDateTime =
-          "${fullDateTime.day.toString().padLeft(2, '0')}-"
-          "${fullDateTime.month.toString().padLeft(2, '0')}-"
-          "${fullDateTime.year} "
-          "${fullDateTime.hour.toString().padLeft(2, '0')}:"
-          "${fullDateTime.minute.toString().padLeft(2, '0')}";
+      if (pickedTime != null) {
+        // Combine date and time
+        final DateTime fullDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
 
-      setState(() {
-        timecontroller.text = formattedDateTime;
-      });
+        // Format the DateTime
+        final String formattedDateTime =
+            "${fullDateTime.day.toString().padLeft(2, '0')}-"
+            "${fullDateTime.month.toString().padLeft(2, '0')}-"
+            "${fullDateTime.year} "
+            "${fullDateTime.hour.toString().padLeft(2, '0')}:"
+            "${fullDateTime.minute.toString().padLeft(2, '0')}";
+
+        setState(() {
+          timecontroller.text = formattedDateTime;
+        });
+      }
     }
   }
-}
-
 }

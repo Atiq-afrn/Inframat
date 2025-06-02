@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:inframat/const/const_api.dart';
@@ -10,15 +11,19 @@ class PunchInProvider extends ChangeNotifier {
   PunchInModel? _operatorpunchIn;
   PunchInModel? get operatorPunchIn => _operatorpunchIn;
 
-  Future<PunchInModel?> getOperatorPunchIn() async {
+  Future<PunchInModel?> getOperatorPunchIn(
+    String? operatorImage,
+    dynamic lat,
+    dynamic long,
+  ) async {
     final response = await http.post(
       Uri.parse("${ConstApi.operatorPunchIn}"),
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "auth_code": await AppStorage.gettingAuthId(),
-        "lat": await AppStorage.gettingLatitude(),
-        "long": await AppStorage.gettingLongitude(),
-        "image": await AppStorage.gettingImageBase64Encoded(),
+        "lat": lat,
+        "long": long,
+        "image": operatorImage,
       },
     );
 
