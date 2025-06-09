@@ -32,8 +32,9 @@ class ConstApi {
   static const picklingProcessApi = "$baseApiUrl/pickling";
   static const crmplanListingApi = "$baseApiUrl/crm_plan_list";
 
-  static const  crmProcessingApi="$baseApiUrl/cold_rolling_mill";
+  static const crmProcessingApi = "$baseApiUrl/cold_rolling_mill";
+  static const cglPlanListingApi = "$baseApiUrl/cgl_plan_list";
+
+  static const cglProcessApi = "$baseApiUrl/cgl_process";
+  static const annealingPlanListApi = "$baseApiUrl/annealing_plan_list";
 }
-
-
-

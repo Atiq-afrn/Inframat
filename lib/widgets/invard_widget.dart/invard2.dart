@@ -39,7 +39,7 @@ class _Invard2State extends State<Invard2> {
   String? catid = "";
   getvalues() async {
     print("${widget.invardvalue!.vehicleNumber}");
-    print("${widget.invardvalue!.vehiclePhotoBase64}");
+
     print("${widget.invardvalue!.vehicleInTime}");
     print("${widget.invardvalue!.transpotName}");
     print("${widget.invardvalue!.driverName}");
@@ -76,7 +76,7 @@ class _Invard2State extends State<Invard2> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
-                height: 800,
+                // height: 800,
                 width: MediaQuery.of(context).size.width * 8,
                 decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Appcolor.greycolor),
@@ -171,7 +171,6 @@ class _Invard2State extends State<Invard2> {
 
                       InvardFileUpload(
                         ongettingImage: (values) {
-                          print(values);
                           setState(() {
                             imageValue = values;
                           });
@@ -343,6 +342,7 @@ class _Invard2State extends State<Invard2> {
                         },
                         child: Center(child: NextContainer(textname: "Next")),
                       ),
+                      SizedBox(height: 60),
                     ],
                   ),
                 ),

@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/crm_processing_response_model.dart';
 import 'package:inframat/screens/dashboard2.dart';
 
 class Crmcoldrolling3 extends StatefulWidget {
-  const Crmcoldrolling3({super.key});
+  Crmcoldrolling3({super.key, this.modeldata});
+  ColdRollingMillData? modeldata;
+  
 
   @override
   State<Crmcoldrolling3> createState() => _Crmcoldrolling3State();
 }
 
 class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("  batch no ${widget.modeldata?.batchNo}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

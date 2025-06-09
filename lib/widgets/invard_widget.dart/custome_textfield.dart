@@ -7,9 +7,11 @@ class CustomeTextfield extends StatelessWidget {
     required this.texthint,
     this.iconname,
     this.customTextcontroller,
+    this.keyboardtype,
   });
   final String texthint;
   final Widget? iconname;
+  TextInputType? keyboardtype;
 
   TextEditingController? customTextcontroller = TextEditingController();
 
@@ -28,6 +30,7 @@ class CustomeTextfield extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Center(
             child: TextField(
+              keyboardType: keyboardtype,
               controller: customTextcontroller,
               decoration: InputDecoration(
                 focusedBorder: InputBorder.none,

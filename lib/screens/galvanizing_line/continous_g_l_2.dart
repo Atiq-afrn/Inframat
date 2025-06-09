@@ -1,17 +1,36 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/cgl_process_model.dart';
+import 'package:inframat/provider/cgl_process_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/galvanizing_line/container_widget_for_cgl.dart';
 import 'package:inframat/screens/galvanizing_line/continous_g_l3.dart';
 
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:provider/provider.dart';
 
 class Continousgalvanizingline2 extends StatefulWidget {
-  const Continousgalvanizingline2({super.key});
+  const Continousgalvanizingline2({
+    super.key,
+    this.batchNo,
+    this.supplierIdNo,
+    this.size,
+    this.length,
+    this.weight,
+    this.planningNO,
+  });
+
+  final String? batchNo;
+  final String? supplierIdNo;
+  final String? size;
+  final String? length;
+  final String? weight;
+  final String? planningNO;
 
   @override
   State<Continousgalvanizingline2> createState() =>
@@ -159,7 +178,13 @@ class Continousgalvanizingline2State extends State<Continousgalvanizingline2> {
 
                 Containerwidgetforcgl2(
                   textnameforcrm: "Proceed",
-                  plannignNo: "1",
+                  batchNo: widget.batchNo,
+                  supplierIdNo: widget.supplierIdNo,
+                  size: widget.size,
+                  length: widget.length,
+                  weight: widget.weight,
+
+                  plannignNo: widget.planningNO,
                 ),
               ],
             ),
@@ -174,10 +199,20 @@ class Containerwidgetforcgl2 extends StatefulWidget {
   const Containerwidgetforcgl2({
     super.key,
     this.textnameforcrm,
+    this.batchNo,
+    this.supplierIdNo,
+    this.size,
+    this.length,
+    this.weight,
     this.plannignNo,
   });
   final String? textnameforcrm;
 
+  final String? batchNo;
+  final String? supplierIdNo;
+  final String? size;
+  final String? length;
+  final String? weight;
   final String? plannignNo;
 
   @override
@@ -186,8 +221,14 @@ class Containerwidgetforcgl2 extends StatefulWidget {
 
 class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
   dynamic selectedImage;
+  dynamic base64Imgae;
 
-  TextEditingController picklinglossecontroller = TextEditingController();
+  TextEditingController lengthcontroller = TextEditingController();
+  TextEditingController widthController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController stdZincController = TextEditingController();
+  TextEditingController scrapeController = TextEditingController();
+  TextEditingController actualWeightController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -219,7 +260,10 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.batchNo} ",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -233,7 +277,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  "${widget.supplierIdNo}",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -252,7 +296,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  " ${widget.length} MM x ${widget.size} MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -267,7 +311,10 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  "${widget.weight} MT",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -473,6 +520,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                           ),
                           child: Center(
                             child: TextField(
+                              controller: lengthcontroller,
                               decoration: InputDecoration(
                                 hintText: "00.00",
                                 focusedBorder: InputBorder.none,
@@ -493,6 +541,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                           ),
                           child: Center(
                             child: TextField(
+                              controller: widthController,
                               decoration: InputDecoration(
                                 hintText: "3.300",
 
@@ -524,6 +573,8 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                             border: Border.all(color: Appcolor.greycolor),
                           ),
                           child: TextField(
+                            controller: weightController,
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
                               focusedBorder: InputBorder.none,
@@ -561,9 +612,12 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(0),
                                 child: TextField(
+                                  controller: stdZincController,
+                                  textAlign: TextAlign.center,
                                   decoration: InputDecoration(
+                                    hintText: "00.00",
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                   ),
@@ -602,9 +656,12 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(0),
                                 child: TextField(
+                                  controller: scrapeController,
+                                  textAlign: TextAlign.center,
                                   decoration: InputDecoration(
+                                    hintText: "00.00",
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                   ),
@@ -644,10 +701,12 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(0),
                                 child: TextField(
-                                  controller: picklinglossecontroller,
+                                  textAlign: TextAlign.center,
+                                  controller: actualWeightController,
                                   decoration: InputDecoration(
+                                    hintText: "00.00",
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                   ),
@@ -669,6 +728,9 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                       );
                       if (pickedImage != null) {
                         File imagepath = File(pickedImage.path);
+                        final bytes = await imagepath.readAsBytes();
+                        base64Imgae = base64Encode(bytes);
+
                         setState(() {
                           selectedImage = imagepath;
                         });
@@ -724,16 +786,60 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                         ),
                       ),
 
-                      // selectedImage
-                      picklinglossecontroller != null
+                      actualWeightController.text.isNotEmpty
                           ? GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ContinousGL3(),
-                                ),
-                              );
+                              Provider.of<CglProcessProvider>(
+                                    context,
+                                    listen: false,
+                                  )
+                                  .gettingCglProcess(
+                                    widget.batchNo.toString(),
+                                    lengthcontroller.text,
+                                    widthController.text,
+                                    widget.size.toString(),
+                                    weightController.text,
+                                    scrapeController.text,
+                                    stdZincController.text,
+                                    widget.supplierIdNo!,
+                                    base64Imgae,
+                                  )
+                                  .then((value) {
+                                    if (value!.data != null) {
+                                      CglProcessData? newEntry = CglProcessData(
+                                        batchNo: value.data?.batchNo.toString(),
+                                        length: value.data?.length.toString(),
+                                        width: value.data?.width.toString(),
+                                        weight: value.data?.weight.toString(),
+                                        zincCoatingWeight:
+                                            value.data?.zincCoatingWeight
+                                                .toString(),
+                                        scrapWeight:
+                                            value.data?.scrapWeight.toString(),
+                                      );
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => ContinousGL3(
+                                                newEntry: newEntry,
+                                              ),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                            "this plan already Processed of something error",
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
                             },
                             child: Container(
                               height: 40,

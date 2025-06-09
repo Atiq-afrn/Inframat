@@ -49,7 +49,7 @@ class _Invard3State extends State<Invard3> {
     print("${widget.invardAllPageValue!.ticketNo}");
     print("${widget.invardAllPageValue!.loadedWeight}");
     print("${widget.invardAllPageValue!.emptyWeight}");
-    print("${widget.invardAllPageValue!.gooodsPhotoBase64}");
+    // print("${widget.invardAllPageValue!.gooodsPhotoBase64}");
   }
 
   // List<String> vendorsList = ["Atiq", "abhishek", "John Doe"];
@@ -88,7 +88,6 @@ class _Invard3State extends State<Invard3> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
-                height: 800,
                 width: MediaQuery.of(context).size.width * 8,
                 decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Appcolor.greycolor),
@@ -135,7 +134,7 @@ class _Invard3State extends State<Invard3> {
 
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
-                        child: Text("Invoice Date)"),
+                        child: Text("Invoice Date"),
                       ),
                       CustomeTextfield(
                         customTextcontroller: dateController,
@@ -273,6 +272,8 @@ class _Invard3State extends State<Invard3> {
                           child: NextContainer(textname: "Submit your Request"),
                         ),
                       ),
+
+                      SizedBox(height: 60),
                     ],
                   ),
                 ),

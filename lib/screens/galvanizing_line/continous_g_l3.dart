@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
-import 'package:inframat/screens/dashboard.dart';
+import 'package:inframat/models/cgl_process_model.dart';
 import 'package:inframat/screens/dashboard2.dart';
 
 class ContinousGL3 extends StatefulWidget {
-  const ContinousGL3({super.key});
+  const ContinousGL3({super.key, this.newEntry});
+  final CglProcessData? newEntry;
 
   @override
   State<ContinousGL3> createState() => _ContinousGL3State();
@@ -189,7 +190,10 @@ class _ContinousGL3State extends State<ContinousGL3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
+              Text(
+                "${widget.newEntry?.batchNo}",
+                style: TextStyle(fontSize: 12),
+              ),
               Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
               Text("13.450", style: TextStyle(fontSize: 12)),
               Text("0.006"),

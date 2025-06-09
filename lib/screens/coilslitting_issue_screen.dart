@@ -490,24 +490,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                         ],
                       ),
                       SizedBox(height: 10),
-                      ...List.generate(selectedImages.length, (index) {
-                        return buildItemBlock(
-                          index,
-                          selectedImages[index],
-                          (newImage, index) {
-                            setState(() => selectedImages[index] = newImage);
-                            setDialogState(() {});
-                          },
 
-                          index == selectedImages.length - 1 &&
-                                  selectedImages.length < 3
-                              ? () {
-                                setState(() => selectedImages.add(null));
-                                setDialogState(() {});
-                              }
-                              : null,
-                        );
-                      }),
                       if (selectedImages.isEmpty)
                         buildItemBlock(
                           0,
@@ -517,11 +500,28 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                             setDialogState(() {});
                           },
 
-                          () {
+                          onAddPressed: () {
                             setState(() => selectedImages.add(null));
                             setDialogState(() {});
                           },
-                        ),
+                        )
+                      else
+                        ...List.generate(selectedImages.length, (index) {
+                          return buildItemBlock(
+                            index,
+                            selectedImages[index],
+                            (newImage, index) {
+                              setState(() => selectedImages[index] = newImage);
+                              setDialogState(() {});
+                            },
+                            onAddPressed: () {
+                              if (selectedImages.length < 3) {
+                                setState(() => selectedImages.add(null));
+                                setDialogState(() {});
+                              }
+                            },
+                          );
+                        }),
 
                       const SizedBox(height: 10),
                       Row(
@@ -589,24 +589,21 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                           ),
 
                           scrapeController.text.isEmpty
-                              ? GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  height: 40,
-                                  width: MediaQuery.of(context).size.width * .3,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Appcolor.greycolor,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Submit",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                              ? Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .3,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Appcolor.greycolor,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
 
-                                        color: Appcolor.whitecolor,
-                                      ),
+                                      color: Appcolor.whitecolor,
                                     ),
                                   ),
                                 ),
@@ -622,15 +619,16 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                         scrapeController.text,
                                       )
                                       .then((value) {
+                                        print(value!.data[1].batchNo);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder:
                                                 (context) => CoilSlitingScreen2(
-                                                  batchNo1: value?.data[0],
+                                                  batchNo1: value.data[0],
 
-                                                  batchNo2: value?.data[1],
-                                                  batchNo3: value?.data[3],
+                                                  batchNo2: value.data[1],
+                                                  batchNo3: value.data[3], //3
                                                 ),
                                           ),
                                         );
@@ -638,13 +636,6 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                       .catchError((error) {
                                         print("Error: $error");
                                       });
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => CoilSlitingScreen2(),
-                                    ),
-                                  );
                                 },
                                 child: Container(
                                   height: 40,
@@ -682,10 +673,9 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   Widget buildItemBlock(
     int index,
     File? selectedImage,
-    Function(File, int index) onImageSelected,
-
+    Function(File, int index) onImageSelected, {
     VoidCallback? onAddPressed,
-  ) {
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -700,7 +690,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
             if (onAddPressed != null)
               GestureDetector(
                 onTap: () async {
-                  onAddPressed();
+                  onAddPressed.call();
                   CoilSlittingBodyModel newEntry = CoilSlittingBodyModel(
                     inwardId: (await gettingInvardid() ?? " default id"),
                     machineId: (await gettingMachineId()) ?? 'default_id',

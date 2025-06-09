@@ -298,7 +298,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                               Row(
                                 children: [
                                   Image.asset(
-                                    AppImages.bi1,
+                                    AppImages.bi2,
                                     width: 30,
                                     height: 30,
                                   ),
@@ -356,7 +356,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                               Row(
                                 children: [
                                   Image.asset(
-                                    AppImages.bi1,
+                                    AppImages.bi3,
                                     width: 30,
                                     height: 30,
                                   ),
@@ -402,7 +402,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                                 child: Row(
                                   children: [
                                     Image.asset(
-                                      AppImages.bi1,
+                                      AppImages.plant4,
                                       width: 30,
                                       height: 30,
                                     ),
@@ -429,7 +429,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "*Notes",
+                    "*Note",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                   ),
                   SizedBox(height: 40),

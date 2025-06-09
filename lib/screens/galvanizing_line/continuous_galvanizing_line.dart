@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/cgl_plan_listing_model.dart';
+import 'package:inframat/provider/cgl_plan_listing_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/galvanizing_line/container_widget_for_cgl.dart';
-
-import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:provider/provider.dart';
 
 class Continousgalvanizingline extends StatefulWidget {
   const Continousgalvanizingline({super.key});
@@ -21,6 +21,24 @@ class ContinousgalvanizinglineState extends State<Continousgalvanizingline> {
     // TODO: implement dispose
     searchWithbatchcontroller.dispose();
     super.dispose();
+  }
+
+  List<ColdRollMillingPlan> cglplanList = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    Provider.of<CglPlanListingProvider>(
+      context,
+      listen: false,
+    ).gettingcglPlanList().then((value) {
+      if (value!.data != null) {
+        cglplanList.clear();
+        cglplanList.addAll(value.data!);
+        print(" planlist  ${cglplanList.length}");
+      }
+    });
   }
 
   @override
@@ -45,130 +63,140 @@ class ContinousgalvanizinglineState extends State<Continousgalvanizingline> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Row(children: [Text("Search plan :")]),
-            ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Row(children: [Text("Search plan :")]),
+          ),
 
-            Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width * .9,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color(0xffF2F4FC),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: TextField(
-                  controller: searchWithbatchcontroller,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  decoration: InputDecoration(
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    // disabledBorder: InputBorder.none,
-                    hintText: "Search by Batch No Plan no",
-                    suffixIcon: Container(
-                      width: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(Icons.search),
-                          SizedBox(width: 10),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CoilslitingOpenCamera(),
-                                ),
-                              );
-                            },
-                            child: Icon(Icons.qr_code),
-                          ),
-                        ],
-                      ),
+          Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width * .9,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Color(0xffF2F4FC),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: TextField(
+                controller: searchWithbatchcontroller,
+                onChanged: (value) {
+                  setState(() {});
+                },
+                decoration: InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  // disabledBorder: InputBorder.none,
+                  hintText: "Search by Batch No Plan no",
+                  suffixIcon: Container(
+                    width: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.search),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CoilslitingOpenCamera(),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.qr_code),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                height: 31,
+                width: MediaQuery.of(context).size.width * .25,
+                decoration: BoxDecoration(
+                  color: Appcolor.deepPurple,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    "Plan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
                   height: 31,
                   width: MediaQuery.of(context).size.width * .25,
                   decoration: BoxDecoration(
-                    color: Appcolor.deepPurple,
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
-                    child: Text(
-                      "Plan",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Appcolor.whitecolor,
-                      ),
-                    ),
+                    child: Text("Issue", style: TextStyle(fontSize: 18)),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Issue", style: TextStyle(fontSize: 18)),
-                    ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text("Recieved", style: TextStyle(fontSize: 18)),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Recieved", style: TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
 
-            searchWithbatchcontroller.text.isNotEmpty
-                ? Column(
-                  children: [
-                    SizedBox(height: 20),
-
-                    Containerwidgetforcgl(
-                      textnameforcrm: "Select",
-                      plannignNo: "1",
-                    ),
-                    SizedBox(height: 20),
-                    Containerwidgetforcgl(
-                      textnameforcrm: "Select",
-                      plannignNo: "2",
-                    ),
-                  ],
-                )
-                : Container(),
-          ],
-        ),
+          searchWithbatchcontroller.text.isNotEmpty
+              ? Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    // shrinkWrap: true,
+                    itemCount: cglplanList.length,
+                    itemBuilder: (BuildContext, index) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: Containerwidgetforcgl(
+                              textnameforcrm: "Select",
+                              planningNo: " ${cglplanList[index].id}",
+                              batchNo: " ${cglplanList[index].batchNo}",
+                              supplierIdNo: "${cglplanList[index].inwardId}",
+                              size: " ${cglplanList[index].thickness}",
+                              lenght: " ${cglplanList[index].length}",
+                              weight: " ${cglplanList[index].weight}",
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              )
+              : Container(),
+        ],
       ),
     );
   }

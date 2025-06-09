@@ -11,6 +11,7 @@ class Containerwidgetforcrm extends StatefulWidget {
     this.size,
     this.width,
     this.weight,
+    this.thickness,
   });
   final String? textnameforcrm;
   final String? batchNo;
@@ -18,12 +19,20 @@ class Containerwidgetforcrm extends StatefulWidget {
   final String? size;
   final String? width;
   final String? weight;
+  final String? thickness;
 
   @override
   State<Containerwidgetforcrm> createState() => _ContainerwidgetforcrmState();
 }
 
 class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("7878 " + widget.thickness!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -178,6 +187,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm> {
                         size: widget.size,
                         width: widget.width,
                         actualWeight: widget.weight,
+                        thickness: widget.thickness,
                       ),
                 ),
               );

@@ -23,4 +23,7 @@ class AppImages {
   static const String tubemill = "assets/images/tubemill.jpg";
   static const String minislitting = "assets/images/mini_slitting.jpg";
   static const String forgetPassword = "assets/images/fg.jpg";
+  static const String plant2 = "assets/images/plant2.jpg";
+  static const String plant3 = "assets/images/plant3.jpg";
+  static const String plant4 = "assets/images/plant4.jpg";
 }

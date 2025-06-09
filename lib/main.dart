@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:inframat/models/contractor_login_model.dart';
+import 'package:inframat/provider/annealing_plan_list_provider.dart';
 import 'package:inframat/provider/catagory_provider.dart';
+import 'package:inframat/provider/cgl_plan_listing_provider.dart';
+import 'package:inframat/provider/cgl_process_provider.dart';
 import 'package:inframat/provider/coil_slitting_provider.dart';
 import 'package:inframat/provider/coilslitting_plan_seaarch_provider.dart';
 import 'package:inframat/provider/connection_provider.dart';
@@ -22,6 +25,7 @@ import 'package:inframat/provider/qr_scann_provider.dart';
 import 'package:inframat/provider/quality_check_provider.dart';
 import 'package:inframat/provider/sub_category_provider.dart';
 import 'package:inframat/provider/vendors_list_provider.dart';
+import 'package:inframat/screens/rewinding_process.dart';
 
 import 'package:inframat/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -52,11 +56,15 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => CoilslittingPlanSeaarchProvider(),
         ),
-
         ChangeNotifierProvider(create: (context) => PicklingPlanProvider()),
         ChangeNotifierProvider(create: (context) => PicklingProcessProvider()),
         ChangeNotifierProvider(create: (context) => CrmProvider()),
         ChangeNotifierProvider(create: (context) => CrmProcessProvider()),
+        ChangeNotifierProvider(create: (context) => CglPlanListingProvider()),
+        ChangeNotifierProvider(create: (context) => CglProcessProvider()),
+        ChangeNotifierProvider(
+          create: (context) => AnnealingPlanListProvider(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -75,7 +83,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: SplashScreen(),
+      home:
+          //RewindingProcess(),
+          SplashScreen(),
     );
   }
 }

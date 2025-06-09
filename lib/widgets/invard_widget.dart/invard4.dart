@@ -287,46 +287,47 @@ class _Invard4State extends State<Invard4> {
               ),
             ),
             SizedBox(height: 20),
-
-            SizedBox(height: 20),
-          ],
-        ),
-      ),
-      bottomNavigationBar: GestureDetector(
-        onTap: () async {
-          await Provider.of<QualityCheckProvider>(
-            context,
-            listen: false,
-          ).gettingQualityCheck(myBase64images).then((value) {
-            print("value is ${value}");
-            if (value!.status == "success") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CoilSlittingScreen()),
-              );
-              print("images added");
-            } else {
-              print("navigation failed");
-            }
-          });
-        },
-        child: Container(
-          height: 40,
-          width: MediaQuery.of(context).size.width * .9,
-          decoration: BoxDecoration(
-            color: Appcolor.deepPurple,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: Text(
-              "Next",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Appcolor.whitecolor,
+            GestureDetector(
+              onTap: () async {
+                await Provider.of<QualityCheckProvider>(
+                  context,
+                  listen: false,
+                ).gettingQualityCheck(myBase64images).then((value) {
+                  // print("value is ${value}");
+                  if (value!.status == "success") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CoilSlittingScreen(),
+                      ),
+                    );
+                    print("images added");
+                  } else {
+                    print("navigation failed");
+                  }
+                });
+              },
+              child: Container(
+                height: 40,
+                width: MediaQuery.of(context).size.width * .9,
+                decoration: BoxDecoration(
+                  color: Appcolor.deepPurple,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    "Next",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+            SizedBox(height: 60),
+          ],
         ),
       ),
     );
@@ -350,7 +351,6 @@ class _Invard4State extends State<Invard4> {
         myBase64images.add(qualityCheckImagebase64!);
         isPhotoAddButtonVisible = false;
       });
-      print("880 ${qualityCheckImagebase64}");
     } else {
       print("No file selected");
     }

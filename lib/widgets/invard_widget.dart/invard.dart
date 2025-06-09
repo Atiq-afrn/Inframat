@@ -85,7 +85,6 @@ class _InvardState extends State<Invard> {
 
                     InvardFileUpload(
                       ongettingImage: (values) {
-                        print(values);
                         setState(() {
                           base64image = values;
                         });
@@ -136,6 +135,7 @@ class _InvardState extends State<Invard> {
                     ),
                     SizedBox(height: 8),
                     CustomeTextfield(
+                      keyboardtype: TextInputType.phone,
                       texthint: "Enter Driver No",
                       customTextcontroller: driverMobileNumberController,
                     ),

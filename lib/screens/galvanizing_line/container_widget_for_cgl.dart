@@ -7,12 +7,21 @@ import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
 class Containerwidgetforcgl extends StatefulWidget {
   const Containerwidgetforcgl({
     super.key,
+    this.batchNo,
+    this.planningNo,
+    this.size,
+    this.lenght,
+    this.supplierIdNo,
+    this.weight,
     this.textnameforcrm,
-    this.plannignNo,
   });
   final String? textnameforcrm;
-
-  final String? plannignNo;
+  final String? batchNo;
+  final String? supplierIdNo;
+  final String? size;
+  final String? lenght;
+  final String? weight;
+  final String? planningNo;
 
   @override
   State<Containerwidgetforcgl> createState() => _ContainerwidgetforcglState();
@@ -50,7 +59,10 @@ class _ContainerwidgetforcglState extends State<Containerwidgetforcgl> {
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -64,7 +76,7 @@ class _ContainerwidgetforcglState extends State<Containerwidgetforcgl> {
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.supplierIdNo.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -83,7 +95,7 @@ class _ContainerwidgetforcglState extends State<Containerwidgetforcgl> {
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  widget.size.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -98,7 +110,10 @@ class _ContainerwidgetforcglState extends State<Containerwidgetforcgl> {
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  "${widget.weight}  MT",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -112,7 +127,7 @@ class _ContainerwidgetforcglState extends State<Containerwidgetforcgl> {
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  widget.plannignNo!,
+                  widget.planningNo!,
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -152,7 +167,15 @@ class _ContainerwidgetforcglState extends State<Containerwidgetforcgl> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Continousgalvanizingline2(),
+                  builder:
+                      (context) => Continousgalvanizingline2(
+                        batchNo: widget.batchNo,
+                        supplierIdNo: widget.supplierIdNo,
+                        size: widget.size,
+                        length: widget.lenght,
+                        weight: widget.weight,
+                        planningNO: widget.planningNo,
+                      ),
                 ),
               );
             },

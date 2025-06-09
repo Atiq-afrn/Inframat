@@ -18,29 +18,28 @@ class CrmProcessProvider extends ChangeNotifier {
     String mtweight,
     String scrapWeight,
     String actualWeight,
-    String base64image,
     String batchNo,
-    // String thickness,
+    String thickness,
+    String base64image,
   ) async {
     final response = await client.post(
       Uri.parse(ConstApi.crmProcessingApi),
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "auth_code": await AppStorage.gettingAuthId(),
-
         "inward_id": "2",
         "machine_id": await AppStorage.gettingMachineId(),
         "batch_no": batchNo,
-        "thickness": " 0.5",
+        "thickness": thickness,
         "width": width,
         "length": lenght,
         "weight": actualWeight,
         "scrap_weight": scrapWeight,
-        "image": base64image,
+        "image": "base64image",
       },
     );
     print(response.body);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       _bodyResponse = ColdRollingMillBodyResponse.fromJson(
         jsonDecode(response.body),
       );

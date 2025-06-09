@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/crm_processing_response_model.dart';
 import 'package:inframat/provider/crm_process_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/crm_cold_mill/crm_cold_mill3.dart';
 
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 class Crmcoldmill2 extends StatefulWidget {
@@ -21,6 +23,7 @@ class Crmcoldmill2 extends StatefulWidget {
     this.size,
     this.width,
     this.actualWeight,
+    this.thickness,
   });
 
   final String? textnameforcrm;
@@ -29,6 +32,7 @@ class Crmcoldmill2 extends StatefulWidget {
   final String? size;
   final String? width;
   final String? actualWeight;
+  final String? thickness;
 
   @override
   State<Crmcoldmill2> createState() => Crmcoldmill2State();
@@ -41,6 +45,17 @@ class Crmcoldmill2State extends State<Crmcoldmill2> {
     // TODO: implement dispose
     searchWithbatchcontroller.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    print("batch no " + widget.batchno!);
+    print("supplierid " + widget.supplieridNO!);
+    print("size " + widget.size!);
+    print("width " + widget.width!);
+    print("thickness " + widget.thickness!);
   }
 
   @override
@@ -179,6 +194,7 @@ class Crmcoldmill2State extends State<Crmcoldmill2> {
                   size: widget.size,
                   width: widget.width,
                   actualWeight: widget.actualWeight,
+                  thickness: widget.thickness,
                 ),
                 SizedBox(height: 20),
               ],
@@ -199,6 +215,7 @@ class Containerwidgetforcrm2 extends StatefulWidget {
     this.size,
     this.width,
     this.actualWeight,
+    this.thickness,
   });
   final String? textnameforcrm;
   final String? batchno;
@@ -206,6 +223,7 @@ class Containerwidgetforcrm2 extends StatefulWidget {
   final String? size;
   final String? width;
   final String? actualWeight;
+  final String? thickness;
 
   @override
   State<Containerwidgetforcrm2> createState() => _ContainerwidgetforcrmState();
@@ -729,6 +747,9 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                       actualWeightController.text.isNotEmpty
                           ? GestureDetector(
                             onTap: () {
+                              // print("batchno" + widget.batchno!);
+                              // print("thickness" + widget.thickness!);
+
                               Provider.of<CrmProcessProvider>(
                                     context,
                                     listen: false,
@@ -737,20 +758,57 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                                     lenghtController.text.toString(),
                                     widthController.text.toString(),
                                     mtcontroller.text,
-                                    scrapController.text.toString(),
                                     actualWeightController.text.toString(),
-                                    base64image,
-                                    widget.batchno!,
+                                    scrapController.text.toString(),
+                                    widget.batchno!.toString(),
+                                    widget.thickness!.toString(),
+                                    base64image.toString(),
                                   )
                                   .then((value) {
-                                    print(value);
+                                    if (value?.data != null) {
+                                      // crmProcessModel!.batchNo=value.data?.batchNo;
+                                      // crmProcessModel!.length;
+                                      // crmProcessModel!.width;
+                                      // crmProcessModel!.thickness;
+                                      // crmProcessModel!.scrapWeight;
+                                      // crmProcessModel!.image;
+                                      // crmProcessModel!.weight;
+
+                                      ColdRollingMillData newEntry =
+                                          ColdRollingMillData(
+                                            batchNo: value!.data.batchNo,
+                                            inwardId: value.data.inwardId,
+                                            thickness: value.data.thickness,
+
+                                            image: "asfdjsadgfs",
+                                            width: value.data.inwardId,
+                                            scrapWeight: value.data.scrapWeight,
+                                            length: value.data.length,
+                                            weight: value.data.weight,
+                                            updatedAt: value.data.updatedAt,
+                                            createdAt: value.data.createdAt,
+                                            id: value.data.id,
+                                            //base64String!,
+                                          );
+                                      if (mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => Crmcoldrolling3(
+                                                  modeldata: newEntry,
+                                                ),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(content: Text("data")),
+                                      );
+                                    }
                                   });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Crmcoldrolling3(),
-                                ),
-                              );
                             },
                             child: Container(
                               height: 40,

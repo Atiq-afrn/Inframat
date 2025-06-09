@@ -168,6 +168,8 @@ class _ContainerWidgetforAnneling2State
   int counter = 1;
   int increamentedValues = 1;
   dynamic selectedImage;
+  bool? ischecked = false;
+  List<bool> isCheckedList = List.generate(5, (_) => false);
 
   TextEditingController picklinglossecontroller = TextEditingController();
   @override
@@ -185,156 +187,232 @@ class _ContainerWidgetforAnneling2State
                         textnameforcrm: "Proceed ",
                         ontap: () => alertDialog1(),
                       )
-                      : ListView.builder(
-                        itemCount: increamentedValues,
-                        itemBuilder: (BuildContext context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20),
-                            child: Container(
-                              height: 250,
-                              width: MediaQuery.of(context).size.width * .9,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                ),
-                                color: Appcolor.whitecolor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withValues(alpha: 0.3),
-                                    offset: Offset(0, 5),
-                                    blurRadius: 4,
-                                    spreadRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 30),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "${increamentedValues}",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              increamentedValues = counter++;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.add_circle_outline_outlined,
-                                          ),
+                      : Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: 5,
+                              itemBuilder: (BuildContext context, int index) {
+                                Widget mainItemContainer = Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * .9,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                      color: Appcolor.whitecolor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          offset: Offset(0, 5),
+                                          blurRadius: 4,
+                                          spreadRadius: 4,
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: Row(
+                                    child: Column(
                                       children: [
-                                        Text(
-                                          "Batch no  : ",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                        SizedBox(height: 30),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Checkbox(
+                                                activeColor:
+                                                    Appcolor.deepPurple,
+                                                value: isCheckedList[index],
+                                                onChanged: (bool? value) {
+                                                  setState(() {
+                                                    isCheckedList[index] =
+                                                        value ?? false;
+                                                  });
+                                                },
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Text(
-                                          " 230948 ",
-                                          style: TextStyle(
-                                            color: Appcolor.greycolor,
+                                        SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Batch no  : ",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                " 230948 ",
+                                                style: TextStyle(
+                                                  color: Appcolor.greycolor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Supplier Id no : ",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                        SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Supplier Id no : ",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                "(We need to bring from MRN screen) ",
+                                                style: TextStyle(
+                                                  color: Appcolor.greycolor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        Text(
-                                          "(We need to bring from MRN screen) ",
-                                          style: TextStyle(
-                                            color: Appcolor.greycolor,
+                                        SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Size :",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                "  250 MM x 0.70 MM x GR-1 x TATA",
+                                                style: TextStyle(
+                                                  color: Appcolor.greycolor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
+                                        SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 20,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Weight :",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                " 7.56 MT",
+                                                style: TextStyle(
+                                                  color: Appcolor.greycolor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
 
-                                  SizedBox(height: 10),
-
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Size :",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                        // If this is last item, add the deepPurple Proceed button inside item
+                                        if (index == 4) ...[
+                                          SizedBox(height: 20),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Plan Details:",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.all(15),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade200,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          7,
+                                                        ),
+                                                  ),
+                                                  child: Text(
+                                                    "Planning details as given planning department",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black87,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    alertDialog1();
+                                                  },
+                                                  child: Container(
+                                                    height: 50,
+                                                    width: double.infinity,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Appcolor.deepPurple,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            7,
+                                                          ),
+                                                    ),
+                                                    child: Text(
+                                                      "Proceed",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                              ],
+                                            ),
                                           ),
-                                        ),
+                                        ],
 
-                                        Text(
-                                          "  250 MM x 0.70 MM x GR-1 x TATA",
-                                          style: TextStyle(
-                                            color: Appcolor.greycolor,
-                                          ),
-                                        ),
+                                        SizedBox(height: 30),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Weight :",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          " 7.56 MT",
-                                          style: TextStyle(
-                                            color: Appcolor.greycolor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                );
+
+                                return mainItemContainer;
+                              },
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
             ),
           ),

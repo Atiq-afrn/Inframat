@@ -129,7 +129,9 @@ class _PunchnowState extends State<Punchnow> {
 
           GestureDetector(
             onTap: () {
-              if (selectedImage != null) {
+              if (selectedImage != null &&
+                  currentPosition?.latitude != null &&
+                  currentPosition?.longitude != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -145,7 +147,11 @@ class _PunchnowState extends State<Punchnow> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.red,
-                    content: Center(child: Text("Please take a photo first")),
+                    content: Center(
+                      child: Text(
+                        "Please take a photo first Or getting User Location",
+                      ),
+                    ),
                   ),
                 );
               }
@@ -192,7 +198,7 @@ class _PunchnowState extends State<Punchnow> {
       List<int> imageByte = await selectedImage.readAsBytes();
       base64image = base64Encode(imageByte);
       AppStorage.storeImageBase64(base64image!);
-      print("base64==  $base64image");
+
       print("base64 conversion success");
     } else {
       print("error");

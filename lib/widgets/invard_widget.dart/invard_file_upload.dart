@@ -44,7 +44,7 @@ class _InvardFileUploadState extends State<InvardFileUpload> {
                           List<int> imageByte =
                               await selectedImage.readAsBytes();
                           base64image = base64Encode(imageByte);
-                          print("87074  $base64image");
+
                           setState(() {
                             widget.ongettingImage?.call(base64image);
                           });

@@ -35,6 +35,7 @@ class CrmcoldmillState extends State<Crmcoldmill> {
       if (value!.status == "success") {
         crmPlanelist.clear();
         crmPlanelist.addAll(value.data);
+        print(" 78787z" + value.data[5].thickness);
       }
     });
   }
@@ -61,140 +62,140 @@ class CrmcoldmillState extends State<Crmcoldmill> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Row(children: [Text("Search plan :")]),
-            ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Row(children: [Text("Search plan :")]),
+          ),
 
-            Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width * .9,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color(0xffF2F4FC),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: TextField(
-                  controller: searchWithbatchcontroller,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  decoration: InputDecoration(
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    // disabledBorder: InputBorder.none,
-                    hintText: "Search by Batch No Plan no",
-                    suffixIcon: Container(
-                      width: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(Icons.search),
-                          SizedBox(width: 10),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CoilslitingOpenCamera(),
-                                ),
-                              );
-                            },
-                            child: Icon(Icons.qr_code),
-                          ),
-                        ],
-                      ),
+          Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width * .9,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Color(0xffF2F4FC),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: TextField(
+                controller: searchWithbatchcontroller,
+                onChanged: (value) {
+                  setState(() {});
+                },
+                decoration: InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  // disabledBorder: InputBorder.none,
+                  hintText: "Search by Batch No Plan no",
+                  suffixIcon: Container(
+                    width: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.search),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CoilslitingOpenCamera(),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.qr_code),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                height: 31,
+                width: MediaQuery.of(context).size.width * .25,
+                decoration: BoxDecoration(
+                  color: Appcolor.deepPurple,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    "Plan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
                   height: 31,
                   width: MediaQuery.of(context).size.width * .25,
                   decoration: BoxDecoration(
-                    color: Appcolor.deepPurple,
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
-                    child: Text(
-                      "Plan",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Appcolor.whitecolor,
-                      ),
-                    ),
+                    child: Text("Issue", style: TextStyle(fontSize: 18)),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Issue", style: TextStyle(fontSize: 18)),
-                    ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text("Recieved", style: TextStyle(fontSize: 18)),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Recieved", style: TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
 
-            searchWithbatchcontroller.text.isNotEmpty
-                ? ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
+          searchWithbatchcontroller.text.isNotEmpty
+              ? Expanded(
+                child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: crmPlanelist.length,
                   itemBuilder: (Context, index) {
-                    return Column(
-                      children: [
-                        Containerwidgetforcrm(
-                          textnameforcrm: "Select",
-                          batchNo: "${crmPlanelist[index].batchNo.toString()}",
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 20,
+                      ),
+                      child: Containerwidgetforcrm(
+                        textnameforcrm: "Select",
+                        batchNo: "${crmPlanelist[index].batchNo.toString()}",
 
-                          supplierID: "${crmPlanelist[index].id.toString()}",
-                          size: "${crmPlanelist[index].length.toString()}",
-                          width: "${crmPlanelist[index].width}",
-                          weight:
-                              "${crmPlanelist[index].actualWeight.toString()}",
-                              
-                        ),
-                        SizedBox(height: 20),
-                      ],
+                        supplierID: "${crmPlanelist[index].id.toString()}",
+                        size: "${crmPlanelist[index].length.toString()}",
+                        width: "${crmPlanelist[index].width}",
+                        weight:
+                            "${crmPlanelist[index].actualWeight.toString()}",
+                        thickness: "${crmPlanelist[index].thickness}",
+                      ),
                     );
                   },
-                )
-                : Container(child: Center(child: CircularProgressIndicator())),
+                ),
+              )
+              : Container(child: Center(child: CircularProgressIndicator())),
 
-            SizedBox(height: 20),
-          ],
-        ),
+          SizedBox(height: 20),
+        ],
       ),
     );
   }

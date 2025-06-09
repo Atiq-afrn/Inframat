@@ -8,6 +8,7 @@ import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:inframat/screens/dashboard.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/issue.dart';
+import 'package:inframat/screens/rewinding_process.dart';
 
 class CoilSlitingScreen2 extends StatefulWidget {
   CoilSlitingScreen2({super.key, this.batchNo1, this.batchNo2, this.batchNo3});
@@ -21,6 +22,12 @@ class CoilSlitingScreen2 extends StatefulWidget {
 
 class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
   TextEditingController departmentcontroller = TextEditingController();
+  @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   print("  Atiq khan ${widget.batchNo1!.createdAt.toString()}");
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,7 +329,7 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Dashboard2()),
+                  MaterialPageRoute(builder: (context) => RewindingProcess()),
                 );
               },
               child: Container(

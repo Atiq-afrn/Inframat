@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/screens/anneling/anneling_process2.dart';
-import 'package:inframat/screens/crm_cold_mill/crm_cold_mill2.dart';
-import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
 
 class ContainerWidgetforAnneling extends StatefulWidget {
   const ContainerWidgetforAnneling({
     super.key,
     this.textnameforcrm,
     this.ontap,
+    this.batchNo,
+    this.supplierIdNo,
+    this.length,
+    this.widht,
+    this.weight,
+    this.boundlNo,
   });
   final String? textnameforcrm;
   final VoidCallback? ontap;
 
+  final String? batchNo;
+  final String? supplierIdNo;
+  final String? length;
+  final String? widht;
+  final String? weight;
+  final String? boundlNo;
   @override
   State<ContainerWidgetforAnneling> createState() =>
       _ContainerWidgetforAnnelingState();
@@ -51,7 +60,10 @@ class _ContainerWidgetforAnnelingState
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.batchNo}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -65,7 +77,7 @@ class _ContainerWidgetforAnnelingState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  "${widget.supplierIdNo} ",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -84,7 +96,7 @@ class _ContainerWidgetforAnnelingState
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  " ${widget.length} MM x ${widget.widht}   MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -99,7 +111,10 @@ class _ContainerWidgetforAnnelingState
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  "${widget.weight}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -112,7 +127,10 @@ class _ContainerWidgetforAnnelingState
                   "Bundle no:",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.boundlNo}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
