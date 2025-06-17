@@ -18,7 +18,7 @@ class PicklingPlanProvider extends ChangeNotifier {
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "auth_code": await AppStorage.gettingAuthId(),
-        "search": "36KD53",
+        "search": "",
       },
     );
     print(response.body);

@@ -1,30 +1,31 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:inframat/const/const_api.dart';
 import 'package:inframat/logger.dart';
-import 'package:inframat/models/operator_logout_model.dart';
+import 'package:inframat/models/tube_mill_planmodel.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 
-class OperatorLogOutProvider extends ChangeNotifier {
-  OperatorLogOutModel? _operatorLogout;
-  OperatorLogOutModel? get operatorLogout => _operatorLogout;
+class TubeMillplanProvider extends ChangeNotifier {
+  TubeMillPlanModel? _tubeMillPlan;
+
+  TubeMillPlanModel? get tubeMillPlan => _tubeMillPlan;
   final client = LoggingHttpClient();
-  Future<OperatorLogOutModel?> getoperatorLogout() async {
+  Future<TubeMillPlanModel?> fetchTubeMillplan() async {
     final response = await client.post(
-      Uri.parse("${ConstApi.operatorLogoutapi}"),
+      Uri.parse(ConstApi.tubeMillPlanListApi),
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "auth_code": await AppStorage.gettingAuthId(),
+        "search": "",
       },
     );
-    print(response.body);
     if (response.statusCode == 200) {
-      _operatorLogout = OperatorLogOutModel.fromJson(jsonDecode(response.body));
+      _tubeMillPlan = TubeMillPlanModel.fromJson(jsonDecode(response.body));
     } else {
       print("Error: ${response.statusCode}");
     }
     notifyListeners();
-    return _operatorLogout;
+    return _tubeMillPlan;
   }
 }

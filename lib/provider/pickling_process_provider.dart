@@ -16,12 +16,12 @@ class PicklingProcessProvider extends ChangeNotifier {
     String batchNo,
     String actualWeight,
     String picklingLoss,
-    String base64Image,
     String length,
     String width,
+    String base64Image,
   ) async {
     final response = await client.post(
-      Uri.parse(ConstApi.coilSlittingApi),
+      Uri.parse(ConstApi.picklingProcessApi),
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "auth_code": await AppStorage.gettingAuthId(),
@@ -29,10 +29,10 @@ class PicklingProcessProvider extends ChangeNotifier {
         //await AppStorage.gettinginwardId(),
         "machine_id": await AppStorage.gettingMachineId(),
         "width": width,
-        "lenght": length,
+        "length": length,
         "thickness": "434",
-        "batch_no": actualWeight,
-        "actual_weight": batchNo,
+        "batch_no": batchNo,
+        "actual_weight": actualWeight,
         "pickling_loss": picklingLoss,
         "image": "base64Image",
       },
@@ -41,7 +41,7 @@ class PicklingProcessProvider extends ChangeNotifier {
 
     print(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       _picklingProcessModel = PicklingProcessResponseModel.fromJson(
         jsonDecode(response.body),
       );

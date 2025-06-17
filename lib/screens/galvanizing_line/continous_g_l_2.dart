@@ -155,18 +155,15 @@ class Continousgalvanizingline2State extends State<Continousgalvanizingline2> {
                   ),
                 ),
 
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Recieved", style: TextStyle(fontSize: 18)),
-                    ),
+                Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text("Recieved", style: TextStyle(fontSize: 18)),
                   ),
                 ),
               ],

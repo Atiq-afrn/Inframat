@@ -87,7 +87,7 @@ class _PunchoutState extends State<Punchout> {
                 context,
                 MaterialPageRoute(
                   builder:
-                      (context) => Facerecognize2(selectedImage: selectedImage),
+                      (context) => Facerecognize2(selectedImage: selectedImage,base64image:base64image ,),
                 ),
               );
             },
@@ -135,8 +135,6 @@ class _PunchoutState extends State<Punchout> {
       base64image = base64Encode(imageByte);
 
       AppStorage.storepunchOutImage(base64image!);
-      print("base64==  $base64image");
-      print("base64");
     } else {
       print("error 7777");
     }

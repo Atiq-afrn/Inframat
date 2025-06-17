@@ -1,16 +1,31 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/skin_process_response_model.dart';
+import 'package:inframat/provider/skinpass_process_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/skin_pass/skin_pass3.dart';
-
-import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:provider/provider.dart';
 
 class SkinPass2 extends StatefulWidget {
-  const SkinPass2({super.key});
+  const SkinPass2({
+    super.key,
+    this.batchNo,
+    this.supplierId,
+    this.length,
+    this.thickness,
+    this.weight,
+    this.planNo,
+  });
+  final String? batchNo;
+  final String? supplierId;
+  final String? length;
+  final String? thickness;
+  final String? weight;
+  final String? planNo;
 
   @override
   State<SkinPass2> createState() => SkinPass2State();
@@ -149,7 +164,15 @@ class SkinPass2State extends State<SkinPass2> {
               children: [
                 SizedBox(height: 20),
 
-                ContainerWidgetForSkinPass2(textnameforcrm: "Proceed"),
+                ContainerWidgetForSkinPass2(
+                  textnameforcrm: "Proceed",
+                  batchNo: widget.batchNo,
+                  supplierId: widget.supplierId,
+                  length: widget.length,
+                  thickness: widget.thickness,
+                  weight: widget.weight,
+                  planNo: widget.planNo,
+                ),
               ],
             ),
           ],
@@ -160,8 +183,23 @@ class SkinPass2State extends State<SkinPass2> {
 }
 
 class ContainerWidgetForSkinPass2 extends StatefulWidget {
-  ContainerWidgetForSkinPass2({super.key, this.textnameforcrm});
+  ContainerWidgetForSkinPass2({
+    super.key,
+    this.textnameforcrm,
+    this.batchNo,
+    this.supplierId,
+    this.length,
+    this.thickness,
+    this.weight,
+    this.planNo,
+  });
   final String? textnameforcrm;
+  final String? batchNo;
+  final String? supplierId;
+  final String? length;
+  final String? thickness;
+  final String? weight;
+  final String? planNo;
 
   @override
   State<ContainerWidgetForSkinPass2> createState() =>
@@ -171,6 +209,7 @@ class ContainerWidgetForSkinPass2 extends StatefulWidget {
 class _ContainerWidgetForSkinPass2State
     extends State<ContainerWidgetForSkinPass2> {
   TextEditingController skinpasscontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -202,67 +241,11 @@ class _ContainerWidgetForSkinPass2State
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              height: 43,
-              width: double.infinity,
-              color: Appcolor.lightgrey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    height: 30,
-
-                    width: MediaQuery.of(context).size.width * .11,
-
-                    decoration: BoxDecoration(
-                      color: Appcolor.whitecolor,
-                      border: Border.all(color: Appcolor.greycolor),
-                    ),
-                    child: Center(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "00.00",
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Text("MM x"),
-                  Container(
-                    height: 30,
-
-                    width: MediaQuery.of(context).size.width * .11,
-
-                    decoration: BoxDecoration(
-                      color: Appcolor.whitecolor,
-                      border: Border.all(color: Appcolor.greycolor),
-                    ),
-                    child: Center(
-                      child: TextField(
-                        controller: skinpasscontroller,
-                        onChanged: (Value) {
-                          setState(() {});
-                        },
-                        decoration: InputDecoration(
-                          hintText: "3.300",
-
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Text("MMX CR-2 x SAIL"),
-                ],
-              ),
             ),
           ),
 
@@ -276,7 +259,7 @@ class _ContainerWidgetForSkinPass2State
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.supplierId.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -295,7 +278,7 @@ class _ContainerWidgetForSkinPass2State
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  "  ${widget.length} MM x ${widget.thickness} MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -310,7 +293,10 @@ class _ContainerWidgetForSkinPass2State
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.weight.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -324,7 +310,10 @@ class _ContainerWidgetForSkinPass2State
                   "Planning :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.planNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -357,62 +346,46 @@ class _ContainerWidgetForSkinPass2State
             ),
           ),
           SizedBox(height: 15),
-          skinpasscontroller.text.isNotEmpty
-              ? GestureDetector(
-                onTap: () {
-                  alertDialog1();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    height: 35,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Appcolor.deepPurple,
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.textnameforcrm.toString(),
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: Appcolor.whitecolor,
-                        ),
-                      ),
-                    ),
-                  ),
+
+          GestureDetector(
+            onTap: () {
+              alertDialog1();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                height: 35,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Appcolor.deepPurple,
+                  borderRadius: BorderRadius.circular(7),
                 ),
-              )
-              : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  height: 35,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Appcolor.greycolor,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Center(
-                    child: Text(
-                      widget.textnameforcrm.toString(),
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        color: Appcolor.whitecolor,
-                      ),
+                child: Center(
+                  child: Text(
+                    widget.textnameforcrm.toString(),
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
                     ),
                   ),
                 ),
               ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   dynamic selectedImage;
-
+  dynamic base64image;
+  List<SkinProcessData> processResonseData = [];
+  TextEditingController lengthController = TextEditingController();
+  TextEditingController widthController = TextEditingController();
+  TextEditingController mtweightController = TextEditingController();
   TextEditingController scrapcontroller = TextEditingController();
+  TextEditingController actualWeightController = TextEditingController();
   Future alertDialog1() async {
     showDialog(
       context: context,
@@ -539,6 +512,7 @@ class _ContainerWidgetForSkinPass2State
                           ),
                           child: Center(
                             child: TextField(
+                              controller: lengthController,
                               decoration: InputDecoration(
                                 hintText: "00.00",
                                 focusedBorder: InputBorder.none,
@@ -559,6 +533,7 @@ class _ContainerWidgetForSkinPass2State
                           ),
                           child: Center(
                             child: TextField(
+                              controller: widthController,
                               decoration: InputDecoration(
                                 hintText: "3.300",
 
@@ -590,6 +565,8 @@ class _ContainerWidgetForSkinPass2State
                             border: Border.all(color: Appcolor.greycolor),
                           ),
                           child: TextField(
+                            controller: mtweightController,
+                            textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               hintText: "00.00",
                               focusedBorder: InputBorder.none,
@@ -626,13 +603,13 @@ class _ContainerWidgetForSkinPass2State
                                 color: Appcolor.whitecolor,
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                  ),
+                              child: TextField(
+                                controller: scrapcontroller,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  hintText: "0.0",
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
                                 ),
                               ),
                             ),
@@ -668,14 +645,13 @@ class _ContainerWidgetForSkinPass2State
                                 color: Appcolor.whitecolor,
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: TextField(
-                                  controller: scrapcontroller,
-                                  decoration: InputDecoration(
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                  ),
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                controller: actualWeightController,
+                                decoration: InputDecoration(
+                                  hintText: "0.0",
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
                                 ),
                               ),
                             ),
@@ -696,6 +672,9 @@ class _ContainerWidgetForSkinPass2State
                       );
                       if (pickedImage != null) {
                         File imagepath = File(pickedImage.path);
+                        List<int> imagebytes = await imagepath.readAsBytes();
+                        base64image = base64Encode(imagebytes);
+
                         setState(() {
                           selectedImage = imagepath;
                         });
@@ -752,15 +731,52 @@ class _ContainerWidgetForSkinPass2State
                       ),
 
                       //selectedImage
-                      scrapcontroller != null
+                      scrapcontroller.text.isNotEmpty
                           ? GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SkinPass3(),
-                                ),
-                              );
+                              Provider.of<SkinpassProcessProvider>(
+                                    context,
+                                    listen: false,
+                                  )
+                                  .gettingskinprocess(
+                                    widget.batchNo.toString(),
+                                    lengthController.text,
+                                    widget.thickness.toString(),
+                                    widthController.text,
+                                    mtweightController.text,
+                                    actualWeightController.text,
+                                    scrapcontroller.text,
+                                    base64image,
+                                  )
+                                  .then((value) {
+                                    if (value!.status == "success") {
+                                      if (value.data != null) {
+                                        processResonseData.clear();
+                                        processResonseData.add(value.data!);
+                                      }
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => SkinPass3(
+                                                responsedata:
+                                                    processResonseData,
+                                                    supplierId: widget.supplierId,
+                                              ),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            "this plan already taken",
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  });
                             },
                             child: Container(
                               height: 40,

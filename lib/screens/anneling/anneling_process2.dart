@@ -1,22 +1,26 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
-import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/screens/anneling/anneling_process3.dart';
 import 'package:inframat/screens/anneling/container_widget_for_anneling.dart';
-import 'package:inframat/screens/coil_sliting_screen2.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/coilslitting_issue_screen.dart';
-import 'package:inframat/screens/crm_cold_mill/crm_cold_mill3.dart';
-import 'package:inframat/widgets/container_widget_for_coilslitting.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 class AnnelingProcess2 extends StatefulWidget {
-  const AnnelingProcess2({super.key});
+  const AnnelingProcess2({
+    super.key,
+    this.batchNo,
+    this.length,
+    this.supplierIdNo,
+    this.weight,
+    this.width,
+  });
+  final String? batchNo;
+  final String? supplierIdNo;
+  final String? length;
+  final String? width;
+  final String? weight;
 
   @override
   State<AnnelingProcess2> createState() => _AnnelingProcess2State();
@@ -129,24 +133,31 @@ class _AnnelingProcess2State extends State<AnnelingProcess2> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Recived", style: TextStyle(fontSize: 18)),
-                    ),
+                Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Appcolor.greycolor),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text("Recived", style: TextStyle(fontSize: 18)),
                   ),
                 ),
               ],
             ),
             SizedBox(height: 20),
-            Column(children: [ContainerWidgetforAnneling2()]),
+            Column(
+              children: [
+                ContainerWidgetforAnneling2(
+                  batchNo: widget.batchNo,
+                  supplierIdno: widget.supplierIdNo,
+                  length: widget.length,
+                  width: widget.width,
+                  weight: widget.weight,
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -155,8 +166,21 @@ class _AnnelingProcess2State extends State<AnnelingProcess2> {
 }
 
 class ContainerWidgetforAnneling2 extends StatefulWidget {
-  const ContainerWidgetforAnneling2({super.key, this.textnameforcrm});
+  const ContainerWidgetforAnneling2({
+    super.key,
+    this.textnameforcrm,
+    this.batchNo,
+    this.supplierIdno,
+    this.length,
+    this.width,
+    this.weight,
+  });
   final String? textnameforcrm;
+  final String? batchNo;
+  final String? supplierIdno;
+  final String? length;
+  final String? width;
+  final String? weight;
 
   @override
   State<ContainerWidgetforAnneling2> createState() =>
@@ -253,7 +277,7 @@ class _ContainerWidgetforAnneling2State
                                                 ),
                                               ),
                                               Text(
-                                                " 230948 ",
+                                                widget.batchNo.toString(),
                                                 style: TextStyle(
                                                   color: Appcolor.greycolor,
                                                 ),
@@ -276,7 +300,7 @@ class _ContainerWidgetforAnneling2State
                                                 ),
                                               ),
                                               Text(
-                                                "(We need to bring from MRN screen) ",
+                                                widget.supplierIdno.toString(),
                                                 style: TextStyle(
                                                   color: Appcolor.greycolor,
                                                 ),
@@ -299,7 +323,7 @@ class _ContainerWidgetforAnneling2State
                                                 ),
                                               ),
                                               Text(
-                                                "  250 MM x 0.70 MM x GR-1 x TATA",
+                                                "  ${widget.length} MM x${widget.width} MM x GR-1 x TATA",
                                                 style: TextStyle(
                                                   color: Appcolor.greycolor,
                                                 ),
@@ -322,7 +346,7 @@ class _ContainerWidgetforAnneling2State
                                                 ),
                                               ),
                                               Text(
-                                                " 7.56 MT",
+                                                " ${widget.weight}",
                                                 style: TextStyle(
                                                   color: Appcolor.greycolor,
                                                 ),

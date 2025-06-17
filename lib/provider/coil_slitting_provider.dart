@@ -34,7 +34,7 @@ class CoilSlittingProvider extends ChangeNotifier {
 
     print('Response: ${response.body}');
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       _coilSlittingModel = CoilSlittingResponseModel.fromJson(
         jsonDecode(response.body),
       );

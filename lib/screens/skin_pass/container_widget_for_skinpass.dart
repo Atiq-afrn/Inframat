@@ -5,8 +5,23 @@ import 'package:inframat/screens/skin_pass/skin_pass2.dart';
 import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
 
 class ContainerWidgetForSkinPass extends StatefulWidget {
-  const ContainerWidgetForSkinPass({super.key, this.textnameforcrm});
+  const ContainerWidgetForSkinPass({
+    super.key,
+    this.textnameforcrm,
+    this.batchNo,
+    this.supplierId,
+    this.length,
+    this.thickness,
+    this.weight,
+    this.planNo,
+  });
   final String? textnameforcrm;
+  final String? batchNo;
+  final String? supplierId;
+  final String? length;
+  final String? thickness;
+  final String? weight;
+  final String? planNo;
 
   @override
   State<ContainerWidgetForSkinPass> createState() =>
@@ -46,12 +61,14 @@ class _ContainerWidgetForSkinPassState
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
 
-          
           SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -62,15 +79,14 @@ class _ContainerWidgetForSkinPassState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.supplierId.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
             ),
           ),
 
-          SizedBox(height: 10),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Row(
@@ -81,7 +97,7 @@ class _ContainerWidgetForSkinPassState
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  "  ${widget.length} MM x ${widget.thickness} MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -96,7 +112,10 @@ class _ContainerWidgetForSkinPassState
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.weight.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -110,7 +129,10 @@ class _ContainerWidgetForSkinPassState
                   "Planning :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.planNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -147,7 +169,17 @@ class _ContainerWidgetForSkinPassState
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SkinPass2()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => SkinPass2(
+                        batchNo: widget.batchNo,
+                        supplierId: widget.supplierId,
+                        length: widget.length,
+                        thickness: widget.thickness,
+                        weight: widget.weight,
+                        planNo: widget.planNo,
+                      ),
+                ),
               );
             },
             child: Padding(

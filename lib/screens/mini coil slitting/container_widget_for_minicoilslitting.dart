@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/screens/crm_cold_mill/crm_cold_mill2.dart';
 import 'package:inframat/screens/mini%20coil%20slitting/mini_coilslitting2.dart';
-import 'package:inframat/screens/skin_pass/skin_pass2.dart';
-import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
 
 class ContainerWidgetForMiniCoilSlitting extends StatefulWidget {
-  const ContainerWidgetForMiniCoilSlitting({super.key, this.textnameforcrm});
+  const ContainerWidgetForMiniCoilSlitting({
+    super.key,
+    this.textnameforcrm,
+    this.batchNo,
+    this.length,
+    this.width,
+    this.weight,
+    this.inwardId,
+    this.planId,
+    this.image,
+  });
   final String? textnameforcrm;
+  final String? batchNo;
+  final String? length;
+  final String? width;
+  final String? weight;
+  final String? inwardId;
+  final String? planId;
+  final dynamic image;
 
   @override
   State<ContainerWidgetForMiniCoilSlitting> createState() =>
@@ -47,7 +61,10 @@ class _ContainerWidgetForMiniCoilSlittingState
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -62,7 +79,7 @@ class _ContainerWidgetForMiniCoilSlittingState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.inwardId.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -81,7 +98,7 @@ class _ContainerWidgetForMiniCoilSlittingState
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  " ${widget.length}MM x ${widget.width} MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -96,7 +113,10 @@ class _ContainerWidgetForMiniCoilSlittingState
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.weight}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -110,7 +130,10 @@ class _ContainerWidgetForMiniCoilSlittingState
                   "Planning :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.planId}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -147,7 +170,17 @@ class _ContainerWidgetForMiniCoilSlittingState
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Minicoilslitting2()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => Minicoilslitting2(
+                        batchNo: widget.batchNo,
+                        inwardId: widget.inwardId,
+                        length: widget.length,
+                        width: widget.width,
+                        weight: widget.weight,
+                        planId: widget.planId,
+                      ),
+                ),
               );
             },
             child: Padding(

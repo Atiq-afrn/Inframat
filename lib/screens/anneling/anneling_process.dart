@@ -180,7 +180,26 @@ class _AnnelingProcessState extends State<AnnelingProcess> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AnnelingProcess2(),
+                                  builder:
+                                      (context) => AnnelingProcess2(
+                                        batchNo:
+                                            annealingPlanListdata[index]
+                                                ?.batchNo
+                                                .toString(),
+                                        supplierIdNo:
+                                            annealingPlanListdata[index]
+                                                ?.inwardId
+                                                .toString(),
+                                        length:
+                                            annealingPlanListdata[index]?.length
+                                                .toString(),
+                                        width:
+                                            annealingPlanListdata[index]?.width
+                                                .toString(),
+                                        weight:
+                                            annealingPlanListdata[index]?.weight
+                                                .toString(),
+                                      ),
                                 ),
                               );
                             },

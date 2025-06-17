@@ -293,7 +293,6 @@ class _Invard4State extends State<Invard4> {
                   context,
                   listen: false,
                 ).gettingQualityCheck(myBase64images).then((value) {
-                  // print("value is ${value}");
                   if (value!.status == "success") {
                     Navigator.push(
                       context,
@@ -303,7 +302,12 @@ class _Invard4State extends State<Invard4> {
                     );
                     print("images added");
                   } else {
-                    print("navigation failed");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text("Field data type not did not matched "),
+                      ),
+                    );
                   }
                 });
               },

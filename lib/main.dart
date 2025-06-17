@@ -13,6 +13,8 @@ import 'package:inframat/provider/crm_provider.dart';
 import 'package:inframat/provider/forget_password_provider.dart';
 import 'package:inframat/provider/invards_all_details_provider.dart';
 import 'package:inframat/provider/login_provider.dart';
+import 'package:inframat/provider/mini_coilSlittingPlan_provider.dart';
+import 'package:inframat/provider/mini_coilsllitting_provider.dart';
 import 'package:inframat/provider/new_password_provider.dart';
 import 'package:inframat/provider/operator_login_provider.dart';
 import 'package:inframat/provider/operator_logout_provider.dart';
@@ -23,7 +25,10 @@ import 'package:inframat/provider/punch_in_provider.dart';
 import 'package:inframat/provider/punch_out_provider.dart';
 import 'package:inframat/provider/qr_scann_provider.dart';
 import 'package:inframat/provider/quality_check_provider.dart';
+import 'package:inframat/provider/skin_pass_plan_provider.dart';
+import 'package:inframat/provider/skinpass_process_provider.dart';
 import 'package:inframat/provider/sub_category_provider.dart';
+import 'package:inframat/provider/tube_millplan_provider.dart';
 import 'package:inframat/provider/vendors_list_provider.dart';
 import 'package:inframat/screens/rewinding_process.dart';
 
@@ -35,6 +40,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => TubeMillplanProvider()),
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => ConnectionProvider()),
         ChangeNotifierProvider(create: (context) => OperatorLoginProvider()),
@@ -65,11 +71,22 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => AnnealingPlanListProvider(),
         ),
+        ChangeNotifierProvider(create: (context) => SkinPassPlanProvider()),
+        ChangeNotifierProvider(create: (context) => SkinpassProcessProvider()),
+        ChangeNotifierProvider(
+          create: (context) => MiniCoilslittingplanProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (context) => MiniCoilsllittingProcessProvider(),
+        ),
       ],
       child: MyApp(),
     ),
   );
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -79,6 +96,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       title: 'Inframat',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

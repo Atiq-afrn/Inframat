@@ -1,19 +1,38 @@
-import 'dart:ffi';
+import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
-import 'package:inframat/const/imageconst.dart';
-import 'package:inframat/screens/coil_sliting_screen2.dart';
-import 'package:inframat/screens/coil_slitting_screen.dart';
+import 'package:inframat/models/mini_coilSlitting_body_model.dart';
+import 'package:inframat/provider/mini_coilsllitting_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/mini%20coil%20slitting/mini_coil_slitting3.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:inframat/shared_pref/shared_preferance.dart';
+import 'package:provider/provider.dart';
 
 class Minicoilslitting2 extends StatefulWidget {
-  const Minicoilslitting2({super.key});
+  const Minicoilslitting2({
+    super.key,
+    this.textnameforcrm,
+    this.batchNo,
+    this.length,
+    this.width,
+    this.weight,
+    this.inwardId,
+    this.planId,
+    this.image,
+  });
+  final String? textnameforcrm;
+  final String? batchNo;
+  final String? length;
+  final String? width;
+  final String? weight;
+  final String? inwardId;
+  final String? planId;
+  final dynamic image;
 
   @override
   State<Minicoilslitting2> createState() => _Minicoilslitting2State();
@@ -142,38 +161,58 @@ class _Minicoilslitting2State extends State<Minicoilslitting2> {
               ],
             ),
             SizedBox(height: 20),
-            ContainerWidget(onSelect: () {}),
+            ContainerWidget(
+              onSelect: () {},
+              batchNo: widget.batchNo,
+              inwardId: widget.inwardId,
+              lenght: widget.length,
+              width: widget.width,
+              weight: widget.weight,
+              planId: widget.planId,
+            ),
           ],
         ),
       ),
     );
   }
-
-  Future alertDialog1() async {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            actions: [
-              Container(
-                height: 21,
-                width: MediaQuery.of(context).size.width * .3,
-                color: Appcolor.deepPurple,
-              ),
-            ],
-          ),
-    );
-  }
 }
 
 class ContainerWidget extends StatefulWidget {
-  const ContainerWidget({super.key, required Null Function() onSelect});
+  const ContainerWidget({
+    super.key,
+    required Null Function() onSelect,
+    this.batchNo,
+    this.inwardId,
+    this.lenght,
+    this.width,
+    this.weight,
+    this.planId,
+  });
+  final String? batchNo;
+  final String? inwardId;
+  final String? lenght;
+  final String? width;
+  final String? weight;
+  final String? planId;
 
   @override
   State<ContainerWidget> createState() => _ContainerWidgetState();
 }
 
 class _ContainerWidgetState extends State<ContainerWidget> {
+  String? inwardId;
+  String? machineId;
+  Future<String?> gettingInvardid() async {
+    inwardId = await AppStorage.gettinginwardId();
+    return machineId;
+  }
+
+  Future<String?> gettingMachineId() async {
+    machineId = await AppStorage.gettingMachineId();
+
+    return machineId;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -205,7 +244,10 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -219,7 +261,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.inwardId.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -235,7 +277,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  "  ${widget.lenght} MM x ${widget.lenght} MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -250,7 +292,10 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.weight}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -262,7 +307,10 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   "Planning :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text("01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  "${widget.planId}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -326,7 +374,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   }
 
   List<File?> selectedImages = [];
-  TextEditingController searchcontroller = TextEditingController();
+  List<CoilSlittingItem> minislittinglist = [];
+  TextEditingController scrapecontroller = TextEditingController();
   void _showAlertDialog() {
     showDialog(
       context: context,
@@ -442,21 +491,27 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       ),
                       SizedBox(height: 10),
                       ...List.generate(selectedImages.length, (index) {
-                        return buildItemBlock(
-                          index,
-                          selectedImages[index],
-                          (newImage) {
-                            setState(() => selectedImages[index] = newImage);
-                            setDialogState(() {});
-                          },
-                          index == selectedImages.length - 1 &&
-                                  selectedImages.length < 3
-                              ? () {
-                                setState(() => selectedImages.add(null));
-                                setDialogState(() {});
-                              }
-                              : null,
-                        );
+                        // print("Selected images length: ${selectedImages.length}");
+                        print("Index: $index, Image: ${selectedImages[index]}");
+                        if (index >= 0 && index <= 2) {
+                          return buildItemBlock(
+                            index,
+                            selectedImages[index],
+                            (newImage) {
+                              setState(() => selectedImages[index] = newImage);
+                              setDialogState(() {});
+                            },
+                            index == selectedImages.length - 1 &&
+                                    selectedImages.length <= 3
+                                ? () {
+                                  setState(() => selectedImages.add(null));
+                                  setDialogState(() {});
+                                }
+                                : null,
+                          );
+                        } else {
+                          return Container();
+                        }
                       }),
                       if (selectedImages.isEmpty)
                         buildItemBlock(
@@ -496,7 +551,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                               height: 30,
                               width: MediaQuery.of(context).size.width * .5,
                               color: Colors.white,
-                              child: const TextField(
+                              child: TextField(
+                                controller: scrapecontroller,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
@@ -536,16 +592,41 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                             ),
                           ),
 
-                          searchcontroller.text.isNotEmpty
+                          scrapecontroller.text.isNotEmpty
                               ? GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => CoilSlitingScreen2(),
-                                    ),
-                                  );
+                                  Provider.of<MiniCoilsllittingProcessProvider>(
+                                        context,
+                                        listen: false,
+                                      )
+                                      .gettingminiCoilSlitting(
+                                        minislittinglist,
+                                        scrapecontroller.text,
+                                        widget.batchNo!,
+                                      )
+                                      .then((value) {
+                                        if (value!.status == "success") {
+                                          print("Data inserted in table");
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                      Minicoilslitting3(),
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                "Data is not matched",
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      });
                                 },
                                 child: Container(
                                   height: 40,
@@ -567,32 +648,21 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                   ),
                                 ),
                               )
-                              : GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => CoilSlitingScreen2(),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: MediaQuery.of(context).size.width * .3,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Appcolor.greycolor,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Submit",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                              : Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .3,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Appcolor.greycolor,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
 
-                                        color: Appcolor.whitecolor,
-                                      ),
+                                      color: Appcolor.whitecolor,
                                     ),
                                   ),
                                 ),
@@ -610,6 +680,11 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     );
   }
 
+  TextEditingController lengthController = TextEditingController();
+  TextEditingController widthController = TextEditingController();
+  TextEditingController mtWeightController = TextEditingController();
+  TextEditingController actualWeightController = TextEditingController();
+  dynamic base64Image;
   Widget buildItemBlock(
     int index,
     File? selectedImage,
@@ -628,9 +703,24 @@ class _ContainerWidgetState extends State<ContainerWidget> {
               String.fromCharCode(65 + index), // A, B, C...
               style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
             ),
-            if (onAddPressed != null)
+            if (onAddPressed != null && (index <= 2 && index >= 0))
               GestureDetector(
-                onTap: onAddPressed,
+                onTap: () async {
+                  onAddPressed.call();
+                  print(index);
+                  CoilSlittingItem newEntry = CoilSlittingItem(
+                    inwardId: (await gettingInvardid() ?? " null value"),
+                    machineId: (await gettingMachineId() ?? "null value"),
+                    length: lengthController.text,
+                    width: widthController.text,
+                    thickness: widget.width,
+                    expectedWeight: mtWeightController.text,
+                    weight: actualWeightController.text,
+                    image: "base64Image",
+                  );
+                  minislittinglist.add(newEntry);
+                },
+
                 child: const Icon(Icons.add_circle_outline, size: 25),
               ),
           ],
@@ -658,6 +748,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: TextField(
+                      controller: lengthController,
                       decoration: const InputDecoration(
                         hintText: "00.00",
                         contentPadding: EdgeInsets.symmetric(
@@ -687,8 +778,9 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: TextField(
+                      controller: widthController,
                       decoration: const InputDecoration(
-                        hintText: "3.00",
+                        hintText: "0.00",
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 8,
@@ -718,7 +810,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                 height: 30,
                 width: MediaQuery.of(context).size.width * .5,
                 color: Colors.white,
-                child: const TextField(
+                child: TextField(
+                  controller: mtWeightController,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     hintText: "00.00",
@@ -755,9 +848,9 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                     child: Padding(
                       padding: EdgeInsets.all(0),
                       child: TextField(
+                        controller: actualWeightController,
                         textAlign: TextAlign.center,
 
-                        // controller: actualWeightController,
                         decoration: InputDecoration(
                           hintText: "00.00",
                           border: InputBorder.none,
@@ -781,6 +874,8 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                 );
                 if (pickedImage != null) {
                   onImageSelected(File(pickedImage.path));
+                  List<int> readasbyte = await pickedImage.readAsBytes();
+                  base64Image = base64Encode(readasbyte);
                 }
               },
               child: Container(

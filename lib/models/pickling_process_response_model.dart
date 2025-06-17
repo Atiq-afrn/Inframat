@@ -1,79 +1,71 @@
-// pickled_oil_model.dart
-
 class PicklingProcessResponseModel {
-  final String status;
-  final String message;
-  final PickledOilData data;
+  final String? status;
+  final String? message;
+  final PickledOilStoreData? data;
 
-  PicklingProcessResponseModel({
-    required this.status,
-    required this.message,
-    required this.data,
-  });
+  PicklingProcessResponseModel({this.status, this.message, this.data});
 
   factory PicklingProcessResponseModel.fromJson(Map<String, dynamic> json) {
     return PicklingProcessResponseModel(
-      status: json['status'] ?? '',
-      message: json['message'] ?? '',
-      data: PickledOilData.fromJson(json['data']),
+      status: json['status']?.toString(),
+      message: json['message']?.toString(),
+      data:
+          json['data'] != null
+              ? PickledOilStoreData.fromJson(json['data'])
+              : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'message': message,
-      'data': data.toJson(),
-    };
+    return {'status': status, 'message': message, 'data': data?.toJson()};
   }
 }
 
-class PickledOilData {
-  final int id;
-  final int inwardId;
-  final String batchNo;
-  final double actualWeight;
-  final double picklingLoss;
-  final int width;
-  final int length;
-  final int thickness;
-  final String image;
-  final String createdAt;
-  final String updatedAt;
+class PickledOilStoreData {
+  final String? inwardId;
+  final String? batchNo;
+  final String? actualWeight;
+  final String? picklingLoss;
+  final String? width;
+  final String? length;
+  final String? thickness;
+  final String? image;
+  final String? updatedAt;
+  final String? createdAt;
+  final String? id;
 
-  PickledOilData({
-    required this.id,
-    required this.inwardId,
-    required this.batchNo,
-    required this.actualWeight,
-    required this.picklingLoss,
-    required this.width,
-    required this.length,
-    required this.thickness,
-    required this.image,
-    required this.createdAt,
-    required this.updatedAt,
+  PickledOilStoreData({
+    this.inwardId,
+    this.batchNo,
+    this.actualWeight,
+    this.picklingLoss,
+    this.width,
+    this.length,
+    this.thickness,
+    this.image,
+    this.updatedAt,
+    this.createdAt,
+    this.id,
   });
 
-  factory PickledOilData.fromJson(Map<String, dynamic> json) {
-    return PickledOilData(
-      id: json['id'],
-      inwardId: json['inward_id'],
-      batchNo: json['batch_no'],
-      actualWeight: (json['actual_weight'] as num).toDouble(),
-      picklingLoss: (json['pickling_loss'] as num).toDouble(),
-      width: json['width'],
-      length: json['length'],
-      thickness: json['thickness'],
-      image: json['image'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+  factory PickledOilStoreData.fromJson(Map<String, dynamic> json) {
+    return PickledOilStoreData(
+      inwardId: json['inward_id']?.toString(),
+      batchNo: json['batch_no']?.toString(),
+      actualWeight: json['actual_weight']?.toString(),
+      picklingLoss: json['pickling_loss']?.toString(),
+      width: json['width']?.toString(),
+      length: json['length']?.toString(),
+      thickness: json['thickness']?.toString(),
+      image: json['image']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      id: json['id']?.toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'inward_id': inwardId,
       'batch_no': batchNo,
       'actual_weight': actualWeight,
@@ -82,8 +74,9 @@ class PickledOilData {
       'length': length,
       'thickness': thickness,
       'image': image,
-      'created_at': createdAt,
       'updated_at': updatedAt,
+      'created_at': createdAt,
+      'id': id,
     };
   }
 }

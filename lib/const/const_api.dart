@@ -37,4 +37,9 @@ class ConstApi {
 
   static const cglProcessApi = "$baseApiUrl/cgl_process";
   static const annealingPlanListApi = "$baseApiUrl/annealing_plan_list";
+  static const skinPassPlanlistApi = "$baseApiUrl/skin_pass_plan_list";
+  static const skinpassProcessApi = "$baseApiUrl/skinpass_process";
+  static const miniCoilSlittingPlanapi = "$baseApiUrl/mini_slitting_plan_list";
+  static const miniCoilslittingProcessApi = "$baseApiUrl/mini_slitting_process";
+  static const tubeMillPlanListApi = "$baseApiUrl/tube_mill_plan_list";
 }

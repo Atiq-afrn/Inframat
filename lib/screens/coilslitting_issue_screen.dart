@@ -619,22 +619,36 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                         scrapeController.text,
                                       )
                                       .then((value) {
-                                        print(value!.data[1].batchNo);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => CoilSlitingScreen2(
-                                                  batchNo1: value.data[0],
+                                        if (value?.status == "success") {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CoilSlitingScreen2(
+                                                    batchNo1: value?.data?[0],
 
-                                                  batchNo2: value.data[1],
-                                                  batchNo3: value.data[3], //3
+                                                    batchNo2: value?.data?[1],
+                                                    batchNo3: value?.data?[2],
+                                                  ),
+                                            ),
+                                          );
+                                        } else {
+                                          print("errorr atiq");
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Center(
+                                                child: Text(
+                                                  "This list already processed",
                                                 ),
-                                          ),
-                                        );
-                                      })
-                                      .catchError((error) {
-                                        print("Error: $error");
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       });
                                 },
                                 child: Container(
@@ -696,7 +710,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                     machineId: (await gettingMachineId()) ?? 'default_id',
                     length: lengthController.text,
                     expectedWeight: actualWeightController.text,
-                    width: "",
+                    width: widthController.text,
                     thickness: widthController.text,
                     weight: weightController.text,
 

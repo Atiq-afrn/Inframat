@@ -371,7 +371,7 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
                     "Batch /ID no.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(": 03-25B-0651"),
+                  Text(widget.batchNo1!.batchNo.toString()),
                 ],
               ),
 

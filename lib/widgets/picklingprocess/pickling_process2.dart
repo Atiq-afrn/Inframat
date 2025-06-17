@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/models/pickling_process_response_model.dart';
@@ -713,12 +712,12 @@ class _ContainerWidgetforpickling2State
                                     listen: false,
                                   )
                                   .gettingPicklingProcess(
-                                    widget.batchNo.toString(),
+                                    widget.batchNo!,
                                     actualweightcontroller.text,
                                     picklinglossecontroller.text,
-                                    selectedImage,
                                     lengthcontroller.text,
                                     widthcontroller.text,
+                                    selectedImage,
                                   )
                                   .then((value) {
                                     if (value != null) {
@@ -730,15 +729,12 @@ class _ContainerWidgetforpickling2State
                                 MaterialPageRoute(
                                   builder:
                                       (context) => Picklingprocess3(
-                                        batchNo: responsedata?.data.batchNo,
-                                        length:
-                                            responsedata?.data.length
-                                                .toString(),
-                                        width:
-                                            responsedata?.data.actualWeight
-                                                .toString(),
+                                        batchNo: responsedata?.data?.batchNo,
+                                        length: responsedata?.data?.length,
+                                        width: responsedata?.data?.actualWeight,
                                         picklingLoss:
-                                            responsedata?.data.id.toString(),
+                                            responsedata?.data?.picklingLoss,
+                                            image: responsedata?.data?.image,
                                       ),
                                 ),
                               );

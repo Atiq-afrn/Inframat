@@ -1,10 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/skin_process_response_model.dart';
 import 'package:inframat/screens/dashboard2.dart';
 
 class SkinPass3 extends StatefulWidget {
-  const SkinPass3({super.key});
+  const SkinPass3({
+    super.key,
+    // this.batchNo,
+    // this.length,
+    // this.width,
+    // this.mtweight,
+    // this.actualWeight,
+    // this.scrapweight,
+    // this.image,
+    this.responsedata,
+    this.supplierId,
+  });
+  // final String? batchNo;
+  // final String? length;
+  // final String? width;
+  // final String? mtweight;
+  // final String? actualWeight;
+  // final String? scrapweight;
+  // final dynamic image;
+  final List<SkinProcessData>? responsedata;
+  final String? supplierId;
 
   @override
   State<SkinPass3> createState() => _SkinPass3State();
@@ -186,10 +207,18 @@ class _SkinPass3State extends State<SkinPass3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-              Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-              Text("7.056", style: TextStyle(fontSize: 12)),
-              Text("6.990"),
+              Text(
+                widget.responsedata![0].batchNo ?? "null ",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text(
+                "${widget.responsedata![0].length ?? "null"} MM x\n ${widget.responsedata![0].width ?? "null"} MM\n x CR-2 x SAIL",
+              ),
+              Text(
+                "${widget.responsedata![0].weight ?? "null"}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.responsedata![0].actualWeight ?? "null"}"),
               GestureDetector(
                 onTap: () {
                   openDialoge4();
@@ -252,13 +281,17 @@ class _SkinPass3State extends State<SkinPass3> {
           Row(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text("03-25D-0651"),
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * .14,
+                ),
+                child: Text("${widget.responsedata![0].scrap ?? "null"}"),
               ),
-              SizedBox(width: 50),
+
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text("0.029"),
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * .2,
+                ),
+                child: Text("${widget.responsedata![0].weight ?? "null"}"),
               ),
             ],
           ),
@@ -308,7 +341,7 @@ class _SkinPass3State extends State<SkinPass3> {
                     "Batch /ID no.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(": 03-25B-0651"),
+                  Text(": ${widget.responsedata![0].batchNo ?? "null"}"),
                 ],
               ),
 
@@ -318,7 +351,9 @@ class _SkinPass3State extends State<SkinPass3> {
                     "size Details",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("  :250 MM x 0.70 MM x\n   GR-1 x TATA"),
+                  Text(
+                    "  :${widget.responsedata![0].length ?? "null"}MM x ${widget.responsedata![0].width ?? "null"} MM x\n   GR-1 x TATA",
+                  ),
                 ],
               ),
               SizedBox(height: 10),
@@ -328,7 +363,7 @@ class _SkinPass3State extends State<SkinPass3> {
                     "Actual wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.456"),
+                  Text(" :  ${widget.responsedata![0].actualWeight ?? "null"}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -338,7 +373,7 @@ class _SkinPass3State extends State<SkinPass3> {
                     "Mill wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.450"),
+                  Text(" :  ${widget.responsedata![0].weight ?? "null"}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -348,14 +383,14 @@ class _SkinPass3State extends State<SkinPass3> {
                     "Qty Mt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : 21.56"),
+                  Text(" : ${widget.responsedata![0].weight ?? "null"}"),
                 ],
               ),
               SizedBox(height: 20),
               Row(
                 children: [
                   Text(
-                    "Supplier MRN Coil ID No :  13",
+                    "Supplier MRN Coil ID No :  ${widget.supplierId}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                 ],

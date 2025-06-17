@@ -182,7 +182,7 @@ class _Invard2State extends State<Invard2> {
                         children: [
                           Text("Item Name"),
                           Text("Qty mty"),
-                          Text("Recieved Qty"),
+                          Text(" Completed Qty"),
                         ],
                       ),
                       SizedBox(height: 5),

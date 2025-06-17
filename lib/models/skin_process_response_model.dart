@@ -1,93 +1,88 @@
-class CoilSlittingResponseModel {
+class SkinProcessResponseModel {
   final String? status;
   final String? message;
-  final List<CoilSlittingEntry>? data;
+  final SkinProcessData? data;
 
-  CoilSlittingResponseModel({
-    this.status,
-    this.message,
-    this.data,
-  });
+  SkinProcessResponseModel({this.status, this.message, this.data});
 
-  factory CoilSlittingResponseModel.fromJson(Map<String, dynamic> json) {
-    return CoilSlittingResponseModel(
+  factory SkinProcessResponseModel.fromJson(Map<String, dynamic> json) {
+    return SkinProcessResponseModel(
       status: json['status'] as String?,
       message: json['message'] as String?,
-      data: (json['data'] as List?)
-          ?.map((x) => CoilSlittingEntry.fromJson(x))
-          .toList(),
+      data:
+          json['data'] != null ? SkinProcessData.fromJson(json['data']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'message': message,
-      'data': data?.map((x) => x.toJson()).toList(),
-    };
+    return {'status': status, 'message': message, 'data': data?.toJson()};
   }
 }
 
-class CoilSlittingEntry {
+class SkinProcessData {
+  final String? id;
   final String? batchNo;
   final String? inwardId;
   final String? length;
-  final String? width;
   final String? thickness;
-  final String? expectedWeight;
+  final String? width;
   final String? weight;
+  final String? actualWeight;
+  final String? scrap;
   final String? machineId;
   final String? image;
   final String? updatedAt;
   final String? createdAt;
-  final String? id;
 
-  CoilSlittingEntry({
+  SkinProcessData({
+    this.id,
     this.batchNo,
     this.inwardId,
     this.length,
-    this.width,
     this.thickness,
-    this.expectedWeight,
+    this.width,
     this.weight,
+    this.actualWeight,
+    this.scrap,
     this.machineId,
     this.image,
     this.updatedAt,
     this.createdAt,
-    this.id,
   });
 
-  factory CoilSlittingEntry.fromJson(Map<String, dynamic> json) {
-    return CoilSlittingEntry(
+  factory SkinProcessData.fromJson(Map<String, dynamic> json) {
+    return SkinProcessData(
+      id: json['id']?.toString(),
       batchNo: json['batch_no']?.toString(),
       inwardId: json['inward_id']?.toString(),
       length: json['length']?.toString(),
-      width: json['width']?.toString(),
       thickness: json['thickness']?.toString(),
-      expectedWeight: json['expected_weight']?.toString(),
+      width: json['width']?.toString(),
       weight: json['weight']?.toString(),
+      actualWeight: json['actual_weight']?.toString(),
+      scrap: json['scrap']?.toString(),
       machineId: json['machine_id']?.toString(),
       image: json['image']?.toString(),
       updatedAt: json['updated_at']?.toString(),
       createdAt: json['created_at']?.toString(),
-      id: json['id']?.toString(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'batch_no': batchNo,
       'inward_id': inwardId,
       'length': length,
-      'width': width,
       'thickness': thickness,
-      'expected_weight': expectedWeight,
+      'width': width,
       'weight': weight,
+      'actual_weight': actualWeight,
+      'scrap': scrap,
       'machine_id': machineId,
       'image': image,
       'updated_at': updatedAt,
       'created_at': createdAt,
-      'id': id,
     };
   }
 }

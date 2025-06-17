@@ -8,15 +8,16 @@ import 'package:inframat/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 class Facerecognize2 extends StatefulWidget {
-  Facerecognize2({super.key, required this.selectedImage});
+  Facerecognize2({super.key, required this.selectedImage,this.base64image});
   dynamic selectedImage;
+  dynamic base64image;
 
   @override
   State<Facerecognize2> createState() => _Facerecognize2State();
 }
 
 class _Facerecognize2State extends State<Facerecognize2> {
-  int connectionId = 0;
+  // int connectionId = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +94,7 @@ class _Facerecognize2State extends State<Facerecognize2> {
             GestureDetector(
               onTap: () {
                 Provider.of<PunchOutProvider>(context, listen: false)
-                    .getPunchOut()
+                    .getPunchOut(widget.base64image)
                     .then((value) {
                       print("Punch Out success");
                     })

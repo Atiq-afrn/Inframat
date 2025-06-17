@@ -21,7 +21,7 @@ class PiicklingProcessState extends State<PiicklingProcess> {
     super.dispose();
   }
 
-  List<PicklingData> picklingPlanList = [];
+  List<PicklingPlan> picklingPlanList = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -32,7 +32,7 @@ class PiicklingProcessState extends State<PiicklingProcess> {
     ).gettingPicklingPlanList().then((values) {
       if (values!.status == "success") {
         picklingPlanList.clear();
-        picklingPlanList.addAll(values.data);
+        picklingPlanList.addAll(values.data!);
       }
     });
   }

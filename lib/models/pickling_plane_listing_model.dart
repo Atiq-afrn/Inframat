@@ -1,73 +1,71 @@
-
-
 class PicklingPlanlistModel {
-  final String status;
-  final String message;
-  final List<PicklingData> data;
+  final String? status;
+  final String? message;
+  final List<PicklingPlan>? data;
 
   PicklingPlanlistModel({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory PicklingPlanlistModel.fromJson(Map<String, dynamic> json) {
     return PicklingPlanlistModel(
-      status: json['status'] ?? '',
-      message: json['message'] ?? '',
-      data: (json['data'] as List)
-          .map((item) => PicklingData.fromJson(item))
-          .toList(),
+      status: json['status']?.toString(),
+      message: json['message']?.toString(),
+      data: json['data'] != null
+          ? List<PicklingPlan>.from(json['data'].map((item) => PicklingPlan.fromJson(item)))
+          : null,
     );
   }
 }
 
-class PicklingData {
-  final int id;
-  final int? machineId;
-  final int statusPickling;
-  final int inwardId;
-  final String batchNo;
-  final int length;
-  final int width;
-  final int thickness;
-  final String image;
-  final String weight;
-  final String createdAt;
-  final String updatedAt;
-  final String? expectedWeight;
+class PicklingPlan {
+  final String? id;
+  final String? inwardId;
+  final String? batchNo;
+  final String? length;
+  final String? width;
+  final String? thickness;
+  final String? image;
+  final String? weight;
+  final String? machineId;
+  final String? statusPickling;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? scrap;
 
-  PicklingData({
-    required this.id,
+  PicklingPlan({
+    this.id,
+    this.inwardId,
+    this.batchNo,
+    this.length,
+    this.width,
+    this.thickness,
+    this.image,
+    this.weight,
     this.machineId,
-    required this.statusPickling,
-    required this.inwardId,
-    required this.batchNo,
-    required this.length,
-    required this.width,
-    required this.thickness,
-    required this.image,
-    required this.weight,
-    required this.createdAt,
-    required this.updatedAt,
-    this.expectedWeight,
+    this.statusPickling,
+    this.createdAt,
+    this.updatedAt,
+    this.scrap,
   });
 
-  factory PicklingData.fromJson(Map<String, dynamic> json) {
-    return PicklingData(
-      id: json['id'],
-      machineId: json['machine_id'],
-      statusPickling: json['status_pickling'],
-      inwardId: json['inward_id'],
-      batchNo: json['batch_no'],
-      length: json['length'],
-      width: json['width'],
-      thickness: json['thickness'],
-      image: json['image'],
-      weight: json['weight'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      expectedWeight: json['expected_weight'],
+  factory PicklingPlan.fromJson(Map<String, dynamic> json) {
+    return PicklingPlan(
+      id: json['id']?.toString(),
+      inwardId: json['inward_id']?.toString(),
+      batchNo: json['batch_no']?.toString(),
+      length: json['length']?.toString(),
+      width: json['width']?.toString(),
+      thickness: json['thickness']?.toString(),
+      image: json['image']?.toString(),
+      weight: json['weight']?.toString(),
+      machineId: json['machine_id']?.toString(),
+      statusPickling: json['status_pickling']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      scrap: json['scrap']?.toString(),
     );
   }
 }

@@ -12,7 +12,7 @@ class PunchOutProvider extends ChangeNotifier {
   PunchOutModel? _punchOutOperator;
   PunchOutModel? get punchOutOperator => _punchOutOperator;
 
-  Future<PunchOutModel?> getPunchOut() async {
+  Future<PunchOutModel?> getPunchOut(String base64PunchOutImage) async {
     final response = await http.post(
       Uri.parse(ConstApi.punchOutOperator),
       body: {
@@ -20,7 +20,7 @@ class PunchOutProvider extends ChangeNotifier {
         "auth_code": await AppStorage.gettingAuthId(),
         "lat": await AppStorage.gettingLatitude(),
         "long": await AppStorage.gettingLongitude(),
-        "image": await AppStorage.gettingPunchOutImage(),
+        "image": base64PunchOutImage,
         "date": "10",
         "month": "04",
         "year": "2025",
