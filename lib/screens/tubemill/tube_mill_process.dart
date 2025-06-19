@@ -21,36 +21,25 @@ class TubemillProcess extends StatefulWidget {
 class _TubemillProcessState extends State<TubemillProcess> {
   TextEditingController alertDialog3controller = TextEditingController();
   TextEditingController searchbyplancontroller = TextEditingController();
+
+  void fetchData(BuildContext context) async {
+    final provider = Provider.of<TubemillPrvider1>(context, listen: false);
+    final value = await provider.fetchTubeMillplan();
+    if (value?.data != null) {
+      planList.clear();
+      planList.addAll(value!.data);
+    } else {
+      print("Network error or no data found");
+    }
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<TubeMillplanProvider>(
-        navigatorKey.currentContext!,
-        listen: false,
-      ).fetchTubeMillplan().then((value) {
-        if (value?.data != null) {
-          planList.clear();
-          planList.addAll(value!.data);
-        }
-      });
+      fetchData(context);
     });
 
     super.initState();
-
-    // Provider.of<CoilslittingPlanSeaarchProvider>(
-    //   context,
-    //   listen: false,
-    // ).gettingcoilSlittingPlanDataList().then((value) {
-    //   if (value?.status == "success") {
-    //     // planListing.clear();
-    //     // print(value?.data.length ?? []);
-    //     // planListing.addAll(value!.data);
-    //     print("datafetched");
-    //   } else {
-    //     print("network error");
-    //   }
-    // });
   }
 
   @override
@@ -76,6 +65,14 @@ class _TubemillProcessState extends State<TubemillProcess> {
       ),
       body: Column(
         children: [
+          ElevatedButton(
+            onPressed: () {
+              if (mounted) {
+                fetchData(context);
+              }
+            },
+            child: Text("data"),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 20, top: 20),
             child: Row(children: [Text("Search plan :")]),
@@ -131,20 +128,33 @@ class _TubemillProcessState extends State<TubemillProcess> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Container(
-                height: 31,
-                width: MediaQuery.of(context).size.width * .25,
-                decoration: BoxDecoration(
-                  color: Appcolor.deepPurple,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Center(
-                  child: Text(
-                    "Plan",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Appcolor.whitecolor,
+              GestureDetector(
+                onTap: () async {
+                  final provider = Provider.of<TubemillPrvider1>(
+                    context,
+                    listen: false,
+                  );
+                  final value = await provider.fetchTubeMillplan();
+                  if (value?.data != null) {
+                    planList.clear();
+                    planList.addAll(value!.data);
+                  }
+                },
+                child: Container(
+                  height: 31,
+                  width: MediaQuery.of(context).size.width * .25,
+                  decoration: BoxDecoration(
+                    color: Appcolor.deepPurple,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Plan",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Appcolor.whitecolor,
+                      ),
                     ),
                   ),
                 ),

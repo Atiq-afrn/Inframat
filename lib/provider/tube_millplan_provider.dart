@@ -6,7 +6,7 @@ import 'package:inframat/logger.dart';
 import 'package:inframat/models/tube_mill_planmodel.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 
-class TubeMillplanProvider extends ChangeNotifier {
+class TubemillPrvider1 extends ChangeNotifier {
   TubeMillPlanModel? _tubeMillPlan;
 
   TubeMillPlanModel? get tubeMillPlan => _tubeMillPlan;

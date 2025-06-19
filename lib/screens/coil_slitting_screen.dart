@@ -186,21 +186,16 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: planListing.length,
-                      itemBuilder: (BuildContext, index) {
+                      itemCount: 5, // Dummy shimmer items
+                      itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: ContainerWidgetforall(
-                            textname: "Select",
-                            supplyerIdNo:
-                                planListing[index].vendorId.toString().isEmpty
-                                    ? "no plan found"
-                                    : planListing[index].vendorId.toString(),
-
-                            size: planListing[index].expectedLength.toString(),
-                            weight: planListing[index].expectedWeight,
-
-                            batchNo: planListing[index].batchNo,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         );
                       },
@@ -212,21 +207,20 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: planListing.length,
-                    itemBuilder: (BuildContext, index) {
+                    itemCount: filteredItems.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         child: ContainerWidgetforall(
                           textname: "Select",
                           supplyerIdNo:
-                              planListing[index].vendorId.toString().isEmpty
+                              item.vendorId.toString().isEmpty
                                   ? "no plan found"
-                                  : planListing[index].vendorId.toString(),
-
-                          size: planListing[index].expectedLength.toString(),
-                          weight: planListing[index].expectedWeight,
-
-                          batchNo: planListing[index].batchNo,
+                                  : item.vendorId.toString(),
+                          size: item.expectedLength.toString(),
+                          weight: item.expectedWeight,
+                          batchNo: item.batchNo,
                         ),
                       );
                     },

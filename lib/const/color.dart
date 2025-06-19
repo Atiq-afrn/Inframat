@@ -10,8 +10,9 @@ class Appcolor {
   static const pinkcolor = Color(0xffFDF4FF);
   static const lightgrey = Color(0xffF1F2F7);
   static const red = Color(0xffFF0000);
+  static const lightgrey3 = Color(0xffEBEBEB);
 
   static const lightred = Color(0xffEAE7ED);
   static const milkywhite = Color(0xffF8F8F8);
-  static const lightred2=Color(0xff298F26);
+  static const lightred2 = Color(0xff298F26);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/invard.printing.barcode.dart/invard_barcode.dart';
 import 'package:inframat/models/coil_slitting_response_model.dart';
 
 import 'package:inframat/screens/coil_slitting_screen.dart';
@@ -329,7 +330,7 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RewindingProcess()),
+                  MaterialPageRoute(builder: (context) => InvardBarcode()),
                 );
               },
               child: Container(
