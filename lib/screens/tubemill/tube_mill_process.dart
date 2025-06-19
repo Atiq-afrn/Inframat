@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/main.dart';
 import 'package:inframat/models/tube_mill_planmodel.dart';
-import 'package:inframat/provider/coilslitting_plan_seaarch_provider.dart';
 import 'package:inframat/provider/tube_millPlan_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/tubemill/contianer_widget_for_tubemill.dart';
@@ -18,23 +17,24 @@ class TubemillProcess extends StatefulWidget {
   State<TubemillProcess> createState() => _TubemillProcessState();
 }
 
+//
 class _TubemillProcessState extends State<TubemillProcess> {
   TextEditingController alertDialog3controller = TextEditingController();
   TextEditingController searchbyplancontroller = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   Provider.of<TubeMillplanProvider>(
-    //     navigatorKey.currentContext!,
-    //     listen: false,
-    //   ).fetchTubeMillplan().then((value) {
-    //     if (value?.data != null) {
-    //       planList.clear();
-    //       planList.addAll(value!.data);
-    //     }
-    //   });
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TubeMillplanProvider>(
+        navigatorKey.currentContext!,
+        listen: false,
+      ).fetchTubeMillplan().then((value) {
+        if (value?.data != null) {
+          planList.clear();
+          planList.addAll(value!.data);
+        }
+      });
+    });
 
     super.initState();
 

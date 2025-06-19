@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:inframat/bottomnav_screen/bdocument.dart';
@@ -14,7 +14,6 @@ import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:inframat/screens/crm_cold_mill/crm_cold_rolling.dart';
 import 'package:inframat/screens/cutting_process/cutting_process.dart';
 import 'package:inframat/screens/galvanizing_line/continuous_galvanizing_line.dart';
-import 'package:inframat/screens/login.dart';
 import 'package:inframat/screens/mini%20coil%20slitting/mini_coil_slitting.dart';
 import 'package:inframat/screens/skin_pass/skin_pass.dart';
 import 'package:inframat/screens/splash_screen.dart';
@@ -22,7 +21,6 @@ import 'package:inframat/screens/tubemill/tube_mill_process.dart';
 import 'package:inframat/widgets/invard_widget.dart/invard.dart';
 import 'package:inframat/widgets/picklingprocess/piickling_process.dart';
 import 'package:inframat/screens/punch_out.dart';
-import 'package:inframat/screens/punchnow.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 import 'package:inframat/widgets/dashboard_widget.dart';
 import 'package:provider/provider.dart';
