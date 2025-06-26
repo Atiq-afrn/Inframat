@@ -43,4 +43,8 @@ class ConstApi {
   static const miniCoilslittingProcessApi = "$baseApiUrl/mini_slitting_process";
   static const tubeMillPlanListApi = "$baseApiUrl/tube_mill_plan_list";
   static const printQrcodeApi = "$baseApiUrl/print_qr";
+  static const cuttingProcessplanApi = "$baseApiUrl/cutting-process_plan";
+  static const cuttingProcessProccessApi = "$baseApiUrl/cutting-process";
+  static const pauseListapi = "$baseApiUrl/pause_reasons_list";
+  static const pausedataApi="$baseApiUrl/update-log/1";
 }

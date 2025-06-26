@@ -2,13 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/mini_coilSlittingResponse_model.dart';
 
 import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/issue.dart';
+import 'package:inframat/screens/mini%20coil%20slitting/printqr_forminicoilslitting.dart';
 
 class Minicoilslitting3 extends StatefulWidget {
-  const Minicoilslitting3({super.key});
+  const Minicoilslitting3({
+    super.key,
+    this.batchNo0,
+    this.batchNo1,
+    this.batchNo2,
+  });
+  final CoilSlittingData? batchNo0;
+  final CoilSlittingData? batchNo1;
+  final CoilSlittingData? batchNo2;
 
   @override
   State<Minicoilslitting3> createState() => _Minicoilslitting3State();
@@ -202,10 +212,18 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-              Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-              Text("7.50", style: TextStyle(fontSize: 12)),
-              Text("13.450"),
+              Text(
+                "${widget.batchNo0?.batchNo}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text(
+                "${widget.batchNo0?.length} MM x\n ${widget.batchNo0?.width}MM\n x CR-2 x SAIL",
+              ),
+              Text(
+                "${widget.batchNo0?.expectedWeight}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.batchNo0?.weight}"),
               GestureDetector(
                 onTap: () {
                   openDialoge4();
@@ -231,10 +249,18 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-              Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-              Text("7.056", style: TextStyle(fontSize: 12)),
-              Text("13.450"),
+              Text(
+                "${widget.batchNo1?.batchNo}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text(
+                "${widget.batchNo1?.length} MM x\n${widget.batchNo1?.width}MM\n x CR-2 x SAIL",
+              ),
+              Text(
+                "${widget.batchNo1?.expectedWeight}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.batchNo1?.weight}"),
 
               GestureDetector(
                 onTap: () {
@@ -262,10 +288,18 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-              Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-              Text("7.056", style: TextStyle(fontSize: 12)),
-              Text("13.450"),
+              Text(
+                "${widget.batchNo2?.batchNo}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text(
+                "${widget.batchNo2?.length} MM x\n ${widget.batchNo2?.width} MM\n x CR-2 x SAIL",
+              ),
+              Text(
+                "${widget.batchNo2?.expectedWeight}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.batchNo2?.weight}"),
               GestureDetector(
                 onTap: () {
                   openDialoge4();
@@ -284,7 +318,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     ),
                   ),
                 ),
-              ),
+              ),  
             ],
           ),
           SizedBox(height: MediaQuery.of(context).size.width * .8),
@@ -292,7 +326,11 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Dashboard2()),
+                MaterialPageRoute(builder: (context) => PrintqrforMinicoilslitting(
+                  batchNo1: widget.batchNo0,
+                  batchNo2: widget.batchNo1,
+                  batchNo3: widget.batchNo2,
+                )),
               );
             },
             child: Container(
@@ -333,7 +371,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     "Batch /ID No.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(": 03-25B-0651"),
+                  Text(": ${widget.batchNo2?.id}"),
                 ],
               ),
 
@@ -343,7 +381,9 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     "size Details",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : 250 MM x 0.70 MM x GR-1 x \n   TATA"),
+                  Text(
+                    " : ${widget.batchNo2?.length} MM x ${widget.batchNo2?.width} MM x GR-1 x \n   TATA",
+                  ),
                 ],
               ),
               Row(
@@ -352,7 +392,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     "Actual wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.456"),
+                  Text(" :  ${widget.batchNo2?.weight}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -362,7 +402,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     "Qty Mt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : 21.450"),
+                  Text(" : ${widget.batchNo2?.expectedWeight}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -372,7 +412,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     "Scrape ",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.540"),
+                  Text(" :  ${widget.batchNo2?.weight}"),
                 ],
               ),
               Row(
@@ -381,7 +421,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     "Scrape Qty (MT)",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.540"),
+                  Text(" :  ${widget.batchNo2?.weight}"),
                 ],
               ),
               SizedBox(height: 10),

@@ -47,8 +47,8 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
     ).gettingcoilSlittingPlanDataList().then((value) {
       if (value?.status == "success") {
         planListing.clear();
-        print(value?.data.length ?? []);
-        planListing.addAll(value!.data);
+        print(value?.data?.length ?? []);
+        planListing.addAll(value!.data!);
         print("datafetched");
       } else {
         print("network error");
@@ -61,7 +61,7 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
     setState(() {
       filteredItems =
           planListing.where((plan) {
-            return plan.batchNo.toLowerCase().contains(lowerQuery);
+            return plan.batchNo!.toLowerCase().contains(lowerQuery);
           }).toList();
     });
   }
@@ -77,79 +77,91 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
         shadowColor: Appcolor.greycolor,
         actions: [Icon(Icons.date_range_outlined)],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Row(children: [Text("Search plan :")]),
-            ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Row(children: [Text("Search plan :")]),
+          ),
 
-            Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width * .9,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color(0xffF2F4FC),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: TextField(
-                  controller: searchbyplancontroller,
-                  onChanged: (value) => filterList(value),
-                  decoration: InputDecoration(
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    // disabledBorder: InputBorder.none,
-                    hintText: "search by Batch no/Plan no",
-                    suffixIcon: Container(
-                      width: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(Icons.search),
-                          SizedBox(width: 10),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CoilslitingOpenCamera(),
-                                ),
-                              );
-                            },
-                            child: Icon(Icons.qr_code),
-                          ),
-                        ],
-                      ),
+          Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width * .9,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Color(0xffF2F4FC),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: TextField(
+                controller: searchbyplancontroller,
+                onChanged: (value) => filterList(value),
+                decoration: InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  // disabledBorder: InputBorder.none,
+                  hintText: "search by Batch no/Plan no",
+                  suffixIcon: Container(
+                    width: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.search),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CoilslitingOpenCamera(),
+                              ),
+                            );
+                          },
+                          child: Icon(Icons.qr_code),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  height: 31,
-                  width: MediaQuery.of(context).size.width * .25,
-                  decoration: BoxDecoration(
-                    color: Appcolor.deepPurple,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Plan",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Appcolor.whitecolor,
-                      ),
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                height: 31,
+                width: MediaQuery.of(context).size.width * .25,
+                decoration: BoxDecoration(
+                  color: Appcolor.deepPurple,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    "Plan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
                     ),
                   ),
                 ),
-                Container(
+              ),
+              Container(
+                height: 31,
+                width: MediaQuery.of(context).size.width * .25,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Appcolor.greycolor),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text("Issue", style: TextStyle(fontSize: 18)),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
                   height: 31,
                   width: MediaQuery.of(context).size.width * .25,
                   decoration: BoxDecoration(
@@ -157,77 +169,69 @@ class _CoilSlittingScreenState extends State<CoilSlittingScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Center(
-                    child: Text("Issue", style: TextStyle(fontSize: 18)),
+                    child: Text("Recived", style: TextStyle(fontSize: 18)),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 31,
-                    width: MediaQuery.of(context).size.width * .25,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1, color: Appcolor.greycolor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Text("Recived", style: TextStyle(fontSize: 18)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            planListing.isEmpty
-                ? Shimmer.fromColors(
-                  baseColor: Appcolor.lightgrey,
-                  highlightColor: Appcolor.greycolor,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 5, // Dummy shimmer items
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Container(
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                )
-                : Padding(
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          planListing.isEmpty
+              ? Shimmer.fromColors(
+                baseColor: Appcolor.lightgrey,
+                highlightColor: Appcolor.greycolor,
+                child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: filteredItems.length,
+                    itemCount: 5, // Dummy shimmer items
                     itemBuilder: (context, index) {
-                      final item = filteredItems[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: ContainerWidgetforall(
-                          textname: "Select",
-                          supplyerIdNo:
-                              item.vendorId.toString().isEmpty
-                                  ? "no plan found"
-                                  : item.vendorId.toString(),
-                          size: item.expectedLength.toString(),
-                          weight: item.expectedWeight,
-                          batchNo: item.batchNo,
+                        child: Container(
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
-          ],
-        ),
+              )
+              : Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+
+                    itemCount: filteredItems.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: ContainerWidgetforall(
+                              textname: "Select",
+                              supplyerIdNo:
+                                  item.inwardId.toString().isEmpty
+                                      ? "no plan found"
+                                      : item.inwardId.toString(),
+                              size: item.expectedLength.toString(),
+                              weight: item.expectedWeight,
+                              batchNo: item.batchNo,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+        ],
       ),
     );
   }

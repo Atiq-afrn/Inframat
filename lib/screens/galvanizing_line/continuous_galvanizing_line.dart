@@ -5,6 +5,7 @@ import 'package:inframat/provider/cgl_plan_listing_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/galvanizing_line/container_widget_for_cgl.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Continousgalvanizingline extends StatefulWidget {
   const Continousgalvanizingline({super.key});
@@ -189,7 +190,32 @@ class ContinousgalvanizinglineState extends State<Continousgalvanizingline> {
                   ),
                 ),
               )
-              : Container(),
+              : Expanded(
+                child: Shimmer.fromColors(
+                  baseColor: Appcolor.lightgrey,
+                  highlightColor: Appcolor.greycolor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 5, // Dummy shimmer items
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
         ],
       ),
     );

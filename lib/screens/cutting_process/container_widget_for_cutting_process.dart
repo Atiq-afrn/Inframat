@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/screens/crm_cold_mill/crm_cold_mill2.dart';
+import 'package:inframat/models/cuttingprocess_model.dart';
+import 'package:inframat/provider/cutting_process2_provider.dart';
 import 'package:inframat/screens/cutting_process/cutting_process3.dart';
-import 'package:inframat/screens/mini%20coil%20slitting/mini_coilslitting2.dart';
-import 'package:inframat/screens/skin_pass/skin_pass2.dart';
-import 'package:inframat/widgets/picklingprocess/pickling_process2.dart';
-import 'package:inframat/widgets/picklingprocess/pickling_process3.dart';
+import 'package:provider/provider.dart';
 
 class Containerwidgetforcuttingprocess extends StatefulWidget {
-  const Containerwidgetforcuttingprocess({super.key, this.textnameforcrm});
+  const Containerwidgetforcuttingprocess({
+    super.key,
+    this.textnameforcrm,
+    this.batchNo,
+    this.supplierId,
+    this.length,
+    this.width,
+    this.weight,
+    this.planNo,
+  });
   final String? textnameforcrm;
+  final String? batchNo;
+  final String? supplierId;
+  final String? length;
+  final String? width;
+  final String? weight;
+  final String? planNo;
 
   @override
   State<Containerwidgetforcuttingprocess> createState() =>
@@ -18,7 +31,6 @@ class Containerwidgetforcuttingprocess extends StatefulWidget {
 
 class _ContainerwidgetforcuttingprocessState
     extends State<Containerwidgetforcuttingprocess> {
-  TextEditingController pcscontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,7 +62,10 @@ class _ContainerwidgetforcuttingprocessState
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.batchNo}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -65,7 +80,7 @@ class _ContainerwidgetforcuttingprocessState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  "${widget.supplierId}",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -84,7 +99,7 @@ class _ContainerwidgetforcuttingprocessState
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  "${widget.length} MM x ${widget.width} MM x GR-1 x TATA",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -99,7 +114,10 @@ class _ContainerwidgetforcuttingprocessState
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  "${widget.weight}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -113,7 +131,10 @@ class _ContainerwidgetforcuttingprocessState
                   "Planning :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 01", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  " ${widget.planNo}",
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -177,6 +198,9 @@ class _ContainerwidgetforcuttingprocessState
     );
   }
 
+  TextEditingController lengthcontroller = TextEditingController();
+  TextEditingController widthcontroller = TextEditingController();
+  TextEditingController piecesController = TextEditingController();
   Future alertDialog1() async {
     showDialog(
       context: context,
@@ -311,6 +335,7 @@ class _ContainerwidgetforcuttingprocessState
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                controller: lengthcontroller,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
@@ -351,6 +376,7 @@ class _ContainerwidgetforcuttingprocessState
                                 border: Border.all(color: Appcolor.greycolor),
                               ),
                               child: TextField(
+                                controller: widthcontroller,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   hintText: "00.00",
@@ -392,7 +418,7 @@ class _ContainerwidgetforcuttingprocessState
                               ),
                               child: TextField(
                                 textAlign: TextAlign.center,
-                                controller: pcscontroller,
+                                controller: piecesController,
                                 onChanged: (value) {
                                   setState(() {});
                                 },
@@ -439,7 +465,7 @@ class _ContainerwidgetforcuttingprocessState
                         ),
                       ),
 
-                      pcscontroller.text.isEmpty
+                      piecesController.text.isEmpty
                           ? Container(
                             height: 40,
                             width: MediaQuery.of(context).size.width * .3,
@@ -461,12 +487,31 @@ class _ContainerwidgetforcuttingprocessState
                           )
                           : GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CuttingProcess3(),
-                                ),
-                              );
+                              Provider.of<CuttingProcess2Provider>(
+                                    context,
+                                    listen: false,
+                                  )
+                                  .gettingCuttingProcees(
+                                    widget.batchNo.toString(),
+                                    lengthcontroller.text,
+                                    widthcontroller.text,
+                                    piecesController.text,
+                                  )
+                                  .then((value) {
+                                    if (value?.status == "success") {
+                                      CuttingProcessSaveData? responsedata =
+                                          (value?.data);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => CuttingProcess3(
+                                                responseData: responsedata,
+                                              ),
+                                        ),
+                                      );
+                                    }
+                                  });
                             },
                             child: Container(
                               height: 40,

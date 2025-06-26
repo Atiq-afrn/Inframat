@@ -6,17 +6,22 @@ import 'package:inframat/provider/print_qr_coder_provider.dart';
 import 'package:inframat/screens/rewinding_process.dart';
 import 'package:provider/provider.dart';
 
-class InvardBarcode extends StatefulWidget {
-  const InvardBarcode({super.key, this.batchNo1, this.batchNo2, this.batchNo3});
+class PicklingqrCode extends StatefulWidget {
+  const PicklingqrCode({
+    super.key,
+    this.batchNo1,
+    this.batchNo2,
+    this.batchNo3,
+  });
   final CoilSlittingEntry? batchNo1;
   final CoilSlittingEntry? batchNo2;
   final CoilSlittingEntry? batchNo3;
 
   @override
-  State<InvardBarcode> createState() => _InvardBarcodeState();
+  State<PicklingqrCode> createState() => _PicklingqrCodeState();
 }
 
-class _InvardBarcodeState extends State<InvardBarcode> {
+class _PicklingqrCodeState extends State<PicklingqrCode> {
   @override
   void initState() {
     // TODO: implement initState

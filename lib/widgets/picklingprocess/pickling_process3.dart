@@ -3,27 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/pickling_process_response_model.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
+import 'package:inframat/widgets/picklingprocess/print_qr_pickling.dart';
 
 class Picklingprocess3 extends StatefulWidget {
-  const Picklingprocess3({
-    super.key,
-    this.actualWeight,
-    this.batchNo,
-    this.picklingLoss,
-    this.length,
-    this.width,
-    this.mtWeight,
-    this.image,
-  });
-  final String? batchNo;
-  final String? length;
-  final String? width;
-  final String? actualWeight;
-  final String? picklingLoss;
-  final String? mtWeight;
-  final String? image;
+  Picklingprocess3({super.key, this.responseModel});
+  final PickledOilStoreData? responseModel;
 
   @override
   State<Picklingprocess3> createState() => _Picklingprocess3State();
@@ -35,7 +22,9 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    imageUrl = widget.image;
+
+    imageUrl = widget.responseModel?.image ?? "";
+    print(" atiq khan  ${widget.responseModel?.batchNo}");
   }
 
   @override
@@ -219,15 +208,18 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(widget.batchNo ?? "0.0", style: TextStyle(fontSize: 12)),
                 Text(
-                  "${widget.length ?? "0.0"} MM x\n ${widget.width ?? "0.0"} MM\n x CR-2 x SAIL",
-                ),
-                Text(
-                  widget.actualWeight ?? "0.0",
+                  widget.responseModel?.batchNo ?? "0.0",
                   style: TextStyle(fontSize: 12),
                 ),
-                Text(widget.picklingLoss ?? "0.0"),
+                Text(
+                  "${widget.responseModel?.length ?? "0.0"} MM x\n ${widget.responseModel?.width ?? "0.0"} MM\n x CR-2 x SAIL",
+                ),
+                Text(
+                  widget.responseModel?.actualWeight ?? "0.0",
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(widget.responseModel?.picklingLoss ?? "0.0"),
                 GestureDetector(
                   onTap: () {
                     openDialoge4();
@@ -291,12 +283,12 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(widget.picklingLoss ?? "000.0000"),
+                  child: Text(widget.responseModel?.picklingLoss ?? "000.0000"),
                 ),
                 SizedBox(width: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(widget.width.toString()),
+                  child: Text(widget.responseModel?.width ?? "0.0"),
                 ),
               ],
             ),
@@ -305,7 +297,13 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Dashboard2()),
+                  MaterialPageRoute(
+                    builder:
+                        (context) => PrintqrforPickling(
+                          batchNopickling: widget.responseModel?.batchNo,
+                          coilno: widget.responseModel?.id,
+                        ),
+                  ),
                 );
               },
               child: Container(
@@ -347,7 +345,7 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
                     "Batch /ID no.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(widget.batchNo.toString()),
+                  Text(widget.responseModel?.batchNo ?? "null values"),
                 ],
               ),
 
@@ -358,7 +356,7 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    " ${widget.length} MM x ${widget.width} MM x\n   GR-1 x TATA",
+                    " ${widget.responseModel?.length} MM x ${widget.responseModel?.width} MM x\n   GR-1 x TATA",
                   ),
                 ],
               ),
@@ -368,14 +366,14 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
                     "Actual wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : ${widget.actualWeight}"),
+                  Text(" : ${widget.responseModel?.actualWeight} MT"),
                 ],
               ),
               SizedBox(height: 20),
               Row(
                 children: [
                   Text(
-                    "Supplier ID No :  ${widget.width?.length}",
+                    "Supplier ID No :  ${widget.responseModel?.length ?? "0.0"}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                 ],

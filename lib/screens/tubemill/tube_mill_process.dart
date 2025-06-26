@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
-import 'package:inframat/main.dart';
-import 'package:inframat/models/tube_mill_planmodel.dart';
-import 'package:inframat/provider/tube_millPlan_provider.dart';
+import 'package:inframat/models/tubemillplanmodel.dart';
+import 'package:inframat/provider/tubemill_plan_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/tubemill/contianer_widget_for_tubemill.dart';
 import 'package:inframat/screens/tubemill/tube_mill2.dart';
@@ -17,30 +16,11 @@ class TubemillProcess extends StatefulWidget {
   State<TubemillProcess> createState() => _TubemillProcessState();
 }
 
-//
+List<TubeMillPlanData> tubmillplanlist = [];
+
 class _TubemillProcessState extends State<TubemillProcess> {
   TextEditingController alertDialog3controller = TextEditingController();
   TextEditingController searchbyplancontroller = TextEditingController();
-
-  void fetchData(BuildContext context) async {
-    final provider = Provider.of<TubemillPrvider1>(context, listen: false);
-    final value = await provider.fetchTubeMillplan();
-    if (value?.data != null) {
-      planList.clear();
-      planList.addAll(value!.data);
-    } else {
-      print("Network error or no data found");
-    }
-  }
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchData(context);
-    });
-
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -48,8 +28,6 @@ class _TubemillProcessState extends State<TubemillProcess> {
     searchbyplancontroller.dispose();
     super.dispose();
   }
-
-  List<TubeMillPlanData> planList = [];
 
   Timer? debaince;
   @override
@@ -65,14 +43,6 @@ class _TubemillProcessState extends State<TubemillProcess> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              if (mounted) {
-                fetchData(context);
-              }
-            },
-            child: Text("data"),
-          ),
           Padding(
             padding: const EdgeInsets.only(left: 20, top: 20),
             child: Row(children: [Text("Search plan :")]),
@@ -91,7 +61,17 @@ class _TubemillProcessState extends State<TubemillProcess> {
                 controller: searchbyplancontroller,
                 onChanged: (value) {
                   if (debaince?.isActive ?? false) debaince?.cancel();
-                  debaince = Timer(Duration(milliseconds: 500), () {});
+                  debaince = Timer(Duration(milliseconds: 500), () {
+                    Provider.of<TubemillPlanProvider>(
+                      context,
+                      listen: false,
+                    ).gettingtubeMillplanlist().then((value) {
+                      if (value?.status == "success") {
+                        tubmillplanlist.clear();
+                        tubmillplanlist.addAll(value!.data!);
+                      }
+                    });
+                  });
                   setState(() {});
                 },
                 decoration: InputDecoration(
@@ -128,33 +108,20 @@ class _TubemillProcessState extends State<TubemillProcess> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              GestureDetector(
-                onTap: () async {
-                  final provider = Provider.of<TubemillPrvider1>(
-                    context,
-                    listen: false,
-                  );
-                  final value = await provider.fetchTubeMillplan();
-                  if (value?.data != null) {
-                    planList.clear();
-                    planList.addAll(value!.data);
-                  }
-                },
-                child: Container(
-                  height: 31,
-                  width: MediaQuery.of(context).size.width * .25,
-                  decoration: BoxDecoration(
-                    color: Appcolor.deepPurple,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Plan",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Appcolor.whitecolor,
-                      ),
+              Container(
+                height: 31,
+                width: MediaQuery.of(context).size.width * .25,
+                decoration: BoxDecoration(
+                  color: Appcolor.deepPurple,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    "Plan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
                     ),
                   ),
                 ),
@@ -187,12 +154,18 @@ class _TubemillProcessState extends State<TubemillProcess> {
           searchbyplancontroller.text.isNotEmpty
               ? Expanded(
                 child: ListView.builder(
-                  itemCount: 3,
+                  itemCount: tubmillplanlist.length,
                   itemBuilder: (context, index) {
                     return Column(
                       children: [
                         SizedBox(height: 20),
                         ContainerWidgetForTubeMill(
+                          batchNo: tubmillplanlist[index].batchNo ?? "",
+                          supplierIdNo: tubmillplanlist[index].inwardId ?? "",
+                          size: tubmillplanlist[index].length ?? "",
+                          weight: tubmillplanlist[index].weight ?? "",
+                          thickness: tubmillplanlist[index].thickness ?? "",
+                          boundleNo: tubmillplanlist[index].length ?? "",
                           textnameforcrm: "Select",
                           ontap: () {
                             Navigator.push(

@@ -5,6 +5,7 @@ import 'package:inframat/provider/picling_plan_list_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PiicklingProcess extends StatefulWidget {
   const PiicklingProcess({super.key});
@@ -188,7 +189,30 @@ class PiicklingProcessState extends State<PiicklingProcess> {
                     );
                   },
                 )
-                : Container(),
+                : Shimmer.fromColors(
+                  baseColor: Appcolor.lightgrey,
+                  highlightColor: Appcolor.greycolor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 5, // Dummy shimmer items
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
           ],
         ),
       ),

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/crm_processing_response_model.dart';
+import 'package:inframat/screens/crm_cold_mill/printqr_forcrm.dart';
 import 'package:inframat/screens/dashboard2.dart';
 
 class Crmcoldrolling3 extends StatefulWidget {
   Crmcoldrolling3({super.key, this.modeldata});
   ColdRollingMillData? modeldata;
-  
 
   @override
   State<Crmcoldrolling3> createState() => _Crmcoldrolling3State();
@@ -198,10 +198,18 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-              Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-              Text("13.450", style: TextStyle(fontSize: 12)),
-              Text("0.006"),
+              Text(
+                "${widget.modeldata?.batchNo}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text(
+                "${widget.modeldata?.length} MM x\n ${widget.modeldata?.width} MM\n x CR-2 x SAIL",
+              ),
+              Text(
+                "${widget.modeldata?.weight}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.modeldata?.scrapWeight}"),
               GestureDetector(
                 onTap: () {
                   openDialoge4();
@@ -265,12 +273,12 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text("03-25D-0651"),
+                child: Text("${widget.modeldata?.scrapWeight}"),
               ),
               SizedBox(width: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text("0.029"),
+                child: Text("${widget.modeldata?.weight}"),
               ),
             ],
           ),
@@ -279,7 +287,13 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Dashboard2()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => PrintqrforCrm(
+                        batchNopickling: widget.modeldata?.batchNo,
+                        coilno: widget.modeldata?.id,
+                      ),
+                ),
               );
             },
             child: Container(
@@ -320,7 +334,7 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
                     "Batch /ID no.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(": 03-25B-0651"),
+                  Text(": ${widget.modeldata?.batchNo}"),
                 ],
               ),
 
@@ -330,7 +344,9 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
                     "size Details",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("  :250 MM x 0.70 MM x\n   GR-1 x TATA"),
+                  Text(
+                    "  :${widget.modeldata?.length} x ${widget.modeldata?.width} MM x\n   GR-1 x TATA",
+                  ),
                 ],
               ),
               Row(
@@ -339,14 +355,14 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
                     "Actual wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.456"),
+                  Text(" :  ${widget.modeldata?.weight}"),
                 ],
               ),
               SizedBox(height: 20),
               Row(
                 children: [
                   Text(
-                    "Supplier ID No :  13",
+                    "Supplier ID No :  ${widget.modeldata?.inwardId}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                 ],

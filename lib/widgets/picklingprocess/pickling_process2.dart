@@ -210,7 +210,7 @@ class _ContainerWidgetforpickling2State
 
   dynamic selectedImage;
   File? imagepath;
-  PicklingProcessResponseModel? responsedata;
+  PickledOilStoreData? responsedata;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -720,24 +720,34 @@ class _ContainerWidgetforpickling2State
                                     selectedImage,
                                   )
                                   .then((value) {
-                                    if (value != null) {
-                                      responsedata = value;
+                                    if (value?.data != null) {
+                                      responsedata = value?.data;
+                                      print(
+                                        "  Atiq khan 1 ${responsedata?.batchNo}",
+                                      );
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => Picklingprocess3(
+                                                responseModel: responsedata,
+                                              ),
+                                        ),
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                            "This Plan already processed",
+                                          ),
+                                        ),
+                                      );
                                     }
                                   });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => Picklingprocess3(
-                                        batchNo: responsedata?.data?.batchNo,
-                                        length: responsedata?.data?.length,
-                                        width: responsedata?.data?.actualWeight,
-                                        picklingLoss:
-                                            responsedata?.data?.picklingLoss,
-                                            image: responsedata?.data?.image,
-                                      ),
-                                ),
-                              );
                             },
                             child: Container(
                               height: 40,

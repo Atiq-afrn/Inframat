@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
+import 'package:inframat/models/mini_coilSlittingResponse_model.dart';
 import 'package:inframat/models/mini_coilSlitting_body_model.dart';
 import 'package:inframat/provider/mini_coilsllitting_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
@@ -373,6 +374,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     );
   }
 
+  List<CoilSlittingData> responsedata = [];
   List<File?> selectedImages = [];
   List<CoilSlittingItem> minislittinglist = [];
   TextEditingController scrapecontroller = TextEditingController();
@@ -606,13 +608,17 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                       )
                                       .then((value) {
                                         if (value!.status == "success") {
-                                          print("Data inserted in table");
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder:
-                                                  (context) =>
-                                                      Minicoilslitting3(),
+                                                  (
+                                                    context,
+                                                  ) => Minicoilslitting3(
+                                                    batchNo0: value.data?[0],
+                                                    batchNo1: value.data?[1],
+                                                    batchNo2: value.data?[2],
+                                                  ),
                                             ),
                                           );
                                         } else {

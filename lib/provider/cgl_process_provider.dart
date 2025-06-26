@@ -29,7 +29,7 @@ class CglProcessProvider extends ChangeNotifier {
         "inward_id": "1",
         "batch_no": batchNo,
         "machine_id": await AppStorage.gettingMachineId(),
-        "thickness": thickness,
+        "thickness": "7.9",
         "width": width,
         "length": length,
         "weight": weight,

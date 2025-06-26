@@ -791,10 +791,10 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                     listen: false,
                                   )
                                   .gettingCglProcess(
-                                    widget.batchNo.toString(),
+                                    widget.batchNo!,
                                     lengthcontroller.text,
                                     widthController.text,
-                                    widget.size.toString(),
+                                    widget.size!,
                                     weightController.text,
                                     scrapeController.text,
                                     stdZincController.text,
@@ -802,19 +802,25 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                     base64Imgae,
                                   )
                                   .then((value) {
-                                    if (value!.data != null) {
+                                    if (value!.status == "success") {
                                       CglProcessData? newEntry = CglProcessData(
-                                        batchNo: value.data?.batchNo.toString(),
-                                        length: value.data?.length.toString(),
-                                        width: value.data?.width.toString(),
-                                        weight: value.data?.weight.toString(),
+                                        batchNo: value.data?.batchNo,
+                                        length: value.data?.length,
+                                        width: value.data?.width,
+                                        weight: value.data?.weight,
                                         zincCoatingWeight:
-                                            value.data?.zincCoatingWeight
-                                                .toString(),
+                                            value.data?.zincCoatingWeight,
                                         scrapWeight:
                                             value.data?.scrapWeight.toString(),
                                       );
-
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text("${value.message}"),
+                                        ),
+                                      );
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -830,9 +836,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                       ).showSnackBar(
                                         SnackBar(
                                           backgroundColor: Colors.red,
-                                          content: Text(
-                                            "this plan already Processed of something error",
-                                          ),
+                                          content: Text("${value.status}"),
                                         ),
                                       );
                                     }

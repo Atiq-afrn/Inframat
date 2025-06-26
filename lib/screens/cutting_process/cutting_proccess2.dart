@@ -1,22 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/models/crm_plan_listing_responsemodel.dart';
-import 'package:inframat/provider/crm_provider.dart';
+import 'package:inframat/models/cuttingprocess_plan_model.dart';
+import 'package:inframat/provider/cutting_processplan_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
-
-import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:inframat/screens/cutting_process/container_widget_for_cutting_process.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
-class Crmcoldmill extends StatefulWidget {
-  const Crmcoldmill({super.key});
+class Cuttingprocess2 extends StatefulWidget {
+  const Cuttingprocess2({super.key});
 
   @override
-  State<Crmcoldmill> createState() => CrmcoldmillState();
+  State<Cuttingprocess2> createState() => Cuttingprocess2State();
 }
 
-class CrmcoldmillState extends State<Crmcoldmill> {
+class Cuttingprocess2State extends State<Cuttingprocess2> {
   TextEditingController searchWithbatchcontroller = TextEditingController();
   @override
   void dispose() {
@@ -25,21 +24,8 @@ class CrmcoldmillState extends State<Crmcoldmill> {
     super.dispose();
   }
 
-  List<ColdRollMillingData> crmPlanelist = [];
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Provider.of<CrmProvider>(context, listen: false).gettingPlanListcrm().then((
-      value,
-    ) {
-      if (value!.status == "success") {
-        crmPlanelist.clear();
-        crmPlanelist.addAll(value.data);
-        print(" 78787z" + value.data[5].thickness);
-      }
-    });
-  }
+  Timer? debinace;
+  List<CuttingPlanData> planList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +35,7 @@ class CrmcoldmillState extends State<Crmcoldmill> {
         backgroundColor: Appcolor.whitecolor,
         elevation: 5,
         shadowColor: Colors.grey.withValues(alpha: .5),
-        title: Text("CRM(Cold Rolling Mill)"),
+        title: Text("Cutting "),
         actions: [
           GestureDetector(
             onTap: () {
@@ -82,12 +68,25 @@ class CrmcoldmillState extends State<Crmcoldmill> {
               child: TextField(
                 controller: searchWithbatchcontroller,
                 onChanged: (value) {
+                  if (debinace?.isActive ?? false) debinace?.cancel();
+                  debinace = Timer(Duration(milliseconds: 500), () {
+                    Provider.of<CuttingProcessplanProvider>(
+                      context,
+                      listen: false,
+                    ).gettingCuttingProcessplan().then((value) {
+                      if (mounted) {
+                        planList.clear();
+                        planList.addAll(value!.data!);
+                      } else {
+                        print("error in object");
+                      }
+                    });
+                  });
                   setState(() {});
                 },
                 decoration: InputDecoration(
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
-                  // disabledBorder: InputBorder.none,
                   hintText: "Search by Batch No Plan no",
                   suffixIcon: Container(
                     width: 60,
@@ -122,31 +121,28 @@ class CrmcoldmillState extends State<Crmcoldmill> {
                 height: 31,
                 width: MediaQuery.of(context).size.width * .25,
                 decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Appcolor.greycolor),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text("Plan", style: TextStyle(fontSize: 18)),
+                ),
+              ),
+              Container(
+                height: 31,
+                width: MediaQuery.of(context).size.width * .25,
+                decoration: BoxDecoration(
                   color: Appcolor.deepPurple,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Center(
                   child: Text(
-                    "Plan",
+                    "Issue",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Appcolor.whitecolor,
                     ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  height: 31,
-                  width: MediaQuery.of(context).size.width * .25,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 1, color: Appcolor.greycolor),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(
-                    child: Text("Issue", style: TextStyle(fontSize: 18)),
                   ),
                 ),
               ),
@@ -170,55 +166,28 @@ class CrmcoldmillState extends State<Crmcoldmill> {
           searchWithbatchcontroller.text.isNotEmpty
               ? Expanded(
                 child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: crmPlanelist.length,
-                  itemBuilder: (Context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 20,
-                      ),
-                      child: Containerwidgetforcrm(
-                        textnameforcrm: "Select",
-                        batchNo: "${crmPlanelist[index].batchNo.toString()}",
-
-                        supplierID: "${crmPlanelist[index].id.toString()}",
-                        size: "${crmPlanelist[index].length.toString()}",
-                        width: "${crmPlanelist[index].width}",
-                        weight:
-                            "${crmPlanelist[index].actualWeight.toString()}",
-                        thickness: "${crmPlanelist[index].thickness}",
-                      ),
+                  itemCount: planList.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Containerwidgetforcuttingprocess(
+                            textnameforcrm: "Select",
+                            batchNo: planList[index].batchNo,
+                            supplierId: planList[index].inwardId,
+                            length: planList[index].length,
+                            width: planList[index].width,
+                            weight: planList[index].weight,
+                            planNo: planList[index].id,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
               )
-              : Shimmer.fromColors(
-                baseColor: Appcolor.lightgrey,
-                highlightColor: Appcolor.greycolor,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 5, // Dummy shimmer items
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-          SizedBox(height: 20),
+              : Text(" Plan Not Found"),
         ],
       ),
     );

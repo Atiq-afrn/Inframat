@@ -3,6 +3,7 @@ import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/cgl_process_model.dart';
 import 'package:inframat/screens/dashboard2.dart';
+import 'package:inframat/screens/galvanizing_line/printqr_for_cg.dart';
 
 class ContinousGL3 extends StatefulWidget {
   const ContinousGL3({super.key, this.newEntry});
@@ -184,9 +185,8 @@ class _ContinousGL3State extends State<ContinousGL3> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
 
-          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -194,9 +194,14 @@ class _ContinousGL3State extends State<ContinousGL3> {
                 "${widget.newEntry?.batchNo}",
                 style: TextStyle(fontSize: 12),
               ),
-              Text("1520 MM x\n 0.80 MM\n x CR-2 x SAIL"),
-              Text("13.450", style: TextStyle(fontSize: 12)),
-              Text("0.006"),
+              Text(
+                "${widget.newEntry?.length} MM x\n ${widget.newEntry?.width} MM\n x CR-2 x SAIL",
+              ),
+              Text(
+                "${widget.newEntry?.weight}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.newEntry?.zincCoatingWeight}"),
               GestureDetector(
                 onTap: () {
                   openDialoge4();
@@ -260,12 +265,12 @@ class _ContinousGL3State extends State<ContinousGL3> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text("03-25D-0651"),
+                child: Text("${widget.newEntry?.scrapWeight}"),
               ),
               SizedBox(width: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text("0.029"),
+                child: Text("${widget.newEntry?.scrapWeight}"),
               ),
             ],
           ),
@@ -274,7 +279,13 @@ class _ContinousGL3State extends State<ContinousGL3> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Dashboard2()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => PrintqrforCGl(
+                        batchNo: widget.newEntry?.batchNo,
+                        coilno: widget.newEntry?.id,
+                      ),
+                ),
               );
             },
             child: Container(
@@ -315,7 +326,7 @@ class _ContinousGL3State extends State<ContinousGL3> {
                     "Batch /ID no.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(": 03-25B-0651"),
+                  Text(": ${widget.newEntry?.batchNo}"),
                 ],
               ),
 
@@ -325,7 +336,9 @@ class _ContinousGL3State extends State<ContinousGL3> {
                     "size Details",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("  :250 MM x 0.70 MM x\n   GR-1 x TATA"),
+                  Text(
+                    "  : ${widget.newEntry?.length} MM x ${widget.newEntry?.width} MM x\n   GR-1 x TATA",
+                  ),
                 ],
               ),
               SizedBox(height: 10),
@@ -335,7 +348,7 @@ class _ContinousGL3State extends State<ContinousGL3> {
                     "Actual wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.456"),
+                  Text(" :  ${widget.newEntry?.weight}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -345,7 +358,7 @@ class _ContinousGL3State extends State<ContinousGL3> {
                     "Mill wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.450"),
+                  Text(" :  ${widget.newEntry?.weight}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -355,14 +368,14 @@ class _ContinousGL3State extends State<ContinousGL3> {
                     "Qty Mt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : 21.56"),
+                  Text(" : ${widget.newEntry?.weight}"),
                 ],
               ),
               SizedBox(height: 20),
               Row(
                 children: [
                   Text(
-                    "Supplier MRN Coil ID No :  13",
+                    "Supplier MRN Coil ID No :  ${widget.newEntry!.id}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                 ],
@@ -374,6 +387,8 @@ class _ContinousGL3State extends State<ContinousGL3> {
                 width: double.infinity,
                 color: Appcolor.lightgrey,
                 child: Image.asset(fit: BoxFit.fill, AppImages.coilstock),
+                //Image.network("{widget.newEntry!.image!}"),
+                //
               ),
 
               SizedBox(height: 30),

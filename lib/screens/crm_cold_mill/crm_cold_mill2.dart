@@ -776,18 +776,19 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
 
                                       ColdRollingMillData newEntry =
                                           ColdRollingMillData(
-                                            batchNo: value!.data.batchNo,
-                                            inwardId: value.data.inwardId,
-                                            thickness: value.data.thickness,
+                                            batchNo: value!.data?.batchNo,
+                                            inwardId: value.data?.inwardId,
+                                            thickness: value.data?.thickness,
 
                                             image: "asfdjsadgfs",
-                                            width: value.data.inwardId,
-                                            scrapWeight: value.data.scrapWeight,
-                                            length: value.data.length,
-                                            weight: value.data.weight,
-                                            updatedAt: value.data.updatedAt,
-                                            createdAt: value.data.createdAt,
-                                            id: value.data.id,
+                                            width: value.data?.inwardId,
+                                            scrapWeight:
+                                                value.data?.scrapWeight,
+                                            length: value.data?.length,
+                                            weight: value.data?.weight,
+                                            updatedAt: value.data?.updatedAt,
+                                            createdAt: value.data?.createdAt,
+                                            id: value.data?.id,
                                             //base64String!,
                                           );
                                       if (mounted) {
@@ -805,7 +806,14 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                                       ScaffoldMessenger.of(
                                         context,
                                       ).showSnackBar(
-                                        SnackBar(content: Text("data")),
+                                        SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Center(
+                                            child: Text(
+                                              "Something went wrong ",
+                                            ),
+                                          ),
+                                        ),
                                       );
                                     }
                                   });

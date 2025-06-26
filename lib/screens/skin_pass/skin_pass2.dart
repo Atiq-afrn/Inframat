@@ -662,8 +662,8 @@ class _ContainerWidgetForSkinPass2State
                     ],
                   ),
 
-                  SizedBox(height: 10),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
+
                   GestureDetector(
                     onTap: () async {
                       final picker = ImagePicker();
@@ -761,7 +761,7 @@ class _ContainerWidgetForSkinPass2State
                                               (context) => SkinPass3(
                                                 responsedata:
                                                     processResonseData,
-                                                    supplierId: widget.supplierId,
+                                                supplierId: widget.supplierId,
                                               ),
                                         ),
                                       );

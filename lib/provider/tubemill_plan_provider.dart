@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:inframat/const/const_api.dart';
 import 'package:inframat/logger.dart';
-import 'package:inframat/models/tube_mill_planmodel.dart';
+import 'package:inframat/models/tubemillplanmodel.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
 
-class TubemillPrvider1 extends ChangeNotifier {
-  TubeMillPlanModel? _tubeMillPlan;
+class TubemillPlanProvider extends ChangeNotifier {
+  TubeMillPlanResponseModel? _tubeMillPlanResponseModel;
+  TubeMillPlanResponseModel? get tubemillplanresponseModel =>
+      _tubeMillPlanResponseModel;
 
-  TubeMillPlanModel? get tubeMillPlan => _tubeMillPlan;
   final client = LoggingHttpClient();
-  Future<TubeMillPlanModel?> fetchTubeMillplan() async {
+  Future<TubeMillPlanResponseModel?> gettingtubeMillplanlist() async {
     final response = await client.post(
       Uri.parse(ConstApi.tubeMillPlanListApi),
       body: {
@@ -21,11 +22,13 @@ class TubemillPrvider1 extends ChangeNotifier {
       },
     );
     if (response.statusCode == 200) {
-      _tubeMillPlan = TubeMillPlanModel.fromJson(jsonDecode(response.body));
+      _tubeMillPlanResponseModel = TubeMillPlanResponseModel.fromJson(
+        jsonDecode(response.body),
+      );
     } else {
       print("Error: ${response.statusCode}");
     }
     notifyListeners();
-    return _tubeMillPlan;
+    return _tubeMillPlanResponseModel;
   }
 }

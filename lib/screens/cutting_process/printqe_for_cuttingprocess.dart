@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/const/imageconst.dart';
-import 'package:inframat/models/coil_slitting_response_model.dart';
+import 'package:inframat/models/cuttingprocess_model.dart';
 import 'package:inframat/provider/print_qr_coder_provider.dart';
-import 'package:inframat/screens/rewinding_process.dart';
+import 'package:inframat/screens/dashboard2.dart';
 import 'package:provider/provider.dart';
 
-class InvardBarcode extends StatefulWidget {
-  const InvardBarcode({super.key, this.batchNo1, this.batchNo2, this.batchNo3});
-  final CoilSlittingEntry? batchNo1;
-  final CoilSlittingEntry? batchNo2;
-  final CoilSlittingEntry? batchNo3;
+class PrintqrforCuttingProcess extends StatefulWidget {
+  const PrintqrforCuttingProcess({super.key, this.batchNo, this.coilno});
+  final CuttingProcessSaveData? batchNo;
+  final String? coilno;
 
   @override
-  State<InvardBarcode> createState() => _InvardBarcodeState();
+  State<PrintqrforCuttingProcess> createState() =>
+      _PrintqrforCuttingProcessState();
 }
 
-class _InvardBarcodeState extends State<InvardBarcode> {
+class _PrintqrforCuttingProcessState extends State<PrintqrforCuttingProcess> {
   @override
   void initState() {
     // TODO: implement initState
@@ -97,33 +96,31 @@ class _InvardBarcodeState extends State<InvardBarcode> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
-                        widget.batchNo1!.batchNo.toString(),
+                        "${widget.batchNo}",
                         style: TextStyle(fontSize: 12),
                       ),
                     ),
 
                     Text(
-                      widget.batchNo1!.id.toString(),
+                      "${widget.batchNo?.id} ",
                       style: TextStyle(fontSize: 12),
                     ),
                     GestureDetector(
                       onTap: () {
                         Provider.of<PrintQrCoderProvider>(
-                              context,
-                              listen: false,
-                            )
-                            .gettingqrCodeData(
-                              widget.batchNo1!.batchNo.toString(),
-                            )
-                            .then((value) {
-                              if (value != null) {
-                                apiImageUrl = value.imageUrl;
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("QR Code not found")),
-                                );
-                              }
-                            });
+                          context,
+                          listen: false,
+                        ).gettingqrCodeData(widget.batchNo!.batchNo!).then((
+                          value,
+                        ) {
+                          if (value != null) {
+                            apiImageUrl = value.imageUrl;
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("QR Code not found")),
+                            );
+                          }
+                        });
                       },
                       child: Container(
                         height: 24,
@@ -173,158 +170,14 @@ class _InvardBarcodeState extends State<InvardBarcode> {
                   ],
                 ),
                 SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Text(
-                        widget.batchNo2!.batchNo.toString(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-
-                    Text(
-                      widget.batchNo2!.id.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Provider.of<PrintQrCoderProvider>(
-                          context,
-                          listen: false,
-                        ).gettingqrCodeData(
-                          widget.batchNo2!.batchNo.toString(),
-                        );
-                      },
-                      child: Container(
-                        height: 24,
-                        width: MediaQuery.of(context).size.width * .21,
-                        decoration: BoxDecoration(
-                          color: Appcolor.lightred2,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              "Print",
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Icon(Icons.print, color: Colors.white),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        openDialoge4(apiImageUrl ?? "not found");
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Appcolor.deepPurple,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: Appcolor.whitecolor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Text(
-                        widget.batchNo3!.batchNo.toString(),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-
-                    Text(
-                      widget.batchNo3!.id.toString(),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Provider.of<PrintQrCoderProvider>(
-                          context,
-                          listen: false,
-                        ).gettingqrCodeData(
-                          widget.batchNo3!.batchNo.toString(),
-                        );
-                      },
-                      child: Container(
-                        height: 24,
-                        width: MediaQuery.of(context).size.width * .21,
-                        decoration: BoxDecoration(
-                          color: Appcolor.lightred2,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              "Print",
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Icon(Icons.print, color: Colors.white),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        openDialoge4(apiImageUrl ?? "not found");
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Appcolor.deepPurple,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.remove_red_eye_outlined,
-                              color: Appcolor.whitecolor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
 
                 SizedBox(height: MediaQuery.of(context).size.width * .9),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => RewindingProcess(),
-                      ),
+                      MaterialPageRoute(builder: (context) => Dashboard2()),
                     );
                   },
                   child: Container(

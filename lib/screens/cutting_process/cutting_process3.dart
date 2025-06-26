@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/cuttingprocess_model.dart';
+import 'package:inframat/screens/cutting_process/printqe_for_cuttingprocess.dart';
 import 'package:inframat/screens/dashboard2.dart';
 
 class CuttingProcess3 extends StatefulWidget {
-  const CuttingProcess3({super.key});
+  const CuttingProcess3({super.key, this.responseData});
+
+  final CuttingProcessSaveData? responseData;
 
   @override
   State<CuttingProcess3> createState() => _CuttingProcess3State();
@@ -186,10 +190,16 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("03-25A-0651", style: TextStyle(fontSize: 12)),
-              Text("60000 MM"),
-              Text("1500", style: TextStyle(fontSize: 12)),
-              Text("120"),
+              Text(
+                "${widget.responseData?.id}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.responseData?.lengthRequired} MM"),
+              Text(
+                "${widget.responseData?.widthRequired}",
+                style: TextStyle(fontSize: 12),
+              ),
+              Text("${widget.responseData?.noOfPieces}"),
               GestureDetector(
                 onTap: () {
                   openDialoge4();
@@ -218,7 +228,7 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Dashboard2()),
+                MaterialPageRoute(builder: (context) => PrintqrforCuttingProcess(batchNo: widget.responseData,)),
               );
             },
             child: Container(
@@ -259,7 +269,7 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
                     "Plan no.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(":03-25B-0651"),
+                  Text(":  ${widget.responseData?.id}"),
                 ],
               ),
 
@@ -269,7 +279,7 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
                     "Lenght",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("  :6000 mm"),
+                  Text("  :  ${widget.responseData?.lengthRequired} mm"),
                 ],
               ),
               SizedBox(height: 10),
@@ -279,7 +289,7 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
                     "Width",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : 1500"),
+                  Text(" : ${widget.responseData?.widthRequired}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -289,7 +299,7 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
                     "No Of Pices",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :120"),
+                  Text(" : ${widget.responseData?.noOfPieces}"),
                 ],
               ),
               SizedBox(height: 10),
@@ -299,14 +309,14 @@ class _CuttingProcess3State extends State<CuttingProcess3> {
                     "Supplier MRN Coil ID",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" : 294834343"),
+                  Text(" : ${widget.responseData?.id}"),
                 ],
               ),
               SizedBox(height: 20),
               Row(
                 children: [
                   Text(
-                    "Supplier MRN Coil ID No :  13",
+                    "Supplier MRN Coil ID No :  ${widget.responseData?.inwardId}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                 ],

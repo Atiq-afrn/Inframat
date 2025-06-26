@@ -8,8 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
 
 import 'package:inframat/models/coil_slitting_body_model.dart';
+import 'package:inframat/models/pausereasonlist_model.dart';
 
 import 'package:inframat/provider/coil_slitting_provider.dart';
+import 'package:inframat/provider/pauslist_provider.dart';
 import 'package:inframat/screens/coil_sliting_screen2.dart';
 
 import 'package:inframat/screens/coilsliting_open_camera.dart';
@@ -311,6 +313,17 @@ class _ContainerWidgetState extends State<ContainerWidget> {
           GestureDetector(
             onTap: () {
               _showAlertDialog();
+              Provider.of<PauslistProvider>(
+                context,
+                listen: false,
+              ).gettingPauseList().then((value) {
+                if (value?.success == "success") {
+                  dropdownItems?.clear();
+                  dropdownItems?.addAll(value!.data!);
+                } else {
+                  print("error on  design page");
+                }
+              });
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -343,16 +356,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
   List<File?> selectedImages = [];
   List<String> base64Images = [];
   List<CoilSlittingBodyModel> coilSlittingModellist = [];
-  // CoilSlittingBodyModel coilSlittingModel = CoilSlittingBodyModel(
-  //   inwardId: 0,
-  //   machineId: 23,
-  //   length: ,
-  //   width: 0,
-  //   thickness: 0.0,
-  //   weight: 0.0,
-  //   scrapWeight: 0.0,
-  //   image: '',
-  // );
+
   String? inwardId;
   String? machineId;
   Future<String?> gettingInvardid() async {
@@ -440,7 +444,14 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              timeStopalertDialoge(context);
+                              Navigator.pop(context);
+                              timeStopalertDialoge(context, (selectedOption) {
+                                if (selectedOption != null) {
+                                  print("User selected: $selectedOption");
+                                } else {
+                                  print("No option selected");
+                                }
+                              });
                             },
                             child: Container(
                               height: 27,
@@ -635,7 +646,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                             ),
                                           );
                                         } else {
-                                          print("errorr atiq");
+                                          print("errorr ");
                                           ScaffoldMessenger.of(
                                             context,
                                           ).showSnackBar(
@@ -916,9 +927,13 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     );
   }
 
-  String? selectedValue;
-  List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
-  void timeStopalertDialoge(BuildContext context) {
+  String? selectedIssue;
+  List<IssueData>? dropdownItems = [];
+
+  void timeStopalertDialoge(
+    BuildContext context,
+    void Function(String?) onSubmit,
+  ) {
     showDialog(
       context: context,
       builder: (context) {
@@ -929,45 +944,96 @@ class _ContainerWidgetState extends State<ContainerWidget> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            width: screenWidth * 0.9,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("Paused", style: TextStyle(fontSize: 12)),
-                SizedBox(height: 16),
-                Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: Appcolor.lightgrey2, // Replace with your color
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      value: selectedValue,
-                      hint: Text("Select an option"),
-                      icon: Icon(Icons.arrow_drop_down),
-                      items:
-                          dropdownItems.map((String item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(item),
-                            );
-                          }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedValue = newValue;
-                        });
-                      },
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                width: screenWidth * 0.9,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Paused", style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Appcolor.lightgrey2,
+                      ),
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.white,
+                        value: selectedIssue,
+                        hint: Text("Select issue"),
+                        isExpanded: true,
+                        items:
+                            dropdownItems?.map((IssueData item) {
+                              return DropdownMenuItem<String>(
+                                value: item.name,
+                                child: Text(item.name ?? ''),
+                              );
+                            }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedIssue = newValue;
+                          });
+                        },
+                      ),
                     ),
-                  ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .3),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.red,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                " Cancel",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width * .34,
+                          decoration: BoxDecoration(
+                            color: Appcolor.deepPurple,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },

@@ -1,67 +1,64 @@
 class ColdRollingMillBodyResponse {
-  final String message;
-  final ColdRollingMillData data;
+  String? message;
+  ColdRollingMillData? data;
 
-  ColdRollingMillBodyResponse({
-    required this.message,
-    required this.data,
-  });
+  ColdRollingMillBodyResponse({this.message, this.data});
 
   factory ColdRollingMillBodyResponse.fromJson(Map<String, dynamic> json) {
     return ColdRollingMillBodyResponse(
-      message: json['message'],
-      data: ColdRollingMillData.fromJson(json['data']),
+      message: json['message']?.toString(),
+      data:
+          json['data'] != null
+              ? ColdRollingMillData.fromJson(json['data'])
+              : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'message': message,
-      'data': data.toJson(),
-    };
+    return {'message': message, 'data': data?.toJson()};
   }
 }
 
 class ColdRollingMillData {
-  final int inwardId;
-  final String batchNo;
-  final double thickness;
-  final int width;
-  final int length;
-  final int weight;
-  final int scrapWeight;
-  final String image;
-  final DateTime updatedAt;
-  final DateTime createdAt;
-  final int id;
+  String? inwardId;
+  String? batchNo;
+  String? thickness;
+  String? width;
+  String? length;
+  String? weight;
+  String? scrapWeight;
+  String? image;
+  String? updatedAt;
+  String? createdAt;
+  String? id;
 
   ColdRollingMillData({
-    required this.inwardId,
-    required this.batchNo,
-    required this.thickness,
-    required this.width,
-    required this.length,
-    required this.weight,
-    required this.scrapWeight,
-    required this.image,
-    required this.updatedAt,
-    required this.createdAt,
-    required this.id,
+    this.inwardId,
+    this.batchNo,
+    this.thickness,
+    this.width,
+    this.length,
+    this.weight,
+    this.scrapWeight,
+    this.image,
+    this.updatedAt,
+    this.createdAt,
+    this.id,
   });
 
   factory ColdRollingMillData.fromJson(Map<String, dynamic> json) {
     return ColdRollingMillData(
-      inwardId: json['inward_id'],
-      batchNo: json['batch_no'],
-      thickness: (json['thickness'] as num).toDouble(),
-      width: json['width'],
-      length: json['length'],
-      weight: json['weight'],
-      scrapWeight: json['scrap_weight'],
-      image: json['image'],
-      updatedAt: DateTime.parse(json['updated_at']),
-      createdAt: DateTime.parse(json['created_at']),
-      id: json['id'],
+      inwardId: json['inward_id']?.toString(),
+      batchNo: json['batch_no']?.toString(),
+      thickness: json['thickness']?.toString(),
+      width: json['width']?.toString(),
+      length: json['length']?.toString(),
+      weight: json['weight']?.toString(),
+      scrapWeight: json['scrap_weight']?.toString(),
+      image: json['image']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
+      createdAt: json['created_at']?.toString(),
+      id: json['id']?.toString(),
     );
   }
 
@@ -75,8 +72,8 @@ class ColdRollingMillData {
       'weight': weight,
       'scrap_weight': scrapWeight,
       'image': image,
-      'updated_at': updatedAt.toIso8601String(),
-      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt,
+      'created_at': createdAt,
       'id': id,
     };
   }

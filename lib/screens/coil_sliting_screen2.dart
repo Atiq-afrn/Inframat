@@ -330,7 +330,14 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => InvardBarcode()),
+                  MaterialPageRoute(
+                    builder:
+                        (context) => InvardBarcode(
+                          batchNo1: widget.batchNo1,
+                          batchNo2: widget.batchNo2,
+                          batchNo3: widget.batchNo3,
+                        ),
+                  ),
                 );
               },
               child: Container(

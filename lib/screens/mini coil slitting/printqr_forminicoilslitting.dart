@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
-import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/coil_slitting_response_model.dart';
+import 'package:inframat/models/mini_coilSlittingResponse_model.dart';
 import 'package:inframat/provider/print_qr_coder_provider.dart';
+import 'package:inframat/screens/dashboard.dart';
+import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/rewinding_process.dart';
 import 'package:provider/provider.dart';
 
-class InvardBarcode extends StatefulWidget {
-  const InvardBarcode({super.key, this.batchNo1, this.batchNo2, this.batchNo3});
-  final CoilSlittingEntry? batchNo1;
-  final CoilSlittingEntry? batchNo2;
-  final CoilSlittingEntry? batchNo3;
+class PrintqrforMinicoilslitting extends StatefulWidget {
+  const PrintqrforMinicoilslitting({
+    super.key,
+    this.batchNo1,
+    this.batchNo2,
+    this.batchNo3,
+  });
+  final CoilSlittingData? batchNo1;
+  final CoilSlittingData? batchNo2;
+  final CoilSlittingData? batchNo3;
 
   @override
-  State<InvardBarcode> createState() => _InvardBarcodeState();
+  State<PrintqrforMinicoilslitting> createState() =>
+      _PrintqrforMinicoilslittingState();
 }
 
-class _InvardBarcodeState extends State<InvardBarcode> {
+class _PrintqrforMinicoilslittingState
+    extends State<PrintqrforMinicoilslitting> {
   @override
   void initState() {
     // TODO: implement initState
@@ -322,9 +331,7 @@ class _InvardBarcodeState extends State<InvardBarcode> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => RewindingProcess(),
-                      ),
+                      MaterialPageRoute(builder: (context) => Dashboard2()),
                     );
                   },
                   child: Container(

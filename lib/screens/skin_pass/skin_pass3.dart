@@ -3,6 +3,7 @@ import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/skin_process_response_model.dart';
 import 'package:inframat/screens/dashboard2.dart';
+import 'package:inframat/screens/skin_pass/printqr_for_skinpass.dart';
 
 class SkinPass3 extends StatefulWidget {
   const SkinPass3({
@@ -300,7 +301,13 @@ class _SkinPass3State extends State<SkinPass3> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Dashboard2()),
+                MaterialPageRoute(
+                  builder:
+                      (context) => PrintQrforSkinpass(
+                        batchNo: widget.responsedata?[0].batchNo,
+                        coilno: widget.responsedata?[0].id,
+                      ),
+                ),
               );
             },
             child: Container(

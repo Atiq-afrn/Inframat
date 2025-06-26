@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:inframat/invard.printing.barcode.dart/invard_barcode.dart';
-import 'package:inframat/models/contractor_login_model.dart';
 import 'package:inframat/provider/annealing_plan_list_provider.dart';
 import 'package:inframat/provider/catagory_provider.dart';
 import 'package:inframat/provider/cgl_plan_listing_provider.dart';
@@ -11,6 +9,8 @@ import 'package:inframat/provider/coilslitting_plan_seaarch_provider.dart';
 import 'package:inframat/provider/connection_provider.dart';
 import 'package:inframat/provider/crm_process_provider.dart';
 import 'package:inframat/provider/crm_provider.dart';
+import 'package:inframat/provider/cutting_process2_provider.dart';
+import 'package:inframat/provider/cutting_processplan_provider.dart';
 import 'package:inframat/provider/forget_password_provider.dart';
 import 'package:inframat/provider/invards_all_details_provider.dart';
 import 'package:inframat/provider/login_provider.dart';
@@ -20,8 +20,10 @@ import 'package:inframat/provider/new_password_provider.dart';
 import 'package:inframat/provider/operator_login_provider.dart';
 import 'package:inframat/provider/operator_logout_provider.dart';
 import 'package:inframat/provider/opt_verify_provider.dart';
+import 'package:inframat/provider/pauslist_provider.dart';
 import 'package:inframat/provider/pickling_process_provider.dart';
 import 'package:inframat/provider/picling_plan_list_provider.dart';
+import 'package:inframat/provider/print_qr_coder_provider.dart';
 import 'package:inframat/provider/punch_in_provider.dart';
 import 'package:inframat/provider/punch_out_provider.dart';
 import 'package:inframat/provider/qr_scann_provider.dart';
@@ -29,9 +31,8 @@ import 'package:inframat/provider/quality_check_provider.dart';
 import 'package:inframat/provider/skin_pass_plan_provider.dart';
 import 'package:inframat/provider/skinpass_process_provider.dart';
 import 'package:inframat/provider/sub_category_provider.dart';
-import 'package:inframat/provider/tube_millplan_provider.dart';
+import 'package:inframat/provider/tubemill_plan_provider.dart';
 import 'package:inframat/provider/vendors_list_provider.dart';
-import 'package:inframat/screens/rewinding_process.dart';
 
 import 'package:inframat/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -80,6 +81,15 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => MiniCoilsllittingProcessProvider(),
         ),
+
+        ChangeNotifierProvider(create: (context) => PrintQrCoderProvider()),
+        ChangeNotifierProvider(create: (context) => TubemillPlanProvider()),
+        ChangeNotifierProvider(
+          create: (context) => CuttingProcessplanProvider(),
+        ),
+
+        ChangeNotifierProvider(create: (context) => CuttingProcess2Provider()),
+        ChangeNotifierProvider(create: (context) => PauslistProvider()),
       ],
       child: MyApp(),
     ),

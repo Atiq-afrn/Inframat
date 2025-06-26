@@ -6,9 +6,23 @@ class ContainerWidgetForTubeMill extends StatefulWidget {
     super.key,
     this.textnameforcrm,
     this.ontap,
+    this.batchNo,
+    this.supplierIdNo,
+    this.size,
+    this.weight,
+    this.thickness,
+    this.boundleNo,
+    this.machineId,
   });
   final String? textnameforcrm;
   final VoidCallback? ontap;
+  final String? batchNo;
+  final String? supplierIdNo;
+  final String? size;
+  final String? weight;
+  final String? thickness;
+  final String? boundleNo;
+  final String? machineId;
 
   @override
   State<ContainerWidgetForTubeMill> createState() =>
@@ -48,7 +62,10 @@ class _ContainerWidgetForTubeMillState
                   "Batch no  : ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 230948 ", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.batchNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -62,7 +79,7 @@ class _ContainerWidgetForTubeMillState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "(We need to bring from MRN screen) ",
+                  widget.supplierIdNo.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -81,7 +98,7 @@ class _ContainerWidgetForTubeMillState
                 ),
 
                 Text(
-                  "  250 MM x 0.70 MM x GR-1 x TATA",
+                  widget.size.toString(),
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -96,7 +113,10 @@ class _ContainerWidgetForTubeMillState
                   "Weight :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 7.56 MT", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.weight.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
@@ -110,7 +130,7 @@ class _ContainerWidgetForTubeMillState
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  " 25x25x.088",
+                  " ${widget.size.toString()}x ${widget.thickness.toString()}",
                   style: TextStyle(color: Appcolor.greycolor),
                 ),
               ],
@@ -125,7 +145,10 @@ class _ContainerWidgetForTubeMillState
                   "Boundle No :",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                Text(" 140", style: TextStyle(color: Appcolor.greycolor)),
+                Text(
+                  widget.boundleNo.toString(),
+                  style: TextStyle(color: Appcolor.greycolor),
+                ),
               ],
             ),
           ),
