@@ -167,54 +167,62 @@ class CrmcoldmillState extends State<Crmcoldmill> {
             ],
           ),
 
-          searchWithbatchcontroller.text.isNotEmpty
+          searchWithbatchcontroller.text.isEmpty
               ? Expanded(
+                child: Shimmer.fromColors(
+                  baseColor: Appcolor.lightgrey,
+                  highlightColor: Appcolor.greycolor,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+
+                      itemCount: 5, // Dummy shimmer items
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+              : Expanded(
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: crmPlanelist.length,
                   itemBuilder: (Context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 20,
-                      ),
-                      child: Containerwidgetforcrm(
-                        textnameforcrm: "Select",
-                        batchNo: "${crmPlanelist[index].batchNo.toString()}",
-
-                        supplierID: "${crmPlanelist[index].id.toString()}",
-                        size: "${crmPlanelist[index].length.toString()}",
-                        width: "${crmPlanelist[index].width}",
-                        weight:
-                            "${crmPlanelist[index].actualWeight.toString()}",
-                        thickness: "${crmPlanelist[index].thickness}",
-                      ),
-                    );
-                  },
-                ),
-              )
-              : Shimmer.fromColors(
-                baseColor: Appcolor.lightgrey,
-                highlightColor: Appcolor.greycolor,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 5, // Dummy shimmer items
-                    itemBuilder: (context, index) {
+                    String batchno = crmPlanelist[index].batchNo.toString();
+                    if (batchno.toLowerCase().contains(
+                      searchWithbatchcontroller.text.toLowerCase(),
+                    )) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 20,
+                        ),
+                        child: Containerwidgetforcrm(
+                          textnameforcrm: "Select",
+                          batchNo: "${crmPlanelist[index].batchNo.toString()}",
+
+                          supplierID: "${crmPlanelist[index].id.toString()}",
+                          size: "${crmPlanelist[index].length.toString()}",
+                          width: "${crmPlanelist[index].width}",
+                          weight:
+                              "${crmPlanelist[index].actualWeight.toString()}",
+                          thickness: "${crmPlanelist[index].thickness}",
                         ),
                       );
-                    },
-                  ),
+                    }
+                    return Container();
+                  },
                 ),
               ),
 

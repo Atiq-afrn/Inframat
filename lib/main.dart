@@ -11,6 +11,7 @@ import 'package:inframat/provider/crm_process_provider.dart';
 import 'package:inframat/provider/crm_provider.dart';
 import 'package:inframat/provider/cutting_process2_provider.dart';
 import 'package:inframat/provider/cutting_processplan_provider.dart';
+import 'package:inframat/provider/dashboard_process_provider.dart';
 import 'package:inframat/provider/forget_password_provider.dart';
 import 'package:inframat/provider/invards_all_details_provider.dart';
 import 'package:inframat/provider/login_provider.dart';
@@ -20,6 +21,7 @@ import 'package:inframat/provider/new_password_provider.dart';
 import 'package:inframat/provider/operator_login_provider.dart';
 import 'package:inframat/provider/operator_logout_provider.dart';
 import 'package:inframat/provider/opt_verify_provider.dart';
+import 'package:inframat/provider/pausedata_send_provider.dart';
 import 'package:inframat/provider/pauslist_provider.dart';
 import 'package:inframat/provider/pickling_process_provider.dart';
 import 'package:inframat/provider/picling_plan_list_provider.dart';
@@ -31,7 +33,9 @@ import 'package:inframat/provider/quality_check_provider.dart';
 import 'package:inframat/provider/skin_pass_plan_provider.dart';
 import 'package:inframat/provider/skinpass_process_provider.dart';
 import 'package:inframat/provider/sub_category_provider.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/provider/tubemill_plan_provider.dart';
+import 'package:inframat/provider/tubemillrecoveryprocess_provider.dart';
 import 'package:inframat/provider/vendors_list_provider.dart';
 
 import 'package:inframat/screens/splash_screen.dart';
@@ -77,19 +81,22 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => MiniCoilslittingplanProvider(),
         ),
-
         ChangeNotifierProvider(
           create: (context) => MiniCoilsllittingProcessProvider(),
         ),
-
         ChangeNotifierProvider(create: (context) => PrintQrCoderProvider()),
         ChangeNotifierProvider(create: (context) => TubemillPlanProvider()),
         ChangeNotifierProvider(
           create: (context) => CuttingProcessplanProvider(),
         ),
-
         ChangeNotifierProvider(create: (context) => CuttingProcess2Provider()),
         ChangeNotifierProvider(create: (context) => PauslistProvider()),
+        ChangeNotifierProvider(create: (context) => PausedataSendProvider()),
+        ChangeNotifierProvider(
+          create: (context) => TubemillrecoveryprocessProvider(),
+        ),
+        ChangeNotifierProvider(create: (context) => DashboardProcessProvider()),
+        ChangeNotifierProvider(create: (context) => TimellogProvider()),
       ],
       child: MyApp(),
     ),

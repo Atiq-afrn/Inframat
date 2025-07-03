@@ -32,6 +32,8 @@ class PunchOutProvider extends ChangeNotifier {
       _punchOutOperator = PunchOutModel.fromJson(jsonDecode(response.body));
 
       print("puncout successful");
+    } else {
+      print(" error on api side");
     }
     notifyListeners();
     return _punchOutOperator;

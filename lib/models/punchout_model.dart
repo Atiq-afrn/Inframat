@@ -1,83 +1,69 @@
 class PunchOutModel {
-  final String status;
-  final String message;
-  final PunchOutData data;
+  final String? status;
+  final String? message;
+  final PunchOutData? data;
 
   PunchOutModel({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory PunchOutModel.fromJson(Map<String, dynamic> json) {
     return PunchOutModel(
-      status: json['status'],
-      message: json['message'],
-      data: PunchOutData.fromJson(json['data']),
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: json['data'] != null
+          ? PunchOutData.fromJson(json['data'])
+          : null,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'message': message,
-      'data': data.toJson(),
-    };
   }
 }
 
 class PunchOutData {
-  final String time;
-  final Location location;
-  final String image;
-  final String dateInfo;
+  final String? name;
+  final String? role;
+  final String? time;
+  final Location? location;
+  final String? image;
+  final String? dateInfo;
 
   PunchOutData({
-    required this.time,
-    required this.location,
-    required this.image,
-    required this.dateInfo,
+    this.name,
+    this.role,
+    this.time,
+    this.location,
+    this.image,
+    this.dateInfo,
   });
 
   factory PunchOutData.fromJson(Map<String, dynamic> json) {
     return PunchOutData(
-      time: json['time'],
-      location: Location.fromJson(json['location']),
-      image: json['image'],
-      dateInfo: json['date_info'],
+      name: json['name'] as String?,
+      role: json['role'] as String?,
+      time: json['time'] as String?,
+      location: json['location'] != null
+          ? Location.fromJson(json['location'])
+          : null,
+      image: json['image'] as String?,
+      dateInfo: json['date_info'] as String?,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'time': time,
-      'location': location.toJson(),
-      'image': image,
-      'date_info': dateInfo,
-    };
   }
 }
 
 class Location {
-  final String lat;
-  final String long;
+  final String? lat;
+  final String? long;
 
   Location({
-    required this.lat,
-    required this.long,
+    this.lat,
+    this.long,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      lat: json['lat'],
-      long: json['long'],
+      lat: json['lat'] as String?,
+      long: json['long'] as String?,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'lat': lat,
-      'long': long,
-    };
   }
 }

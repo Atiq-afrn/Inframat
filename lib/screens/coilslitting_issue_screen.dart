@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'dart:io';
@@ -12,10 +13,12 @@ import 'package:inframat/models/pausereasonlist_model.dart';
 
 import 'package:inframat/provider/coil_slitting_provider.dart';
 import 'package:inframat/provider/pauslist_provider.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/coil_sliting_screen2.dart';
 
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/shared_pref/shared_preferance.dart';
+import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 
@@ -44,6 +47,8 @@ class _CoilslittingIssueScreenState extends State<CoilslittingIssueScreen> {
   void dispose() {
     // TODO: implement dispose
     searchbyplancontroller.dispose();
+    super.dispose();
+
     super.dispose();
   }
 
@@ -194,6 +199,30 @@ class ContainerWidget extends StatefulWidget {
 }
 
 class _ContainerWidgetState extends State<ContainerWidget> {
+  late String timeString;
+  late Timer _timer;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _timer.cancel();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    timeString = _formatDateTime(DateTime.now());
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        timeString = _formatDateTime(DateTime.now());
+      });
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('HH:mm:ss').format(dateTime); // 24-hour format
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -312,7 +341,18 @@ class _ContainerWidgetState extends State<ContainerWidget> {
           SizedBox(height: 15),
           GestureDetector(
             onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("start", "").then((value) {
+                if (value != null) {
+                  print("success on UI");
+                } else {
+                  print(" error on ui");
+                }
+              });
               _showAlertDialog();
+              _getCurrentTime();
               Provider.of<PauslistProvider>(
                 context,
                 listen: false,
@@ -405,7 +445,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                             ),
                             child: Center(
                               child: Text(
-                                "Started 9 P.M",
+                                "Started ${currentTime}",
                                 style: TextStyle(fontSize: 10),
                               ),
                             ),
@@ -427,7 +467,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    "00:30 :55",
+                                    "${timeString}",
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: Appcolor.whitecolor,
@@ -642,6 +682,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
 
                                                     batchNo2: value?.data?[1],
                                                     batchNo3: value?.data?[2],
+                                                    totaltime: timeString,
                                                   ),
                                             ),
                                           );
@@ -927,9 +968,18 @@ class _ContainerWidgetState extends State<ContainerWidget> {
     );
   }
 
+  String? currentTime = '';
   String? selectedIssue;
   List<IssueData>? dropdownItems = [];
+  void _getCurrentTime() {
+    DateTime now = DateTime.now();
+    String formattedTime = DateFormat.Hm().format(now); // HH:mm format
+    setState(() {
+      currentTime = formattedTime;
+    });
+  }
 
+  String? selectedIssueId;
   void timeStopalertDialoge(
     BuildContext context,
     void Function(String?) onSubmit,
@@ -978,6 +1028,14 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                         onChanged: (String? newValue) {
                           setState(() {
                             selectedIssue = newValue;
+
+                            final selectedItem = dropdownItems?.firstWhere(
+                              (item) => item.name == newValue,
+                              orElse: () => IssueData(id: "", name: ''),
+                            );
+
+                            selectedIssueId = selectedItem?.id;
+                            print("📌 Selected ID: $selectedIssueId");
                           });
                         },
                       ),
@@ -1010,20 +1068,37 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                           ),
                         ),
 
-                        Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width * .34,
-                          decoration: BoxDecoration(
-                            color: Appcolor.deepPurple,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Submit",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          onTap: () {
+                            Provider.of<TimellogProvider>(
+                              context,
+                              listen: false,
+                            ).gettingTimeLog("pause", selectedIssueId).then((
+                              value,
+                            ) {
+                              if (value != null) {
+                                Navigator.pop(context);
+                                print("success on ui");
+                              } else {
+                                print(" Error on ui");
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.deepPurple,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Submit",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

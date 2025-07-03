@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/punchout_model.dart';
 import 'package:inframat/provider/punch_out_provider.dart';
 import 'package:inframat/screens/barcode_scanner.dart';
 import 'package:inframat/screens/dashboard.dart';
 import 'package:inframat/screens/splash_screen.dart';
+import 'package:inframat/shared_pref/shared_preferance.dart';
 import 'package:provider/provider.dart';
 
 class Facerecognize2 extends StatefulWidget {
-  Facerecognize2({super.key, required this.selectedImage,this.base64image});
+  Facerecognize2({super.key, required this.selectedImage, this.base64image});
   dynamic selectedImage;
   dynamic base64image;
 
@@ -18,6 +22,97 @@ class Facerecognize2 extends StatefulWidget {
 
 class _Facerecognize2State extends State<Facerecognize2> {
   // int connectionId = 0;
+  Position? currentPosition;
+  Future<void> getUserLocation() async {
+    try {
+      // Check if location services are enabled
+      bool isLocationServiceEnabled =
+          await Geolocator.isLocationServiceEnabled();
+      if (!isLocationServiceEnabled) {
+        // Optionally, prompt the user to enable location services.
+        return;
+      }
+
+      // Check for permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print("Location permission denied.");
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        print("Location permission permanently denied.");
+
+        return;
+      }
+
+      currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
+
+      // Store location if valid
+      AppStorage.storeLat(currentPosition!.latitude.toString());
+      AppStorage.storeLong(currentPosition!.longitude.toString());
+
+      print(
+        "Location retrieved: ${currentPosition!.latitude}, ${currentPosition!.longitude}",
+      );
+    } catch (e) {
+      print("Failed to get location: $e");
+    }
+  }
+
+  // getting user location  by lat and long
+  Future<String> getAddressFromLatLng(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        latitude,
+        longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+
+        String address =
+            '${place.street}, '
+            '${place.subLocality}, '
+            '${place.locality}, '
+            '${place.administrativeArea}, '
+            '${place.postalCode}, '
+            '${place.country}';
+
+        return address;
+      } else {
+        return 'No address found';
+      }
+    } catch (e) {
+      print('Error in reverse geocoding: $e');
+      return 'Error retrieving address';
+    }
+  }
+
+  String? address;
+  //String? formattedAddress;
+
+  void getUserAddress() async {
+    double lat = currentPosition!.latitude; // Your dynamic latitude
+    double lng = currentPosition!.longitude; // Your dynamic longitude
+
+    address = await getAddressFromLatLng(lat, lng);
+    print("User Address: $address");
+  }
+
+  PunchOutModel? punchOutdata;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserLocation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,15 +188,27 @@ class _Facerecognize2State extends State<Facerecognize2> {
 
             GestureDetector(
               onTap: () {
-                Provider.of<PunchOutProvider>(context, listen: false)
-                    .getPunchOut(widget.base64image)
-                    .then((value) {
-                      print("Punch Out success");
-                    })
-                    .then((values) {
-                      openAlertDialoge();
-                      splashScreen1();
-                    });
+                Provider.of<PunchOutProvider>(
+                  context,
+                  listen: false,
+                ).getPunchOut(widget.base64image).then((value) {
+                  if (value?.status == "success") {
+                    punchOutdata = value;
+                    AppStorage.removeUserIdandMachineId();
+                    openAlertDialoge();
+                    splashScreen1();
+                    print("Punch Out success");
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Center(
+                          child: Text("PunchIn Record Not found "),
+                        ),
+                      ),
+                    );
+                  }
+                });
               },
               child: Container(
                 height: 43,
@@ -137,7 +244,7 @@ class _Facerecognize2State extends State<Facerecognize2> {
   }
 
   void splashScreen1() async {
-    await Future.delayed(Duration(seconds: 1), () {
+    await Future.delayed(Duration(seconds: 5), () {
       Navigator.pop(context);
       Navigator.pushReplacement(
         context,
@@ -166,11 +273,11 @@ class _Facerecognize2State extends State<Facerecognize2> {
                     backgroundImage: AssetImage(AppImages.punchinimage),
                   ),
                   Text(
-                    "shivansh Sharma",
+                    "${punchOutdata?.data?.name}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Sale Executive",
+                    "${punchOutdata?.data?.role}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Row(
@@ -180,7 +287,7 @@ class _Facerecognize2State extends State<Facerecognize2> {
                         color: Appcolor.deepPurple,
                       ),
                       Text(
-                        "Punch in at  09:00 am  |  09 Apr 2024",
+                        "Punch in at  ${punchOutdata?.data?.time}  |  ${punchOutdata?.data?.dateInfo}",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -195,7 +302,7 @@ class _Facerecognize2State extends State<Facerecognize2> {
                         color: Appcolor.deepPurple,
                       ),
                       Text(
-                        "1/5 Sec-A Omax City, Sharda Nagar ,",
+                        " ,",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -204,7 +311,7 @@ class _Facerecognize2State extends State<Facerecognize2> {
                     ],
                   ),
                   Text(
-                    " Extention,Lucknow, Uttar Pradesh, 226002, India",
+                    "${address}",
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ],

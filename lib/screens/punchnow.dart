@@ -138,8 +138,8 @@ class _PunchnowState extends State<Punchnow> {
                     builder:
                         (context) => Facerecognize(
                           operatorImage: selectedImage,
-                          lat: currentPosition!.latitude.toString(),
-                          log: currentPosition!.longitude.toString(),
+                          lat: currentPosition!.latitude,
+                          log: currentPosition!.longitude,
                         ),
                   ),
                 );

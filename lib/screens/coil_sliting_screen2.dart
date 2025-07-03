@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
+import 'package:inframat/const/const_api.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/invard.printing.barcode.dart/invard_barcode.dart';
 import 'package:inframat/models/coil_slitting_response_model.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 
 import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:inframat/screens/dashboard.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/issue.dart';
 import 'package:inframat/screens/rewinding_process.dart';
+import 'package:provider/provider.dart';
 
 class CoilSlitingScreen2 extends StatefulWidget {
-  CoilSlitingScreen2({super.key, this.batchNo1, this.batchNo2, this.batchNo3});
+  CoilSlitingScreen2({
+    super.key,
+    this.batchNo1,
+    this.batchNo2,
+    this.batchNo3,
+    this.totaltime,
+  });
   final CoilSlittingEntry? batchNo1;
   final CoilSlittingEntry? batchNo2;
   final CoilSlittingEntry? batchNo3;
+  final String? totaltime;
 
   @override
   State<CoilSlitingScreen2> createState() => _CoilSlitingScreen2State();
@@ -29,6 +40,7 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
   //   super.initState();
   //   print("  Atiq khan ${widget.batchNo1!.createdAt.toString()}");
   // }
+  final String baseUrl = "http://inframart.goproject.in/";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +64,7 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "00:30 :55",
+                    "${widget.totaltime}",
                     style: TextStyle(fontSize: 10, color: Appcolor.whitecolor),
                   ),
                   Icon(
@@ -64,21 +76,47 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Fluttertoast.showToast(
+                      msg: "Machine time log sent to management",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green.shade200,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  });
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Error")));
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),
@@ -389,7 +427,9 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
                     "size Details",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("  :250 MM x 0.70 MM x\n   GR-1 x TATA"),
+                  Text(
+                    "  : ${widget.batchNo1!.length} MM x ${widget.batchNo1!.width} MM x\n   GR-1 x TATA",
+                  ),
                 ],
               ),
               Row(
@@ -398,14 +438,14 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
                     "Actual wt",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(" :  13.456"),
+                  Text(" :  ${widget.batchNo1!.weight}"),
                 ],
               ),
               SizedBox(height: 20),
               Row(
                 children: [
                   Text(
-                    "Supplier ID No :  13",
+                    "Supplier ID No :  ${widget.batchNo1!.id}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                 ],
@@ -416,7 +456,10 @@ class _CoilSlitingScreen2State extends State<CoilSlitingScreen2> {
                 height: 150,
                 width: double.infinity,
                 color: Appcolor.lightgrey,
-                child: Image.asset(fit: BoxFit.fill, AppImages.slittingcoil),
+                child: Image.asset(AppImages.coilstock),
+                // Image.network(
+                //   ConstApi.imageBaseUrl + widget.batchNo1!.image!,
+                // ),
               ),
 
               SizedBox(height: 30),

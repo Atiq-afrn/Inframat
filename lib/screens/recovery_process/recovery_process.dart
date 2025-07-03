@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/tubemill_recoveryprocess_model.dart';
+import 'package:inframat/provider/tubemillrecoveryprocess_provider.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/recovery_process/recovery_process_custome_widget.dart';
+import 'package:provider/provider.dart';
 
 class RecoveryProcess extends StatefulWidget {
   const RecoveryProcess({super.key});
@@ -14,6 +17,16 @@ class RecoveryProcess extends StatefulWidget {
 
 class _RecoveryProcessState extends State<RecoveryProcess> {
   bool? ischecked = false;
+  TextEditingController openController = TextEditingController();
+  TextEditingController jointController = TextEditingController();
+  TextEditingController zincController = TextEditingController();
+  TextEditingController pinholcontroller = TextEditingController();
+  TextEditingController toleProblemController = TextEditingController();
+  TextEditingController bendController = TextEditingController();
+  TextEditingController babriController = TextEditingController();
+  TextEditingController acuulatorController = TextEditingController();
+  TextEditingController totolaController = TextEditingController();
+  TubeMillReportData? data = TubeMillReportData();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,17 +103,53 @@ class _RecoveryProcessState extends State<RecoveryProcess> {
                   ),
                 ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "OPEN"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "OPEN",
+                  controllername: openController,
+                  onCheckboxChanged: (value) {
+                    data?.open = value;
+                  },
+                ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "JOINT"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "JOINT",
+                  controllername: jointController,
+                  onCheckboxChanged: (value) {
+                    data?.joint = value;
+                  },
+                ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "ZINC BLACK"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "ZINC BLACK",
+                  controllername: zincController,
+                  onCheckboxChanged: (value) {
+                    data?.zincBlack = value;
+                  },
+                ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "PIN HOLE"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "PIN HOLE",
+                  controllername: pinholcontroller,
+                  onCheckboxChanged: (value) {
+                    data?.pinhole = value;
+                  },
+                ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "TOLE PROBLEM"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "TOLE PROBLEM",
+                  controllername: toleProblemController,
+                  onCheckboxChanged: (value) {
+                    data?.toolProblem = value;
+                  },
+                ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "BEND"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "BEND",
+                  controllername: bendController,
+                  onCheckboxChanged: (value) {
+                    data?.bend = value;
+                  },
+                ),
 
                 SizedBox(height: 10),
                 Container(
@@ -124,9 +173,21 @@ class _RecoveryProcessState extends State<RecoveryProcess> {
                   ),
                 ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "BABRI"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "BABRI",
+                  controllername: babriController,
+                  onCheckboxChanged: (value) {
+                    data?.babri = value;
+                  },
+                ),
                 SizedBox(height: 10),
-                RecoveryProcessCustomeWidget(buttonName: "ACUMULATOR\nSCRAP"),
+                RecoveryProcessCustomeWidget(
+                  buttonName: "ACUMULATOR\nSCRAP",
+                  controllername: acuulatorController,
+                  onCheckboxChanged: (value) {
+                    data?.accumulatorScrap = value;
+                  },
+                ),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -142,6 +203,7 @@ class _RecoveryProcessState extends State<RecoveryProcess> {
                         ),
                         child: Center(
                           child: TextField(
+                            controller: totolaController,
                             decoration: InputDecoration(
                               hintText: "0000",
                               enabledBorder: InputBorder.none,
@@ -156,10 +218,16 @@ class _RecoveryProcessState extends State<RecoveryProcess> {
                 SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Provider.of<TubemillrecoveryprocessProvider>(
                       context,
-                      MaterialPageRoute(builder: (context) => Dashboard2()),
-                    );
+                      listen: false,
+                    ).gettingtubemillRecoveryprocess(data).then((value) {
+                      if (value?.message == "Report stored successfully") {
+                        print(value?.data?.pinhole);
+                      } else {
+                        print("error on design side");
+                      }
+                    });
                   },
                   child: Container(
                     height: 40,

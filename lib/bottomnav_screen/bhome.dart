@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/models/dashboard_model.dart';
+import 'package:inframat/provider/dashboard_process_provider.dart';
 import 'package:inframat/widgets/dashboard_widget.dart';
+import 'package:provider/provider.dart';
 
 class Bhome extends StatefulWidget {
   const Bhome({super.key, required this.sessionId});
@@ -13,6 +16,28 @@ class Bhome extends StatefulWidget {
 
 class _BhomeState extends State<Bhome> {
   @override
+  List<StageData>? data;
+  Future<void> gettingDashboarditems() async {
+    Provider.of<DashboardProcessProvider>(
+      context,
+      listen: false,
+    ).gettingDashBoardItems().then((value) {
+      if (value != null) {
+        data = value.data;
+        setState(() {});
+      } else {
+        print("error ");
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    gettingDashboarditems();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -30,8 +55,8 @@ class _BhomeState extends State<Bhome> {
                     // );
                   },
                   child: DashboardWidget(
-                    imagename: AppImages.invardimage,
-                    textname: "Inward",
+                    imagename: "${data?[0].image}",
+                    textname: "${data?[0].title}",
                   ),
                 ),
 
@@ -45,8 +70,8 @@ class _BhomeState extends State<Bhome> {
                     // );
                   },
                   child: DashboardWidget(
-                    imagename: AppImages.coilslittingDash,
-                    textname: "coil slitting",
+                    imagename: "${data?[1].image}",
+                    textname: "${data?[1].title}",
                   ),
                 ),
               ],
@@ -62,13 +87,13 @@ class _BhomeState extends State<Bhome> {
                 children: [
                   SizedBox(width: 5),
                   DashboardWidget(
-                    imagename: AppImages.picklingprocess,
-                    textname: "Pickling Process",
+                    imagename: "${data?[2].image}",
+                    textname: "${data?[2].title}",
                   ),
 
                   DashboardWidget(
-                    imagename: AppImages.crmcoldrolling,
-                    textname: "CRM (Cold rolling mill)",
+                    imagename: "${data?[3].image}",
+                    textname: "${data?[3].title}",
                   ),
                 ],
               ),
@@ -86,13 +111,13 @@ class _BhomeState extends State<Bhome> {
                 children: [
                   SizedBox(width: 5),
                   DashboardWidget(
-                    imagename: AppImages.continuousgalvanizingline,
-                    textname: "Continuous Ganlvanizing \nLine",
+                    imagename: "${data?[4].image}",
+                    textname: "${data?[4].title}",
                   ),
 
                   DashboardWidget(
-                    imagename: AppImages.anneling,
-                    textname: "Anneling",
+                    imagename: "${data?[5].image}",
+                    textname: "${data?[5].title}",
                   ),
                 ],
               ),
@@ -101,13 +126,13 @@ class _BhomeState extends State<Bhome> {
               children: [
                 SizedBox(width: 5),
                 DashboardWidget(
-                  imagename: AppImages.skinpass,
-                  textname: "Sking Pass",
+                  imagename: "${data?[6].image}",
+                  textname: "${data?[6].title}",
                 ),
 
                 DashboardWidget(
-                  imagename: AppImages.tubemill,
-                  textname: "Tube Mill",
+                  imagename: "${data?[7].image}",
+                  textname: "${data?[7].title}",
                 ),
               ],
             ),
@@ -116,8 +141,13 @@ class _BhomeState extends State<Bhome> {
               children: [
                 SizedBox(width: 5),
                 DashboardWidget(
-                  imagename: AppImages.cuttingprocess,
-                  textname: "Cutting Process",
+                  imagename: "${data?[8].image}",
+                  textname: "${data?[8].title}",
+                ),
+
+                DashboardWidget(
+                  imagename: "${data?[9].image}",
+                  textname: "${data?[9].title}",
                 ),
               ],
             ),

@@ -3,28 +3,21 @@ class TimelineUpdateResponseModel {
   final String? message;
   final TimelineData? data;
 
-  TimelineUpdateResponseModel({
-    this.status,
-    this.message,
-    this.data,
-  });
+  TimelineUpdateResponseModel({this.status, this.message, this.data});
 
   factory TimelineUpdateResponseModel.fromJson(Map<String, dynamic> json) {
     return TimelineUpdateResponseModel(
       status: json['status'] as String?,
       message: json['message'] as String?,
-      data: json['data'] != null
-          ? TimelineData.fromJson(json['data'] as Map<String, dynamic>)
-          : null,
+      data:
+          json['data'] != null
+              ? TimelineData.fromJson(json['data'] as Map<String, dynamic>)
+              : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'status': status,
-      'message': message,
-      'data': data?.toJson(),
-    };
+    return {'status': status, 'message': message, 'data': data?.toJson()};
   }
 }
 

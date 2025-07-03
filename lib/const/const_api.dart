@@ -1,12 +1,12 @@
 class ConstApi {
   static const baseApiUrl = "http://inframart.goproject.in/api";
+  static const imageBaseUrl = "http://inframart.goproject.in/";
+  
   static const getconnectionApi = "$baseApiUrl/getconnection";
   static const operatorLogin = "$baseApiUrl/login-operator";
   static const operatorLogoutapi = "$baseApiUrl/logout-operator?=null";
   static const operatorPunchIn = "$baseApiUrl/punch_in";
-
   static const punchOutOperator = "$baseApiUrl/punch_out";
-
   static const invardDetailsApi = "$baseApiUrl/store_inwards";
 
   static const qualitycheckApi = "$baseApiUrl/qualityCheck";
@@ -46,5 +46,8 @@ class ConstApi {
   static const cuttingProcessplanApi = "$baseApiUrl/cutting-process_plan";
   static const cuttingProcessProccessApi = "$baseApiUrl/cutting-process";
   static const pauseListapi = "$baseApiUrl/pause_reasons_list";
-  static const pausedataApi="$baseApiUrl/update-log/1";
+  static const pausedataApi = "$baseApiUrl/update-log/1";
+  static const tubemillRecoveryProcessApi = "$baseApiUrl/tube-mill-recovery";
+  static const dashboardApi = "$baseApiUrl/dashboard-items";
+  static const timeLogApi = "$baseApiUrl/update-log";
 }

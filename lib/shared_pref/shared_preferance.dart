@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:inframat/models/contractor_login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppStorage {
@@ -55,6 +53,14 @@ class AppStorage {
     remuser.remove("connection_id");
     remuser.clear();
 
+    return true;
+  }
+
+  static Future<bool> removeUserIdandMachineId() async {
+    final pref = await SharedPreferences.getInstance();
+    pref.remove("user_id");
+    pref.remove("machine_id");
+    pref.clear();
     return true;
   }
 
@@ -157,5 +163,16 @@ class AppStorage {
   static Future<String?> gettingSiteId() async {
     final pref = await SharedPreferences.getInstance();
     return pref.getString("site_id");
+  }
+
+  //
+  static storeOperatorId(String operatorId) async {
+    final pref = await SharedPreferences.getInstance();
+    pref.setString("user_id", operatorId);
+  }
+
+  static Future<String?> gettingOperatorID() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.getString("user_id");
   }
 }

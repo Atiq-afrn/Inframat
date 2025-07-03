@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 
 class RecoveryProcessCustomeWidget extends StatefulWidget {
-  const RecoveryProcessCustomeWidget({super.key, this.buttonName});
+  const RecoveryProcessCustomeWidget({
+    super.key,
+    this.buttonName,
+    this.controllername,
+    this.onCheckboxChanged,
+  });
   final String? buttonName;
+  final TextEditingController? controllername;
+  final Function(String? value)? onCheckboxChanged;
 
   @override
   State<RecoveryProcessCustomeWidget> createState() =>
@@ -13,6 +20,7 @@ class RecoveryProcessCustomeWidget extends StatefulWidget {
 class _RecoveryProcessCustomeWidgetState
     extends State<RecoveryProcessCustomeWidget> {
   bool? ischecked = false;
+  // TextEditingController controllername = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -31,6 +39,15 @@ class _RecoveryProcessCustomeWidgetState
                   setState(() {
                     ischecked = values;
                   });
+
+                  if (values == true) {
+                    final text = widget.controllername?.text ?? "0";
+                    widget.onCheckboxChanged?.call(text);
+                  } else {
+                    widget.onCheckboxChanged?.call(
+                      "0",
+                    ); // Optional: Reset value if unchecked
+                  }
                 },
               ),
 
@@ -65,6 +82,9 @@ class _RecoveryProcessCustomeWidgetState
                       horizontal: MediaQuery.of(context).size.width * .2,
                     ),
                     child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: widget.controllername,
+
                       decoration: InputDecoration(
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,

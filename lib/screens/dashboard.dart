@@ -10,6 +10,7 @@ import 'package:inframat/bottomnav_screen/bsearch.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/provider/operator_logout_provider.dart';
+import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/login.dart';
 
 import 'package:inframat/screens/punchnow.dart';
@@ -34,6 +35,29 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    gettingmachineidAndUserId();
+  }
+
+  Future<void> gettingmachineidAndUserId() async {
+    await Future.delayed(Duration(seconds: 3));
+    final String? userId = await AppStorage.gettingOperatorID();
+    final String? machineId = await AppStorage.gettingMachineId();
+    print("machine id   $machineId");
+    print("userId  $userId");
+
+    if (machineId != null && userId != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard2()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Appcolor.deepPurple,
+          content: Center(child: Text("please punch in")),
+        ),
+      );
+    }
   }
 
   @override

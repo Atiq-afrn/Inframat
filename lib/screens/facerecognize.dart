@@ -1,24 +1,66 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/punch_in_model.dart';
 import 'package:inframat/provider/punch_in_provider.dart';
 import 'package:inframat/screens/barcode_scanner.dart';
-import 'package:inframat/screens/splash_screen.dart';
+import 'package:inframat/shared_pref/shared_preferance.dart';
 import 'package:provider/provider.dart';
 
 class Facerecognize extends StatefulWidget {
   Facerecognize({super.key, this.operatorImage, this.lat, this.log});
   File? operatorImage;
-  String? lat;
-  String? log;
+  double? lat;
+  double? log;
   @override
   State<Facerecognize> createState() => _FacerecognizeState();
 }
 
 class _FacerecognizeState extends State<Facerecognize> {
+  Future<String> getAddressFromLatLng(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        latitude,
+        longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+
+        String address =
+            '${place.street}, '
+            '${place.subLocality}, '
+            '${place.locality}, '
+            '${place.administrativeArea}, '
+            '${place.postalCode}, '
+            '${place.country}';
+
+        return address;
+      } else {
+        return 'No address found';
+      }
+    } catch (e) {
+      print('Error in reverse geocoding: $e');
+      return 'Error retrieving address';
+    }
+  }
+
+  PunchInModel? punchindata;
+  String? address;
+  //String? formattedAddress;
+
+  void getUserAddress() async {
+    double lat = widget.lat!; // Your dynamic latitude
+    double lng = widget.log!; // Your dynamic longitude
+
+    address = await getAddressFromLatLng(lat, lng);
+    print("User Address: $address");
+  }
+
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,13 +138,29 @@ class _FacerecognizeState extends State<Facerecognize> {
                 Provider.of<PunchInProvider>(context, listen: false)
                     .getOperatorPunchIn(
                       widget.operatorImage!.toString(),
-                      widget.lat,
-                      widget.log,
+                      widget.lat.toString(),
+                      widget.log.toString(),
                     )
                     .then((value) {
-                      openAlertDialoge();
+                      if (value != null) {
+                        punchindata = value;
+                        AppStorage.storeOperatorId(
+                          value.data!.userId.toString(),
+                        );
+                        openAlertDialoge();
 
-                      splashScreen1();
+                        splashScreen1();
+                        getUserAddress();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Center(
+                              child: Text("you are already punch in "),
+                            ),
+                          ),
+                        );
+                      }
                     });
               },
               child: Container(
@@ -165,11 +223,11 @@ class _FacerecognizeState extends State<Facerecognize> {
                     backgroundImage: FileImage(widget.operatorImage!),
                   ),
                   Text(
-                    "shivansh Sharma",
+                    "${punchindata?.data?.name}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Sale Executive",
+                    "${punchindata?.data?.role}",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Row(
@@ -179,7 +237,7 @@ class _FacerecognizeState extends State<Facerecognize> {
                         color: Appcolor.deepPurple,
                       ),
                       Text(
-                        "Punch in at  09:00 am  |  09 Apr 2024",
+                        "Punch in at  ${punchindata?.data?.time} |  ${punchindata?.data?.date}",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -193,18 +251,11 @@ class _FacerecognizeState extends State<Facerecognize> {
                         Icons.location_searching_outlined,
                         color: Appcolor.deepPurple,
                       ),
-                      Text(
-                        "1/5 Sec-A Omax City, Sharda Nagar ,",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ],
                   ),
                   Text(
-                    " Extention,Lucknow, Uttar Pradesh, 226002, India",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    " ${address}",
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

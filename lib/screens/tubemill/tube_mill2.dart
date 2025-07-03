@@ -1,20 +1,10 @@
-import 'dart:ffi';
-import 'dart:io';
+
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
-import 'package:inframat/const/imageconst.dart';
-import 'package:inframat/screens/anneling/anneling_process2.dart';
-import 'package:inframat/screens/anneling/container_widget_for_anneling.dart';
-import 'package:inframat/screens/coil_sliting_screen2.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/coilslitting_issue_screen.dart';
 import 'package:inframat/screens/tubemill/contianer_widget_for_tubemill.dart';
 import 'package:inframat/screens/tubemill/tube_mill3.dart';
-import 'package:inframat/widgets/container_widget_for_coilslitting.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 class TubemillProcess2 extends StatefulWidget {
   const TubemillProcess2({super.key});

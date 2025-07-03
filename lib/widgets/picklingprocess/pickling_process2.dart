@@ -1,15 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
+import 'package:inframat/models/pausereasonlist_model.dart';
 import 'package:inframat/models/pickling_process_response_model.dart';
+import 'package:inframat/provider/pauslist_provider.dart';
 import 'package:inframat/provider/pickling_process_provider.dart';
 
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/widgets/picklingprocess/pickling_process3.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PiicklingProcess2 extends StatefulWidget {
@@ -33,9 +36,15 @@ class PiicklingProcess2State extends State<PiicklingProcess2> {
   TextEditingController searchWithbatchcontroller = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   void dispose() {
     // TODO: implement dispose
     searchWithbatchcontroller.dispose();
+
     super.dispose();
   }
 
@@ -207,10 +216,30 @@ class _ContainerWidgetforpickling2State
   TextEditingController weightcontroller = TextEditingController();
   TextEditingController actualweightcontroller = TextEditingController();
   TextEditingController picklingLossweightcontroller = TextEditingController();
-
+  Timer? timer;
   dynamic selectedImage;
   File? imagepath;
   PickledOilStoreData? responsedata;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getCurrentTime(); // initialize first
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      _getCurrentTime();
+      print(currentTime); // update every second
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
+    timer?.cancel();
+    print("dispose the timer");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -328,6 +357,19 @@ class _ContainerWidgetforpickling2State
           GestureDetector(
             onTap: () {
               alertDialog1();
+              // _showAlertDialog();
+              _getCurrentTime();
+              Provider.of<PauslistProvider>(
+                context,
+                listen: false,
+              ).gettingPauseList().then((value) {
+                if (value?.success == "success") {
+                  dropdownItems?.clear();
+                  dropdownItems?.addAll(value!.data!);
+                } else {
+                  print("error on  design page");
+                }
+              });
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -356,444 +398,578 @@ class _ContainerWidgetforpickling2State
     );
   }
 
-  Future alertDialog1() async {
+  Future<void> alertDialog1() async {
     TextEditingController picklinglossecontroller = TextEditingController();
+    TextEditingController lengthcontroller = TextEditingController();
+    TextEditingController widthcontroller = TextEditingController();
+    TextEditingController weightcontroller = TextEditingController();
+    TextEditingController actualweightcontroller = TextEditingController();
+    File? imagepath;
+    String? selectedImage;
+    String currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+    Timer? timer;
+
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            backgroundColor: Appcolor.whitecolor,
-            content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Appcolor.greycolor,
-                            width: 1,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Started 9 P.M",
-                            style: TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
-                        decoration: BoxDecoration(
-                          color: Appcolor.lightpurple,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                            color: Appcolor.lightpurple,
-                            width: 1,
-                          ),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(
-                                "00:30 :55",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Appcolor.whitecolor,
-                                ),
-                              ),
-                              Icon(
-                                Icons.watch_later_outlined,
-                                color: Appcolor.whitecolor,
-                                size: 15,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
-                        decoration: BoxDecoration(
-                          color: Appcolor.gcol,
-                          borderRadius: BorderRadius.circular(17),
-                          border: Border.all(
-                            color: Appcolor.greycolor,
-                            width: 1,
-                          ),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Icon(
-                                Icons.pause,
-                                color: Appcolor.whitecolor,
-                                size: 15,
-                              ),
-                              Text(
-                                "Pause",
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Appcolor.whitecolor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        "Add New IM pickiling No",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            timer ??= Timer.periodic(const Duration(seconds: 1), (_) {
+              setState(() {
+                currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+              });
+            });
 
-                  Container(
-                    height: 43,
-                    width: double.infinity,
-                    color: Appcolor.lightgrey,
-                    child: Row(
+            return AlertDialog(
+              backgroundColor: Appcolor.whitecolor,
+              content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Container(
-                          height: 30,
-
-                          width: MediaQuery.of(context).size.width * .11,
-
+                          height: 27,
+                          width: MediaQuery.of(context).size.width * .18,
                           decoration: BoxDecoration(
-                            color: Appcolor.whitecolor,
+                            borderRadius: BorderRadius.circular(4),
                             border: Border.all(color: Appcolor.greycolor),
                           ),
                           child: Center(
+                            child: Text(
+                              "Started $currentTime",
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 27,
+                          width: MediaQuery.of(context).size.width * .18,
+                          decoration: BoxDecoration(
+                            color: Appcolor.lightpurple,
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Appcolor.lightpurple),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  currentTime,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Appcolor.whitecolor,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.watch_later_outlined,
+                                  color: Appcolor.whitecolor,
+                                  size: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            timer?.cancel();
+                            Navigator.pop(context);
+                            timeStopalertDialoge(context, (selectedOption) {
+                              if (selectedOption != null) {
+                                print("User selected: $selectedOption");
+                              } else {
+                                print("No option selected");
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 27,
+                            width: MediaQuery.of(context).size.width * .18,
+                            decoration: BoxDecoration(
+                              color: Appcolor.gcol,
+                              borderRadius: BorderRadius.circular(17),
+                              border: Border.all(color: Appcolor.greycolor),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Icon(
+                                    Icons.pause,
+                                    color: Appcolor.whitecolor,
+                                    size: 15,
+                                  ),
+                                  Text(
+                                    "Pause",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Appcolor.whitecolor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Row(
+                      children: [
+                        Text(
+                          "Add New IM pickiling No",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      height: 43,
+                      width: double.infinity,
+                      color: Appcolor.lightgrey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width * .11,
+                            decoration: BoxDecoration(
+                              color: Appcolor.whitecolor,
+                              border: Border.all(color: Appcolor.greycolor),
+                            ),
+                            child: Center(
+                              child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(),
+                                controller: lengthcontroller,
+                                decoration: const InputDecoration(
+                                  hintText: "00.00",
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Text("MM x"),
+                          Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width * .11,
+                            decoration: BoxDecoration(
+                              color: Appcolor.whitecolor,
+                              border: Border.all(color: Appcolor.greycolor),
+                            ),
+                            child: Center(
+                              child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(),
+                                controller: widthcontroller,
+                                decoration: const InputDecoration(
+                                  hintText: "3.300",
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Text("MMX CR-2 x SAIL"),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      height: 43,
+                      width: double.infinity,
+                      color: Appcolor.lightgrey,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width * .5,
+                            decoration: BoxDecoration(
+                              color: Appcolor.whitecolor,
+                              border: Border.all(color: Appcolor.greycolor),
+                            ),
                             child: TextField(
                               keyboardType: TextInputType.numberWithOptions(),
-                              controller: lengthcontroller,
-                              decoration: InputDecoration(
+                              controller: weightcontroller,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
                                 hintText: "00.00",
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                               ),
                             ),
                           ),
-                        ),
-                        Text("MM x"),
-                        Container(
-                          height: 30,
-
-                          width: MediaQuery.of(context).size.width * .11,
-
-                          decoration: BoxDecoration(
-                            color: Appcolor.whitecolor,
-                            border: Border.all(color: Appcolor.greycolor),
-                          ),
-                          child: Center(
-                            child: TextField(
-                              keyboardType: TextInputType.numberWithOptions(),
-                              controller: widthcontroller,
-                              decoration: InputDecoration(
-                                hintText: "3.300",
-
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Text("MMX CR-2 x SAIL"),
-                      ],
+                          const Text("MT"),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    height: 43,
-                    width: double.infinity,
-                    color: Appcolor.lightgrey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        const Text(
+                          "Actual Weight",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                         Container(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width * .5,
-                          decoration: BoxDecoration(
-                            color: Appcolor.whitecolor,
-                            border: Border.all(color: Appcolor.greycolor),
-                          ),
-                          child: TextField(
-                            keyboardType: TextInputType.numberWithOptions(),
-                            controller: weightcontroller,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              hintText: "00.00",
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                        Text("MT"),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Actual Weight",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * .37,
-                        color: Appcolor.lightgrey2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 30,
-                              width: MediaQuery.of(context).size.width * .17,
-                              decoration: BoxDecoration(
-                                color: Appcolor.whitecolor,
-                                border: Border.all(color: Appcolor.greycolor),
-                              ),
-                              child: TextField(
-                                keyboardType: TextInputType.numberWithOptions(),
-                                controller: actualweightcontroller,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  hintText: "00.00",
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Text("(in MT)"),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Pickling Loss",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width * .37,
-                        color: Appcolor.lightgrey2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              height: 30,
-                              width: MediaQuery.of(context).size.width * .17,
-                              decoration: BoxDecoration(
-                                color: Appcolor.whitecolor,
-                                border: Border.all(color: Appcolor.greycolor),
-                              ),
-                              child: TextField(
-                                keyboardType: TextInputType.numberWithOptions(),
-                                textAlign: TextAlign.center,
-                                controller: picklinglossecontroller,
-                                onChanged: (value) => setState(() {}),
-                                decoration: InputDecoration(
-                                  hintText: "00.00",
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Text("(in MT)"),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () async {
-                      final pickedInstance = ImagePicker();
-                      final pickedImage = await pickedInstance.pickImage(
-                        source: ImageSource.camera,
-                      );
-                      if (pickedImage != null) {
-                        imagepath = File(pickedImage.path);
-                        final readbyte = await imagepath!.readAsBytes();
-                        final base64 = base64Encode(readbyte);
-                        setState(() {
-                          selectedImage = base64;
-                        });
-                      }
-                    },
-                    child:
-                        selectedImage != null
-                            ? Container(
-                              height: 50,
-                              width: 50,
-                              child: Center(child: Image.file(imagepath!)),
-                            )
-                            : Container(
-                              height: 140,
-                              width: MediaQuery.of(context).size.width * .8,
-                              color: Appcolor.lightgrey2,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.camera_alt_outlined),
-                                  SizedBox(width: 6),
-                                  Text("Take Pickture"),
-                                ],
-                              ),
-                            ),
-                  ),
-
-                  SizedBox(height: 120),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
                           height: 40,
-                          width: MediaQuery.of(context).size.width * .3,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Appcolor.red,
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Appcolor.whitecolor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      //selectedImage
-                      picklinglossecontroller.text.isNotEmpty
-                          ? GestureDetector(
-                            onTap: () {
-                              Provider.of<PicklingProcessProvider>(
-                                    context,
-                                    listen: false,
-                                  )
-                                  .gettingPicklingProcess(
-                                    widget.batchNo!,
-                                    actualweightcontroller.text,
-                                    picklinglossecontroller.text,
-                                    lengthcontroller.text,
-                                    widthcontroller.text,
-                                    selectedImage,
-                                  )
-                                  .then((value) {
-                                    if (value?.data != null) {
-                                      responsedata = value?.data;
-                                      print(
-                                        "  Atiq khan 1 ${responsedata?.batchNo}",
-                                      );
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => Picklingprocess3(
-                                                responseModel: responsedata,
-                                              ),
-                                        ),
-                                      );
-                                    } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          backgroundColor: Colors.red,
-                                          content: Text(
-                                            "This Plan already processed",
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  });
-                            },
-                            child: Container(
-                              height: 40,
-                              width: MediaQuery.of(context).size.width * .3,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Appcolor.deepPurple,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-
-                                    color: Appcolor.whitecolor,
+                          width: MediaQuery.of(context).size.width * .37,
+                          color: Appcolor.lightgrey2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                height: 30,
+                                width: MediaQuery.of(context).size.width * .17,
+                                decoration: BoxDecoration(
+                                  color: Appcolor.whitecolor,
+                                  border: Border.all(color: Appcolor.greycolor),
+                                ),
+                                child: TextField(
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  controller: actualweightcontroller,
+                                  textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                    hintText: "00.00",
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
                                   ),
                                 ),
                               ),
-                            ),
-                          )
-                          : Container(
+                              const Text("(in MT)"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Pickling Loss",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width * .37,
+                          color: Appcolor.lightgrey2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                height: 30,
+                                width: MediaQuery.of(context).size.width * .17,
+                                decoration: BoxDecoration(
+                                  color: Appcolor.whitecolor,
+                                  border: Border.all(color: Appcolor.greycolor),
+                                ),
+                                child: TextField(
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  textAlign: TextAlign.center,
+                                  controller: picklinglossecontroller,
+                                  onChanged: (value) => setState(() {}),
+                                  decoration: const InputDecoration(
+                                    hintText: "00.00",
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                              const Text("(in MT)"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () async {
+                        final pickedInstance = ImagePicker();
+                        final pickedImage = await pickedInstance.pickImage(
+                          source: ImageSource.camera,
+                        );
+                        if (pickedImage != null) {
+                          imagepath = File(pickedImage.path);
+                          final readbyte = await imagepath!.readAsBytes();
+                          final base64 = base64Encode(readbyte);
+                          setState(() {
+                            selectedImage = base64;
+                          });
+                        }
+                      },
+                      child:
+                          selectedImage != null
+                              ? Container(
+                                height: 50,
+                                width: 50,
+                                child: Center(child: Image.file(imagepath!)),
+                              )
+                              : Container(
+                                height: 140,
+                                width: MediaQuery.of(context).size.width * .8,
+                                color: Appcolor.lightgrey2,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.camera_alt_outlined),
+                                    SizedBox(width: 6),
+                                    Text("Take Picture"),
+                                  ],
+                                ),
+                              ),
+                    ),
+                    const SizedBox(height: 120),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            timer?.cancel();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
                             height: 40,
                             width: MediaQuery.of(context).size.width * .3,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Appcolor.greycolor,
+                              color: Appcolor.red,
+                            ),
+                            child: Center(
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        picklinglossecontroller.text.isNotEmpty
+                            ? GestureDetector(
+                              onTap: () {
+                                Provider.of<PicklingProcessProvider>(
+                                      context,
+                                      listen: false,
+                                    )
+                                    .gettingPicklingProcess(
+                                      widget.batchNo!,
+                                      actualweightcontroller.text,
+                                      picklinglossecontroller.text,
+                                      lengthcontroller.text,
+                                      widthcontroller.text,
+                                      selectedImage!,
+                                    )
+                                    .then((value) {
+                                      if (value?.data != null) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => Picklingprocess3(
+                                                  responseModel: value!.data!,
+                                                ),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                              "This Plan already processed",
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    });
+                              },
+                              child: Container(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * .3,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Appcolor.deepPurple,
+                                ),
+                                child: Center(
+                                  child: const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                            : Container(
+                              height: 40,
+                              width: MediaQuery.of(context).size.width * .3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Appcolor.greycolor,
+                              ),
+                              child: Center(
+                                child: const Text(
+                                  "Submit",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((_) => timer?.cancel()); // Cancel timer on dialog close
+  }
+
+  String? currentTime = '';
+  String? selectedIssue;
+  List<IssueData>? dropdownItems = [];
+  void _getCurrentTime() {
+    DateTime now = DateTime.now();
+    String formattedTime = DateFormat.Hm().format(now); // HH:mm format
+    setState(() {
+      currentTime = formattedTime;
+    });
+  }
+
+  void timeStopalertDialoge(
+    BuildContext context,
+    void Function(String?) onSubmit,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        return Dialog(
+          backgroundColor: Appcolor.whitecolor,
+          insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                width: screenWidth * 0.9,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Paused", style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Appcolor.lightgrey2,
+                      ),
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.white,
+                        value: selectedIssue,
+                        hint: Text("Select issue"),
+                        isExpanded: true,
+                        items:
+                            dropdownItems?.map((IssueData item) {
+                              return DropdownMenuItem<String>(
+                                value: item.name,
+                                child: Text(item.name ?? ''),
+                              );
+                            }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedIssue = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .3),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.red,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                " Cancel",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.deepPurple,
+                              borderRadius: BorderRadius.circular(5),
                             ),
                             child: Center(
                               child: Text(
                                 "Submit",
                                 style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-
-                                  color: Appcolor.whitecolor,
                                 ),
                               ),
                             ),
                           ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
+        );
+      },
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/cgl_process_model.dart';
-import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/galvanizing_line/printqr_for_cg.dart';
 
 class ContinousGL3 extends StatefulWidget {

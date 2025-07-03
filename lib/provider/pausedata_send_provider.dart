@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:inframat/const/const_api.dart';
 import 'package:inframat/logger.dart';
@@ -32,6 +30,6 @@ class PausedataSendProvider extends ChangeNotifier {
       print(" Error : ${response.statusCode}");
     }
     notifyListeners();
-    return _timelineUpdateResponseModel;
+    return _timelineUpdateResponseModel; 
   }
 }
