@@ -14,13 +14,15 @@ class TimellogProvider extends ChangeNotifier {
     String typeValue,
     String? resonid,
   ) async {
-    // ✅ Construct body based on typeValue
     final Map<String, dynamic> body = {
       "machine_id": await AppStorage.gettingMachineId(),
       "user_id": await AppStorage.gettingOperatorID(),
       "actions": [
         if (typeValue == "pause")
-          {"type": "pause", "reason_id": "${resonid}"}
+          {
+            "type": "pause",
+            "reason_id": resonid != null ? int.tryParse(resonid) : "0",
+          }
         else
           {"type": typeValue},
       ],

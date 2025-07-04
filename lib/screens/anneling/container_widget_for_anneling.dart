@@ -12,6 +12,7 @@ class ContainerWidgetforAnneling extends StatefulWidget {
     this.widht,
     this.weight,
     this.boundlNo,
+  
   });
   final String? textnameforcrm;
   final VoidCallback? ontap;
@@ -22,6 +23,7 @@ class ContainerWidgetforAnneling extends StatefulWidget {
   final String? widht;
   final String? weight;
   final String? boundlNo;
+  
   @override
   State<ContainerWidgetforAnneling> createState() =>
       _ContainerWidgetforAnnelingState();

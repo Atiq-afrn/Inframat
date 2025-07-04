@@ -1,17 +1,23 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/models/cgl_process_model.dart';
+import 'package:inframat/models/pausereasonlist_model.dart';
 import 'package:inframat/provider/cgl_process_provider.dart';
+import 'package:inframat/provider/pauslist_provider.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/galvanizing_line/container_widget_for_cgl.dart';
 import 'package:inframat/screens/galvanizing_line/continous_g_l3.dart';
 
 import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Continousgalvanizingline2 extends StatefulWidget {
@@ -226,6 +232,10 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
   TextEditingController stdZincController = TextEditingController();
   TextEditingController scrapeController = TextEditingController();
   TextEditingController actualWeightController = TextEditingController();
+  String currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+  Timer? timer;
+
+  List<IssueData>? dropdownItems = [];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -363,6 +373,37 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
           GestureDetector(
             onTap: () {
               alertDialog1();
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("start", "").then((value) {
+                if (value != null) {
+                  Fluttertoast.showToast(
+                    msg: "CGL Process Time Start",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.deepPurple,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  print(" error on ui");
+                }
+              });
+              Provider.of<PauslistProvider>(
+                context,
+                listen: false,
+              ).gettingPauseList().then((value) {
+                if (value?.success == "success") {
+                  setState(() {
+                    dropdownItems?.clear();
+                    dropdownItems?.addAll(value!.data!);
+                  });
+                } else {
+                  print("error on  design page");
+                }
+              });
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -406,7 +447,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                     children: [
                       Container(
                         height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
+                        width: MediaQuery.of(context).size.width * .19,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
@@ -416,7 +457,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                         ),
                         child: Center(
                           child: Text(
-                            "Started 9 P.M",
+                            "Started ${currentTime}",
                             style: TextStyle(fontSize: 10),
                           ),
                         ),
@@ -437,7 +478,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                "00:30 :55",
+                                "${currentTime}",
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Appcolor.whitecolor,
@@ -452,34 +493,47 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
-                        decoration: BoxDecoration(
-                          color: Appcolor.gcol,
-                          borderRadius: BorderRadius.circular(17),
-                          border: Border.all(
-                            color: Appcolor.greycolor,
-                            width: 1,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+
+                          timeStopalertDialoge(context, (selectedOption) {
+                            if (selectedOption != null) {
+                              print("User selected: $selectedOption");
+                            } else {
+                              print("No option selected");
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: 27,
+                          width: MediaQuery.of(context).size.width * .18,
+                          decoration: BoxDecoration(
+                            color: Appcolor.gcol,
+                            borderRadius: BorderRadius.circular(17),
+                            border: Border.all(
+                              color: Appcolor.greycolor,
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Icon(
-                                Icons.pause,
-                                color: Appcolor.whitecolor,
-                                size: 15,
-                              ),
-                              Text(
-                                "Pause",
-                                style: TextStyle(
-                                  fontSize: 10,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Icon(
+                                  Icons.pause,
                                   color: Appcolor.whitecolor,
+                                  size: 15,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "Pause",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Appcolor.whitecolor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -813,13 +867,14 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                         scrapWeight:
                                             value.data?.scrapWeight.toString(),
                                       );
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          backgroundColor: Colors.red,
-                                          content: Text("${value.message}"),
-                                        ),
+                                      Fluttertoast.showToast(
+                                        msg: "${value.message}",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Appcolor.deepPurple,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0,
                                       );
                                       Navigator.push(
                                         context,
@@ -827,6 +882,7 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
                                           builder:
                                               (context) => ContinousGL3(
                                                 newEntry: newEntry,
+                                                currentTime:currentTime
                                               ),
                                         ),
                                       );
@@ -887,6 +943,153 @@ class _Containerwidgetforcgl2State extends State<Containerwidgetforcgl2> {
               ),
             ),
           ),
+    );
+  }
+
+  String? selectedIssueId;
+  String? selectedIssue;
+
+  void timeStopalertDialoge(
+    BuildContext context,
+    void Function(String?) onSubmit,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        return Dialog(
+          backgroundColor: Appcolor.whitecolor,
+          insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                width: screenWidth * 0.9,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Pause", style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Appcolor.lightgrey2,
+                      ),
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.white,
+                        value: selectedIssue,
+                        hint: Text("Select issue"),
+                        isExpanded: true,
+                        items:
+                            dropdownItems?.map((IssueData item) {
+                              return DropdownMenuItem<String>(
+                                value: item.name,
+                                child: Text(item.name ?? ''),
+                              );
+                            }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedIssue = newValue;
+
+                            final selectedItem = dropdownItems?.firstWhere(
+                              (item) => item.name == newValue,
+                              orElse: () => IssueData(id: "", name: ''),
+                            );
+
+                            selectedIssueId = selectedItem?.id;
+                            print("📌 Selected ID: $selectedIssueId");
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .3),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.red,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                " Cancel",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Provider.of<TimellogProvider>(
+                                  context,
+                                  listen: false,
+                                )
+                                .gettingTimeLog("pause", "${selectedIssueId}")
+                                .then((value) {
+                                  if (value != null) {
+                                    Fluttertoast.showToast(
+                                      msg:
+                                          "Machine time log sent to management",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Appcolor.deepPurple,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0,
+                                    );
+                                  } else {
+                                    print(" error on ui");
+                                  }
+                                });
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.deepPurple,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Submit",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

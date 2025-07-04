@@ -1,11 +1,18 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
+import 'package:inframat/models/pausereasonlist_model.dart';
+import 'package:inframat/provider/pauslist_provider.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/anneling/anneling_process3.dart';
 import 'package:inframat/screens/anneling/container_widget_for_anneling.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AnnelingProcess2 extends StatefulWidget {
   const AnnelingProcess2({
@@ -189,6 +196,8 @@ class ContainerWidgetforAnneling2 extends StatefulWidget {
 
 class _ContainerWidgetforAnneling2State
     extends State<ContainerWidgetforAnneling2> {
+  String currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+  Timer? timer;
   int counter = 1;
   int increamentedValues = 1;
   dynamic selectedImage;
@@ -207,10 +216,7 @@ class _ContainerWidgetforAnneling2State
               height: 600,
               child:
                   increamentedValues == 5
-                      ? ContainerWidgetforAnneling(
-                        textnameforcrm: "Proceed ",
-                        ontap: () => alertDialog1(),
-                      )
+                      ? Text("data")
                       : Column(
                         children: [
                           Expanded(
@@ -396,6 +402,72 @@ class _ContainerWidgetforAnneling2State
                                                 GestureDetector(
                                                   onTap: () {
                                                     alertDialog1();
+                                                    Provider.of<
+                                                      TimellogProvider
+                                                    >(
+                                                      context,
+                                                      listen: false,
+                                                    ).gettingTimeLog("start", "").then((
+                                                      value,
+                                                    ) {
+                                                      if (value != null) {
+                                                        Fluttertoast.showToast(
+                                                          msg:
+                                                              "Annealing Process Time Start",
+                                                          toastLength:
+                                                              Toast
+                                                                  .LENGTH_SHORT,
+                                                          gravity:
+                                                              ToastGravity
+                                                                  .CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Appcolor
+                                                                  .deepPurple,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0,
+                                                        );
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                          msg: "Network Error ",
+                                                          toastLength:
+                                                              Toast
+                                                                  .LENGTH_SHORT,
+                                                          gravity:
+                                                              ToastGravity
+                                                                  .CENTER,
+                                                          timeInSecForIosWeb: 1,
+                                                          backgroundColor:
+                                                              Appcolor.red,
+                                                          textColor:
+                                                              Colors.white,
+                                                          fontSize: 16.0,
+                                                        );
+                                                      }
+                                                    });
+
+                                                    Provider.of<
+                                                      PauslistProvider
+                                                    >(
+                                                      context,
+                                                      listen: false,
+                                                    ).gettingPauseList().then((
+                                                      value,
+                                                    ) {
+                                                      if (value?.success ==
+                                                          "success") {
+                                                        setState(() {
+                                                          dropdownItems
+                                                              ?.clear();
+                                                          dropdownItems?.addAll(
+                                                            value!.data!,
+                                                          );
+                                                        });
+                                                      } else {
+                                                        print("error ");
+                                                      }
+                                                    });
                                                   },
                                                   child: Container(
                                                     height: 50,
@@ -461,7 +533,7 @@ class _ContainerWidgetforAnneling2State
                     children: [
                       Container(
                         height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
+                        width: MediaQuery.of(context).size.width * .19,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
@@ -471,7 +543,7 @@ class _ContainerWidgetforAnneling2State
                         ),
                         child: Center(
                           child: Text(
-                            "Started 9 P.M",
+                            "Started ${currentTime}",
                             style: TextStyle(fontSize: 10),
                           ),
                         ),
@@ -492,7 +564,7 @@ class _ContainerWidgetforAnneling2State
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                "00:30 :55",
+                                "${currentTime}",
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Appcolor.whitecolor,
@@ -507,34 +579,47 @@ class _ContainerWidgetforAnneling2State
                           ),
                         ),
                       ),
-                      Container(
-                        height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
-                        decoration: BoxDecoration(
-                          color: Appcolor.gcol,
-                          borderRadius: BorderRadius.circular(17),
-                          border: Border.all(
-                            color: Appcolor.greycolor,
-                            width: 1,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+
+                          timeStopalertDialoge(context, (selectedOption) {
+                            if (selectedOption != null) {
+                              print("User selected: $selectedOption");
+                            } else {
+                              print("No option selected");
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: 27,
+                          width: MediaQuery.of(context).size.width * .18,
+                          decoration: BoxDecoration(
+                            color: Appcolor.gcol,
+                            borderRadius: BorderRadius.circular(17),
+                            border: Border.all(
+                              color: Appcolor.greycolor,
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Icon(
-                                Icons.pause,
-                                color: Appcolor.whitecolor,
-                                size: 15,
-                              ),
-                              Text(
-                                "Pause",
-                                style: TextStyle(
-                                  fontSize: 10,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Icon(
+                                  Icons.pause,
                                   color: Appcolor.whitecolor,
+                                  size: 15,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "Pause",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Appcolor.whitecolor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -774,13 +859,16 @@ class _ContainerWidgetforAnneling2State
                       ),
 
                       //  selectedImage
-                      picklinglossecontroller != null
+                      picklinglossecontroller.text.isNotEmpty
                           ? GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => Annelingprocess3(),
+                                  builder:
+                                      (context) => Annelingprocess3(
+                                        currentTime: currentTime,
+                                      ),
                                 ),
                               );
                             },
@@ -831,4 +919,138 @@ class _ContainerWidgetforAnneling2State
           ),
     );
   }
+}
+
+List<IssueData>? dropdownItems = [];
+String? selectedIssueId;
+String? selectedIssue;
+
+void timeStopalertDialoge(
+  BuildContext context,
+  void Function(String?) onSubmit,
+) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      return Dialog(
+        backgroundColor: Appcolor.whitecolor,
+        insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              width: screenWidth * 0.9,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text("Pause", style: TextStyle(fontSize: 12)),
+                  SizedBox(height: 16),
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: Appcolor.lightgrey2,
+                    ),
+                    child: DropdownButton<String>(
+                      dropdownColor: Colors.white,
+                      value: selectedIssue,
+                      hint: Text("Select issue"),
+                      isExpanded: true,
+                      items:
+                          dropdownItems?.map((IssueData item) {
+                            return DropdownMenuItem<String>(
+                              value: item.name,
+                              child: Text(item.name ?? 'Unnamed'),
+                            );
+                          }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedIssue = newValue;
+                          final selectedItem = dropdownItems?.firstWhere(
+                            (item) => item.name == newValue,
+                            orElse: () => IssueData(id: "", name: ''),
+                          );
+                          selectedIssueId = selectedItem?.id;
+                          print("📌 Selected ID: $selectedIssueId");
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          print(dropdownItems?.length);
+                          print(dropdownItems?[0].id);
+                        },
+                        child: Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width * .34,
+                          decoration: BoxDecoration(
+                            color: Appcolor.red,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              " Cancel",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Provider.of<TimellogProvider>(context, listen: false)
+                              .gettingTimeLog("pause", "${selectedIssueId}")
+                              .then((value) {
+                                if (value != null) {
+                                  print("success on UI");
+                                } else {
+                                  print(" error on ui");
+                                }
+                              });
+                        },
+                        child: Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width * .34,
+                          decoration: BoxDecoration(
+                            color: Appcolor.deepPurple,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Submit",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    },
+  );
 }

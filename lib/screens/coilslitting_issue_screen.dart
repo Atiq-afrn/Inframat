@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/color.dart';
 
@@ -353,6 +354,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
               });
               _showAlertDialog();
               _getCurrentTime();
+
               Provider.of<PauslistProvider>(
                 context,
                 listen: false,
@@ -688,17 +690,16 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                                           );
                                         } else {
                                           print("errorr ");
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              backgroundColor: Colors.red,
-                                              content: Center(
-                                                child: Text(
-                                                  "This list already processed",
-                                                ),
-                                              ),
-                                            ),
+                                          Fluttertoast.showToast(
+                                            msg:
+                                                "Machine time log sent to management",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor:
+                                                Colors.green.shade200,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0,
                                           );
                                         }
                                       });
@@ -1003,7 +1004,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Paused", style: TextStyle(fontSize: 12)),
+                    Text("Pause", style: TextStyle(fontSize: 12)),
                     SizedBox(height: 16),
                     Container(
                       height: 50,

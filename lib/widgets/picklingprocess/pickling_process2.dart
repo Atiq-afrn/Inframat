@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/models/pausereasonlist_model.dart';
 import 'package:inframat/models/pickling_process_response_model.dart';
 import 'package:inframat/provider/pauslist_provider.dart';
 import 'package:inframat/provider/pickling_process_provider.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 
 import 'package:inframat/screens/coilsliting_open_camera.dart';
 import 'package:inframat/widgets/picklingprocess/pickling_process3.dart';
@@ -227,7 +229,7 @@ class _ContainerWidgetforpickling2State
     _getCurrentTime(); // initialize first
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       _getCurrentTime();
-      print(currentTime); // update every second
+      // print(currentTime); // update every second
     });
   }
 
@@ -359,6 +361,17 @@ class _ContainerWidgetforpickling2State
               alertDialog1();
               // _showAlertDialog();
               _getCurrentTime();
+
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("start", "").then((value) {
+                if (value != null) {
+                  print("success on UI");
+                } else {
+                  print(" error on ui");
+                }
+              });
               Provider.of<PauslistProvider>(
                 context,
                 listen: false,
@@ -783,19 +796,20 @@ class _ContainerWidgetforpickling2State
                                             builder:
                                                 (context) => Picklingprocess3(
                                                   responseModel: value!.data!,
+                                                  currentTime: currentTime,
                                                 ),
                                           ),
                                         );
                                       } else {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            backgroundColor: Colors.red,
-                                            content: Text(
-                                              "This Plan already processed",
-                                            ),
-                                          ),
+                                        Fluttertoast.showToast(
+                                          msg:
+                                              "This plan had already been process ",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Appcolor.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0,
                                         );
                                       }
                                     });
@@ -860,6 +874,8 @@ class _ContainerWidgetforpickling2State
     });
   }
 
+  String? selectedIssueId;
+
   void timeStopalertDialoge(
     BuildContext context,
     void Function(String?) onSubmit,
@@ -883,7 +899,7 @@ class _ContainerWidgetforpickling2State
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Paused", style: TextStyle(fontSize: 12)),
+                    Text("Pause", style: TextStyle(fontSize: 12)),
                     SizedBox(height: 16),
                     Container(
                       height: 50,
@@ -908,6 +924,14 @@ class _ContainerWidgetforpickling2State
                         onChanged: (String? newValue) {
                           setState(() {
                             selectedIssue = newValue;
+
+                            final selectedItem = dropdownItems?.firstWhere(
+                              (item) => item.name == newValue,
+                              orElse: () => IssueData(id: "", name: ''),
+                            );
+
+                            selectedIssueId = selectedItem?.id;
+                            print("📌 Selected ID: $selectedIssueId");
                           });
                         },
                       ),
@@ -941,7 +965,21 @@ class _ContainerWidgetforpickling2State
                         ),
 
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Provider.of<TimellogProvider>(
+                                  context,
+                                  listen: false,
+                                )
+                                .gettingTimeLog("start", "${selectedIssueId}")
+                                .then((value) {
+                                  if (value != null) {
+                                    print("success on UI");
+                                  } else {
+                                    print(" error on ui");
+                                  }
+                                });
+                            Navigator.pop(context);
+                          },
                           child: Container(
                             height: 40,
                             width: MediaQuery.of(context).size.width * .34,

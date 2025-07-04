@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/crm_processing_response_model.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/crm_cold_mill/printqr_forcrm.dart';
 import 'package:inframat/screens/dashboard2.dart';
+import 'package:provider/provider.dart';
 
 class Crmcoldrolling3 extends StatefulWidget {
-  Crmcoldrolling3({super.key, this.modeldata});
+  Crmcoldrolling3({super.key, this.modeldata, this.currenttime});
   ColdRollingMillData? modeldata;
+  final String? currenttime;
 
   @override
   State<Crmcoldrolling3> createState() => _Crmcoldrolling3State();
@@ -44,7 +48,7 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "00:30 :55",
+                    "${widget.currenttime}",
                     style: TextStyle(fontSize: 10, color: Appcolor.whitecolor),
                   ),
                   Icon(
@@ -56,21 +60,51 @@ class _Crmcoldrolling3State extends State<Crmcoldrolling3> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value != null) {
+                  Fluttertoast.showToast(
+                    msg: "Machine time log sent to management",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.deepPurple,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Something went wrong",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: Appcolor.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),

@@ -342,7 +342,7 @@ class _Dashboard2State extends State<Dashboard2> {
                     },
                     child: DashboardWidget(
                       imagename: "${data?[6].image}",
-                      textname: "${data?[2].title}",
+                      textname: "${data?[6].title}",
                     ),
                   ),
 

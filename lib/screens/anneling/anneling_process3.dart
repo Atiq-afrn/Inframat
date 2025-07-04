@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/anneling/anneling3_custome_widget.dart';
 import 'package:inframat/screens/dashboard2.dart';
+import 'package:provider/provider.dart';
 
 class Annelingprocess3 extends StatefulWidget {
-  const Annelingprocess3({super.key});
+  const Annelingprocess3({super.key, this.currentTime});
+  final String? currentTime;
 
   @override
   State<Annelingprocess3> createState() => _Annelingprocess3State();
@@ -35,7 +39,7 @@ class _Annelingprocess3State extends State<Annelingprocess3> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "00:30 :55",
+                    "${widget.currentTime}",
                     style: TextStyle(fontSize: 10, color: Appcolor.whitecolor),
                   ),
                   Icon(
@@ -47,21 +51,48 @@ class _Annelingprocess3State extends State<Annelingprocess3> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value!.status == true) {
+                  Fluttertoast.showToast(
+                    msg: "Machine Time Line Sent To Management ",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.deepPurple,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Center(child: Text("Network Error")),
+                    ),
+                  );
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/cgl_process_model.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/galvanizing_line/printqr_for_cg.dart';
+import 'package:intl/number_symbols_data.dart';
+import 'package:provider/provider.dart';
 
 class ContinousGL3 extends StatefulWidget {
-  const ContinousGL3({super.key, this.newEntry});
+  const ContinousGL3({super.key, this.newEntry, this.currentTime});
   final CglProcessData? newEntry;
+  final String? currentTime;
 
   @override
   State<ContinousGL3> createState() => _ContinousGL3State();
@@ -36,7 +41,7 @@ class _ContinousGL3State extends State<ContinousGL3> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "00:30 :55",
+                    "${widget.currentTime}",
                     style: TextStyle(fontSize: 10, color: Appcolor.whitecolor),
                   ),
                   Icon(
@@ -48,21 +53,51 @@ class _ContinousGL3State extends State<ContinousGL3> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value != null) {
+                  Fluttertoast.showToast(
+                    msg: "Machine time log sent to management",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.deepPurple,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Network Error",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),

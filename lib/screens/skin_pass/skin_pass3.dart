@@ -1,32 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/skin_process_response_model.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/skin_pass/printqr_for_skinpass.dart';
+import 'package:provider/provider.dart';
 
 class SkinPass3 extends StatefulWidget {
   const SkinPass3({
     super.key,
-    // this.batchNo,
-    // this.length,
-    // this.width,
-    // this.mtweight,
-    // this.actualWeight,
-    // this.scrapweight,
-    // this.image,
+
     this.responsedata,
     this.supplierId,
+    this.currenttime,
   });
-  // final String? batchNo;
-  // final String? length;
-  // final String? width;
-  // final String? mtweight;
-  // final String? actualWeight;
-  // final String? scrapweight;
-  // final dynamic image;
+
   final List<SkinProcessData>? responsedata;
   final String? supplierId;
+  final String? currenttime;
 
   @override
   State<SkinPass3> createState() => _SkinPass3State();
@@ -56,7 +49,7 @@ class _SkinPass3State extends State<SkinPass3> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "00:30 :55",
+                    "${widget.currenttime}",
                     style: TextStyle(fontSize: 10, color: Appcolor.whitecolor),
                   ),
                   Icon(
@@ -68,21 +61,50 @@ class _SkinPass3State extends State<SkinPass3> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value != null) {
+                  Fluttertoast.showToast(
+                    msg: "Machine Time Log Sent To Management",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.deepPurple,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Network Error",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),

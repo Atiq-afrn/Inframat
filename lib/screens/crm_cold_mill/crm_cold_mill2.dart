@@ -1,17 +1,19 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/models/crm_processing_response_model.dart';
+import 'package:inframat/models/pausereasonlist_model.dart';
 import 'package:inframat/provider/crm_process_provider.dart';
+import 'package:inframat/provider/pauslist_provider.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/screens/coilsliting_open_camera.dart';
-import 'package:inframat/screens/crm_cold_mill/container_widget_for_crm.dart';
 import 'package:inframat/screens/crm_cold_mill/crm_cold_mill3.dart';
-
-import 'package:inframat/widgets/picklingprocess/container_widget_for_pickling.dart';
-import 'package:pinput/pinput.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Crmcoldmill2 extends StatefulWidget {
@@ -377,6 +379,19 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
           GestureDetector(
             onTap: () {
               alertDialog1();
+              Provider.of<PauslistProvider>(
+                context,
+                listen: false,
+              ).gettingPauseList().then((value) {
+                if (value?.success == "success") {
+                  setState(() {
+                    dropdownItems?.clear();
+                    dropdownItems?.addAll(value!.data!);
+                  });
+                } else {
+                  print("error on  design page");
+                }
+              });
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -410,6 +425,9 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
   TextEditingController mtcontroller = TextEditingController();
   TextEditingController scrapController = TextEditingController();
   TextEditingController actualWeightController = TextEditingController();
+  List<IssueData>? dropdownItems = [];
+  String currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
+  Timer? timer;
   Future alertDialog1() async {
     showDialog(
       context: context,
@@ -425,7 +443,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                     children: [
                       Container(
                         height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
+                        width: MediaQuery.of(context).size.width * .19,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                           border: Border.all(
@@ -435,7 +453,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                         ),
                         child: Center(
                           child: Text(
-                            "Started 9 P.M",
+                            "Started ${currentTime}",
                             style: TextStyle(fontSize: 10),
                           ),
                         ),
@@ -456,7 +474,7 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Text(
-                                "00:30 :55",
+                                "${currentTime}",
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Appcolor.whitecolor,
@@ -471,34 +489,62 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 27,
-                        width: MediaQuery.of(context).size.width * .18,
-                        decoration: BoxDecoration(
-                          color: Appcolor.gcol,
-                          borderRadius: BorderRadius.circular(17),
-                          border: Border.all(
-                            color: Appcolor.greycolor,
-                            width: 1,
+                      GestureDetector(
+                        onTap: () {
+                          // _showAlertDialog();
+                          // _getCurrentTime();
+
+                          //  timer?.cancel();
+                          Navigator.pop(context);
+
+                          timeStopalertDialoge(context, (selectedOption) {
+                            if (selectedOption != null) {
+                              print("User selected: $selectedOption");
+                            } else {
+                              print("No option selected");
+                            }
+                          });
+
+                          // Provider.of<TimellogProvider>(
+                          //   context,
+                          //   listen: false,
+                          // ).gettingTimeLog("pause", "").then((value) {
+                          //   if (value != null) {
+                          //     print("success on UI");
+                          //   } else {
+                          //     print(" error on ui");
+                          //   }
+                          // });
+                        },
+                        child: Container(
+                          height: 27,
+                          width: MediaQuery.of(context).size.width * .18,
+                          decoration: BoxDecoration(
+                            color: Appcolor.gcol,
+                            borderRadius: BorderRadius.circular(17),
+                            border: Border.all(
+                              color: Appcolor.greycolor,
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Icon(
-                                Icons.pause,
-                                color: Appcolor.whitecolor,
-                                size: 15,
-                              ),
-                              Text(
-                                "Pause",
-                                style: TextStyle(
-                                  fontSize: 10,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Icon(
+                                  Icons.pause,
                                   color: Appcolor.whitecolor,
+                                  size: 15,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "Pause",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Appcolor.whitecolor,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -780,7 +826,8 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                                             inwardId: value.data?.inwardId,
                                             thickness: value.data?.thickness,
 
-                                            image: "asfdjsadgfs",
+                                            image: "asdhfhhabd",
+                                            //selectedImage,
                                             width: value.data?.inwardId,
                                             scrapWeight:
                                                 value.data?.scrapWeight,
@@ -798,22 +845,21 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
                                             builder:
                                                 (context) => Crmcoldrolling3(
                                                   modeldata: newEntry,
+                                                  currenttime: currentTime,
                                                 ),
                                           ),
                                         );
                                       }
                                     } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          backgroundColor: Colors.red,
-                                          content: Center(
-                                            child: Text(
-                                              "Something went wrong ",
-                                            ),
-                                          ),
-                                        ),
+                                      Fluttertoast.showToast(
+                                        msg:
+                                            "This Plan had already been process",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0,
                                       );
                                     }
                                   });
@@ -863,6 +909,144 @@ class _ContainerwidgetforcrmState extends State<Containerwidgetforcrm2> {
               ),
             ),
           ),
+    );
+  }
+
+  String? selectedIssueId;
+  String? selectedIssue;
+
+  void timeStopalertDialoge(
+    BuildContext context,
+    void Function(String?) onSubmit,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        return Dialog(
+          backgroundColor: Appcolor.whitecolor,
+          insetPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Container(
+                padding: const EdgeInsets.all(16),
+                width: screenWidth * 0.9,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Pause", style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Appcolor.lightgrey2,
+                      ),
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.white,
+                        value: selectedIssue,
+                        hint: Text("Select issue"),
+                        isExpanded: true,
+                        items:
+                            dropdownItems?.map((IssueData item) {
+                              return DropdownMenuItem<String>(
+                                value: item.name,
+                                child: Text(item.name ?? ''),
+                              );
+                            }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedIssue = newValue;
+
+                            final selectedItem = dropdownItems?.firstWhere(
+                              (item) => item.name == newValue,
+                              orElse: () => IssueData(id: "", name: ''),
+                            );
+
+                            selectedIssueId = selectedItem?.id;
+                            print("📌 Selected ID: $selectedIssueId");
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .3),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.red,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                " Cancel",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Provider.of<TimellogProvider>(
+                                  context,
+                                  listen: false,
+                                )
+                                .gettingTimeLog("pause", "${selectedIssueId}")
+                                .then((value) {
+                                  if (value != null) {
+                                    print("success on UI");
+                                  } else {
+                                    print(" error on ui");
+                                  }
+                                });
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * .34,
+                            decoration: BoxDecoration(
+                              color: Appcolor.deepPurple,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "Submit",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/Color.dart';
 import 'package:inframat/provider/print_qr_coder_provider.dart';
 import 'package:inframat/screens/dashboard2.dart';
@@ -108,6 +109,15 @@ class _PrintqrforCGlState extends State<PrintqrforCGl> {
                         ).gettingqrCodeData(widget.batchNo!).then((value) {
                           if (value != null) {
                             apiImageUrl = value.imageUrl;
+                            Fluttertoast.showToast(
+                              msg: "Print The QR Code",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Appcolor.deepPurple,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text("QR Code not found")),

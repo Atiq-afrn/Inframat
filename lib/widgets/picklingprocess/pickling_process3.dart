@@ -1,16 +1,16 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/pickling_process_response_model.dart';
-import 'package:inframat/screens/dashboard2.dart';
-import 'package:inframat/shared_pref/shared_preferance.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 import 'package:inframat/widgets/picklingprocess/print_qr_pickling.dart';
+import 'package:provider/provider.dart';
 
 class Picklingprocess3 extends StatefulWidget {
-  Picklingprocess3({super.key, this.responseModel});
+  Picklingprocess3({super.key, this.responseModel, this.currentTime});
   final PickledOilStoreData? responseModel;
+  final String? currentTime;
 
   @override
   State<Picklingprocess3> createState() => _Picklingprocess3State();
@@ -24,7 +24,7 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
     super.initState();
 
     imageUrl = widget.responseModel?.image ?? "";
-    print(" atiq khan  ${widget.responseModel?.batchNo}");
+    // print(" atiq khan  ${widget.responseModel?.batchNo}");
   }
 
   @override
@@ -50,7 +50,7 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    "00:30 :55",
+                    "${widget.currentTime}",
                     style: TextStyle(fontSize: 10, color: Appcolor.whitecolor),
                   ),
                   Icon(
@@ -62,21 +62,47 @@ class _Picklingprocess3State extends State<Picklingprocess3> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Fluttertoast.showToast(
+                      msg: "Machine time log sent to management",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Appcolor.deepPurple,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  });
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Error")));
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),
