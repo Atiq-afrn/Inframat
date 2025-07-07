@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:inframat/const/Color.dart';
@@ -197,7 +198,15 @@ class _Facerecognize2State extends State<Facerecognize2> {
                     AppStorage.removeUserIdandMachineId();
                     openAlertDialoge();
                     splashScreen1();
-                    print("Punch Out success");
+                    Fluttertoast.showToast(
+                      msg: "Punch Out Successful",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Appcolor.deepPurple,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -302,7 +311,7 @@ class _Facerecognize2State extends State<Facerecognize2> {
                         color: Appcolor.deepPurple,
                       ),
                       Text(
-                        " ,",
+                        "${address}",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

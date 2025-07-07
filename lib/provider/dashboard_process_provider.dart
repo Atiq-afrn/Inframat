@@ -16,7 +16,8 @@ class DashboardProcessProvider extends ChangeNotifier {
       body: {
         "connection_id": await AppStorage.getConnectionId(),
         "auth_code": await AppStorage.gettingAuthId(),
-        "machine_id": await AppStorage.gettingMachineId(),
+        "machine_id": "291",
+        //await AppStorage.gettingMachineId(),
       },
     );
     if (response.statusCode == 200) {

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inframat/const/color.dart';
 import 'package:inframat/const/imageconst.dart';
 import 'package:inframat/models/mini_coilSlittingResponse_model.dart';
+import 'package:inframat/provider/timellog_provider.dart';
 
 import 'package:inframat/screens/coil_slitting_screen.dart';
 import 'package:inframat/screens/dashboard2.dart';
 import 'package:inframat/screens/issue.dart';
 import 'package:inframat/screens/mini%20coil%20slitting/printqr_forminicoilslitting.dart';
+import 'package:provider/provider.dart';
 
 class Minicoilslitting3 extends StatefulWidget {
   const Minicoilslitting3({
@@ -61,21 +64,51 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 27,
-              width: MediaQuery.of(context).size.width * .17,
-              decoration: BoxDecoration(
-                color: Appcolor.red,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Appcolor.whitecolor,
+          GestureDetector(
+            onTap: () {
+              Provider.of<TimellogProvider>(
+                context,
+                listen: false,
+              ).gettingTimeLog("end", "").then((value) {
+                if (value?.status == true) {
+                  Fluttertoast.showToast(
+                    msg: " Machine Time log sent to management",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.deepPurple,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                    msg: "Network Error ",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Appcolor.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Container(
+                height: 27,
+                width: MediaQuery.of(context).size.width * .17,
+                decoration: BoxDecoration(
+                  color: Appcolor.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "End",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Appcolor.whitecolor,
+                    ),
                   ),
                 ),
               ),
@@ -318,7 +351,7 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
                     ),
                   ),
                 ),
-              ),  
+              ),
             ],
           ),
           SizedBox(height: MediaQuery.of(context).size.width * .8),
@@ -326,11 +359,14 @@ class _Minicoilslitting3State extends State<Minicoilslitting3> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PrintqrforMinicoilslitting(
-                  batchNo1: widget.batchNo0,
-                  batchNo2: widget.batchNo1,
-                  batchNo3: widget.batchNo2,
-                )),
+                MaterialPageRoute(
+                  builder:
+                      (context) => PrintqrforMinicoilslitting(
+                        batchNo1: widget.batchNo0,
+                        batchNo2: widget.batchNo1,
+                        batchNo3: widget.batchNo2,
+                      ),
+                ),
               );
             },
             child: Container(

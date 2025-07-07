@@ -448,7 +448,7 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                         children: [
                           Container(
                             height: 27,
-                            width: MediaQuery.of(context).size.width * .18,
+                            width: MediaQuery.of(context).size.width * .19,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
                               border: Border.all(
@@ -1072,17 +1072,25 @@ class _ContainerWidgetState extends State<ContainerWidget> {
                           onTap: () {
                             Navigator.pop(context);
                             Provider.of<TimellogProvider>(
-                                  context,
-                                  listen: false,
-                                )
-                                .gettingTimeLog("pause", "${selectedIssueId}")
-                                .then((value) {
-                                  if (value != null) {
-                                    print("success on UI");
-                                  } else {
-                                    print(" error on ui");
-                                  }
-                                });
+                              context,
+                              listen: false,
+                            ).gettingTimeLog("pause", "${selectedIssueId}").then(
+                              (value) {
+                                if (value != null) {
+                                  Fluttertoast.showToast(
+                                    msg: "Machine time line sent to management",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Appcolor.deepPurple,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
+                                } else {
+                                  print(" error on ui");
+                                }
+                              },
+                            );
                           },
                           child: Container(
                             height: 40,

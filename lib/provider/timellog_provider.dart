@@ -21,7 +21,7 @@ class TimellogProvider extends ChangeNotifier {
         if (typeValue == "pause")
           {
             "type": "pause",
-            "reason_id": resonid != null ? int.tryParse(resonid) : "0",
+            "reason_id": resonid != null ? int.tryParse(resonid) : 0,
           }
         else
           {"type": typeValue},
@@ -44,7 +44,7 @@ class TimellogProvider extends ChangeNotifier {
         print("❌ Response body: ${response.body}");
       }
     } catch (e) {
-      print("❗ Exception: $e");
+      print("❗ Exception timelog provider api: $e");
     }
 
     notifyListeners();
